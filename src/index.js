@@ -1,10 +1,3 @@
-// const http = require("http");
-// const server = http.createServer((req, res) => {
-//     res.setHeader("Content-Type", "text/html");
-//     res.end("OK");
-// });
-
-// server.listen("3000", () => console.log("OK 서버 시작"));
 const express = require("express");
 const app = express();
 let posts = [];
@@ -15,7 +8,7 @@ app.get("/", (req, res) => {
     res.json(posts);
 });
 app.post("/post", (req, res) => {
-    const { title, name, text} = res.body;
+    const { title, name, text} = req.body;
 
     posts.push({id: posts.length + 1, title, name, text, createDt: Date()});
     res.json({title, name, text});
