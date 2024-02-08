@@ -1,6 +1,7 @@
 # create table
 
 - 회원 테이블
+
 CREATE TABLE user (
     id VARCHAR(10) PRIMARY KEY,
     passwd VARCHAR(255) NOT NULL,
