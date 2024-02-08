@@ -68,13 +68,14 @@ const pool = require("./db.js");
   };
 
 /*
-글 불러오기 scope 0 : 전체, 1 : 친구만, 2 : 나만보기
+글 불러오기 scope 0 : 전체, 1 : 친구만, 2 : 나만보기 (로그인 상태)
 */
-  exports.getPost = async(user_id, start, end) =>{
+  exports.getPost = async(user_id, start, end, start, end) =>{
     try
     {
       const query = `
-      SELECT *
+      SELECT l.id as id, l.user_id as user_id, l.title as title, l.content_url as content_url, 
+      l.scope as scope, l.create_dt as create_dt, r.name as name
       FROM(
         SELECT id, user_id, title, content_url, scope, create_dt 
         FROM (
@@ -98,9 +99,11 @@ const pool = require("./db.js");
           FROM friend_list 
           WHERE user_id = ?) as r 
         ON l.user_id = r.friend_id
-      ) as res
-      ORDER BY res.create_dt desc
-      LIMIT ?,?
+        ) as l
+		    JOIN user as r
+        ON l.user_id = r.id
+        ORDER BY create_dt desc
+        LIMIT ?,?
         `;
         const result = await pool(query, [user_id, user_id, user_id, start, end]);
         return (result.length < 0)? null : result[0];;
@@ -112,6 +115,31 @@ const pool = require("./db.js");
     }
     
   };
+
+  /*
+글 불러오기 scope 0 : 전체, 1 : 친구만, 2 : 나만보기 (로그아웃 상태)
+*/
+exports.getPost = async(user_id, start, end, start, end) =>{
+  try
+  {
+    const query = `
+    SELECT l.id as id, l.user_id as user_id, l.title as title, l.content_url as content_url, 
+    l.scope as scope, l.create_dt as create_dt, r.name as name
+    FROM post as l
+    JOIN user as r
+    ON l.user_id = r.id
+    WHERE l.scope = 0
+      `;
+      const result = await pool(query, [user_id, user_id, user_id, start, end]);
+      return (result.length < 0)? null : result[0];;
+  }
+  catch(error)
+  {
+      console.error('feedModel.getPost error:', error);
+      throw{message: "Server error", status:500};
+  }
+  
+};
 
 /*
 댓글 추가
