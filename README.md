@@ -14,6 +14,7 @@ CREATE TABLE user (
 );
 
 - 게시글 테이블
+
 CREATE TABLE post (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id VARCHAR(10) NOT NULL,
@@ -25,6 +26,7 @@ CREATE TABLE post (
 );
 
 - 댓글 테이블
+
 CREATE TABLE comments (
     id INT PRIMARY KEY AUTO_INCREMENT,
     post_id INT NOT NULL,
@@ -36,6 +38,7 @@ CREATE TABLE comments (
 );
 
 - 태그 테이블
+
 CREATE TABLE tags (
     comment_id INT NOT NULL,
     user_id VARCHAR(10) NOT NULL,
@@ -47,6 +50,7 @@ CREATE TABLE tags (
 );
 
 - 친구목록 테이블
+
 CREATE TABLE friend_list (
     user_id VARCHAR(10) NOT NULL,
     friend_id VARCHAR(10) NOT NULL,
@@ -57,6 +61,7 @@ CREATE TABLE friend_list (
 );
 
 - 친구요청 테이블
+
 CREATE TABLE friend_request (
     sender_id VARCHAR(10) NOT NULL,
     receiver_id VARCHAR(10) NOT NULL,
@@ -67,6 +72,7 @@ CREATE TABLE friend_request (
 );
 
 - 친구차단 테이블
+
 CREATE TABLE friend_blocking (
     user_id VARCHAR(10) NOT NULL,
     blocked_user_id VARCHAR(10) NOT NULL,
@@ -77,6 +83,7 @@ CREATE TABLE friend_blocking (
 );
 
 - 채팅기록 테이블
+
 CREATE TABLE chat_history (
     id INT PRIMARY KEY AUTO_INCREMENT,
     sender_id VARCHAR(10) NOT NULL,
