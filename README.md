@@ -7,21 +7,21 @@ back-end/<br>
 |-- controllers/<br>
 |   |-- chatController.js<br>
 |   |-- feedController.js<br>
-|   |-- friendController.js
-|   |-- userController.js
-|-- models/
-|   |-- chatModel.js
-|   |-- feedModel.js
-|   |-- friendModel.js
-|   |-- userModel.js
-|-- routes/
-|   |-- routes.js
-|-- server.js
-|-- .env
-|-- .gitignore
-|-- package-lock.json
-|-- package.json
-|-- README.md
+|   |-- friendController.js<br>
+|   |-- userController.js<br>
+|-- models/<br>
+|   |-- chatModel.js<br>
+|   |-- feedModel.js<br>
+|   |-- friendModel.js<br>
+|   |-- userModel.js<br>
+|-- routes/<br>
+|   |-- routes.js<br>
+|-- server.js<br>
+|-- .env<br>
+|-- .gitignore<br>
+|-- package-lock.json<br>
+|-- package.json<br>
+|-- README.md<br>
 
 
 # create table
