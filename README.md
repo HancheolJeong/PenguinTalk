@@ -1,3 +1,39 @@
+## BACK-END
+
+# File Structure
+
+project-root/
+|-- penguintalk/
+|   |-- node_modules/
+|   |-- config/
+|   |   |-- db.config.js
+|   |-- controller/
+|   |   |-- feedControllers.js
+|   |   |-- userControllers.js
+|   |-- models/
+|   |   |-- feedModel.js
+|   |   |-- userModel.js
+|   |-- routes/
+|   |   |-- userModel.js
+|   |   |-- routes.js
+|   |-- react-app/
+|   |   |-- node_modules/
+|   |   |-- build/
+|   |   |-- public/
+|   |   |-- src/
+|   |   |   |-- App.css
+|   |   |   |-- App.js
+|   |   |   |-- App.test.js
+|   |   |   |-- index.css
+|   |   |   |-- index.js
+|   |-- server.js
+|   |-- .env
+|   |-- .gitignore
+|   |-- package-lock.json
+|   |-- package.json
+|   |-- README.md
+
+
 # create table
 
 - 회원 테이블

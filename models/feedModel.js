@@ -1,7 +1,6 @@
 const {pool, transaction} = require("./db.js");
 
 
-
 /*
 글 추가
 */

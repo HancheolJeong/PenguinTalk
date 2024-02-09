@@ -14,7 +14,7 @@ exports.insertFriendList = async(user_id, friend_id) =>{
       {
         throw{message: 'db error', status:404};
       }
-      return result;
+      return true;
     }
     catch(error)
     {
@@ -55,6 +55,23 @@ exports.insertFriendList = async(user_id, friend_id) =>{
     } catch (error) {
         console.error('friendModel.deleteFriendList error:', error);
         throw { message: 'Server error', status: 500 };
+    }
+
+    try
+    {
+      const query = `INSERT INTO user (id, passwd, name, birthday, gender)
+      VALUES (?,?,?,?,?)`;
+      const result = await pool(query, [id, passwd, name, birthday, gender]);
+      if(result.affectedRows === 0)
+      {
+        throw{message: 'db error', status:404};
+      }
+      return true;
+    }
+    catch(error)
+    {
+      console.error('userModel.registerUser error:', error);
+      throw{message: "Server error", status:500};
     }
 };
 
