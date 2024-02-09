@@ -57,5 +57,7 @@ router.delete("/feed/comment/del", feedController.deleteComment);
 router.post("/feed/tag", feedController.getTag);
 
 //chat
+router.post("/chat", chatController.getChat);
+router.post("/chat/add",chatController.insertChat);
 
 module.exports = router;

@@ -126,7 +126,7 @@ const {pool, transaction} = require("./db.js");
     {
       const query = `SELECT id, name, birthday, gender, create_dt, login_dt, picture_url FROM user WHERE id = ?;`;
       const result = await pool(query, [id]);
-      return (result.length < 0)? null : result[0];
+      return (result.length < 0)? null : result;
     }
     catch(error)
     {
@@ -142,7 +142,7 @@ const {pool, transaction} = require("./db.js");
     {
       const query = `SELECT name FROM user WHERE id = ?;`;
       const result = await pool(query, [id]);
-      return (result.length < 0)? null : result[0];
+      return (result.length < 0)? null : result;
     }
     catch(error)
     {
@@ -158,7 +158,7 @@ const {pool, transaction} = require("./db.js");
     {
       const query = `SELECT picture_url FROM user WHERE id = ?;`;
       const result = await pool(query, [id]);
-      return (result.length < 0)? null : result[0];
+      return (result.length < 0)? null : result;
     }
     catch(error)
     {

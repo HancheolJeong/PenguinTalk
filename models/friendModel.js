@@ -98,7 +98,7 @@ exports.insertFriendRequest = async(sender_id, receiver_id) =>{
       {
         throw{message: 'db error', status:404};
       }
-      return result;
+      return true;
     }
     catch(error)
     {
@@ -119,7 +119,7 @@ exports.insertFriendRequest = async(sender_id, receiver_id) =>{
       {
         throw{message: 'db error', status:404};
       }
-      return result;
+      return true;
     }
     catch(error)
     {
@@ -182,7 +182,7 @@ exports.insertBlockedFriend = async(user_id, blocked_user_id) =>{
       {
         throw{message: 'db error', status:404};
       }
-      return result;
+      return true;
     }
     catch(error)
     {
@@ -203,7 +203,7 @@ exports.insertBlockedFriend = async(user_id, blocked_user_id) =>{
       {
         throw{message: 'db error', status:404};
       }
-      return result;
+      return true;
     }
     catch(error)
     {

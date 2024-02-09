@@ -14,7 +14,7 @@ const {pool, commentTransaction} = require("./db.js");
       {
         throw{message: 'db error', status:404};
       }
-      return result;
+      return true;
     }
     catch(error)
     {
@@ -36,7 +36,7 @@ const {pool, commentTransaction} = require("./db.js");
         {
             throw{message: 'db error', status:404};
         }
-        return result;
+        return true;
     }
     catch(error)
     {
@@ -57,7 +57,7 @@ const {pool, commentTransaction} = require("./db.js");
         {
             throw{message: 'db error', status:404};
         }
-        return result;
+        return true;
     }
     catch(error)
     {
@@ -158,7 +158,7 @@ exports.getPostWhileLogout = async(page) =>{
       {
         throw{message: 'db error', status:404};
       }
-      return result;
+      return true;
     }
     catch(error)
     {
@@ -180,7 +180,7 @@ exports.getPostWhileLogout = async(page) =>{
       {
         throw{message: 'db error', status:404};
       }
-      return result;
+      return true;
     }
     catch(error)
     {
@@ -202,7 +202,7 @@ exports.getPostWhileLogout = async(page) =>{
       {
         throw{message: 'db error', status:404};
       }
-      return result;
+      return true;
     }
     catch(error)
     {
@@ -250,7 +250,7 @@ exports.getPostWhileLogout = async(page) =>{
       {
         throw{message: 'db error', status:404};
       }
-      return result;
+      return true;
     }
     catch(error)
     {

@@ -15,7 +15,6 @@ exports.Test = async(post_id, user_id, content, taggedUsers) =>{
         ];
 
       const result = await commentTransaction(queries, taggedUsers);
-      console.log(result[0]);
       if(result.affectedRows === 0)
       {
         throw{message: 'db error', status:404};

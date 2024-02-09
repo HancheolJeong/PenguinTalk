@@ -27,6 +27,10 @@ front-end/<br>
 
 back-end/<br>
 |-- node_modules/<br>
+|-- resources/<br>
+|   |-- images/<br>
+|   |-- logs/<br>
+|   |-- xml/<br>
 |-- controllers/<br>
 |   |-- chatController.js<br>
 |   |-- feedController.js<br>
@@ -182,4 +186,7 @@ CREATE TABLE chat_history (
 |/feed/comment/add|post|post_id, user_id, content, users|result|
 |/feed/comment/mod|post|id, content|result|
 |/feed/comment/del|delete|id|result|
-|/feed/tag|post|user_id, page|result|
+|/feed/tag|post|user_id, page|result, items[comment_id, post_id, sender_id, receiver_id, content, create_dt, checking]|
+|------|---|---|---|
+|/chat|post|sender_id, receiver_id, message_content|result, items[id, sender_id, receiver_id, message_content, create_dt]|
+|/chat/add|post|sender_id, receiver_id, page|result|
