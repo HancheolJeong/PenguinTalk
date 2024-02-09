@@ -137,15 +137,15 @@ CREATE TABLE chat_history (
 |/user/get/url|post|id|result, items[picture_url]|
 |/user/get/list|post|id|list, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
 |------|---|---|---|
-|/user/friend|post|user_id|result, items[]|
+|/user/friend|post|user_id|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
 |/user/friend/add|post|user_id, friend_id|result|
 |/user/friend/del|delete|user_id, friend_id|result|
-|/user/request/fm|post|sender_id|result, items[]|
-|/user/request/tm|post|receiver_id|resultm items[]|
-|/user/request/pos|post|user_id|result, items[]|
+|/user/request/fm|post|sender_id|result, items[receiver_id, create_dt]|
+|/user/request/tm|post|receiver_id|resultm items[sender_id, create_dt]|
+|/user/request/pos|post|user_id|result, items[id, name, birthday, gender, picture_url]|
 |/user/request/add|post|sender_id, receiver_id|result|
 |/user/request/del|delete|sender_id, receiver_id|result|
-|/user/block|post|user_id|result, items[]|
-|/user/block/pos|post|user_id|result, items[]|
+|/user/block|post|user_id|result, items[blocked_user_id]|
+|/user/block/pos|post|user_id|result, items[id, name, birthday, gender, picture_url]|
 |/user/block/add|post|user_id, blocked_id|result|
 |/user/block/del|delete|user_id, blocked_id|result|
