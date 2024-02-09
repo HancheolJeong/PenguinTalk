@@ -8,8 +8,18 @@ const chatController = require("../controllers/chatController.js");
 const router = express.Router();
 
 
+
+//user
 router.post("/user/register", userController.registerUser);
 router.post("/user/login", userController.loginUser);
+router.delete("/user", userController.deleteUser);
+router.post("/user/update/pw", userController.updatePassword);
+router.post("/user/update/url", userController.updatePictureUrl);
+router.post("/user/update/info", userController.updateUser);
+router.post("/user/get/info", userController.getUser);
+router.post("/user/get/name", userController.getUserName);
+router.post("/user/get/url", userController.getUserPictureUrl);
+router.post("/user/get/list", userController.getUserList);
 
 
 

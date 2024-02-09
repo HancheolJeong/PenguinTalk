@@ -7,8 +7,8 @@ exports.registerUser = async(req, res) => {
         message: "There is no content."
       });
     }
-    let {id, passwd, name, birthday, gender} = req.body;
-    let encryptedPassword = crypto.pbkdf2Sync(passwd, process.env.SECRET_KEY, 1, 32, 'sha512');
+    let {id, pw, name, birthday, gender} = req.body;
+    let encryptedPassword = crypto.pbkdf2Sync(pw, process.env.SECRET_KEY, 1, 32, 'sha512');
 
     try
     {
@@ -39,8 +39,8 @@ exports.registerUser = async(req, res) => {
         message: "There is no content."
       });
     }
-    let {id, passwd} = req.body;
-    let encryptedPassword = crypto.pbkdf2Sync(passwd, process.env.SECRET_KEY, 1, 32, 'sha512');
+    let {id, pw} = req.body;
+    let encryptedPassword = crypto.pbkdf2Sync(pw, process.env.SECRET_KEY, 1, 32, 'sha512');
 
     try
     {
@@ -64,3 +64,244 @@ exports.registerUser = async(req, res) => {
     }
 
   };
+
+  exports.deleteUser = async(req, res) => {
+    if (!req.body) {
+        res.status(400).send({
+          message: "There is no content."
+        });
+      }
+      let {id} = req.body;
+      try
+      {
+          let is_success = await user.deleteUser(id);
+          if(is_success)
+          {
+              res.json({result:"success"});
+          }
+          else
+          {
+              res.json({result:"fail"});
+          }
+      }
+      catch(err)
+      {
+          console.error('userController.deleteUser error:', err);
+          res.status(err.status || 500).json({
+              result: "fail",
+              message: err.message || "Server error"
+          });
+      }
+  }
+
+  exports.updatePassword = async(req, res) => {
+    if (!req.body) {
+        res.status(400).send({
+          message: "There is no content."
+        });
+      }
+      let {id, pw} = req.body;
+      let encryptedPassword = crypto.pbkdf2Sync(pw, process.env.SECRET_KEY, 1, 32, 'sha512');
+      try
+      {
+          let is_success = await user.updatePassword(encryptedPassword.toString('base64'), id);
+          if(is_success)
+          {
+              res.json({result:"success"});
+          }
+          else
+          {
+              res.json({result:"fail"});
+          }
+      }
+      catch(err)
+      {
+          console.error('userController.updatePassword error:', err);
+          res.status(err.status || 500).json({
+              result: "fail",
+              message: err.message || "Server error"
+          });
+      }
+  }
+
+  
+  exports.updatePictureUrl = async(req, res) => {
+    if (!req.body) {
+        res.status(400).send({
+          message: "There is no content."
+        });
+      }
+      let {id, url} = req.body;
+      try
+      {
+          let is_success = await user.updatePictureUrl(url, id);
+          if(is_success)
+          {
+              res.json({result:"success"});
+          }
+          else
+          {
+              res.json({result:"fail"});
+          }
+      }
+      catch(err)
+      {
+          console.error('userController.updatePictureUrl error:', err);
+          res.status(err.status || 500).json({
+              result: "fail",
+              message: err.message || "Server error"
+          });
+      }
+  }
+
+  exports.updateUser = async(req, res) => {
+    if (!req.body) {
+        res.status(400).send({
+          message: "There is no content."
+        });
+      }
+      let {id, name, birthday, gender} = req.body;
+      try
+      {
+          let is_success = await user.updateUser(name, birthday, gender, id);
+          if(is_success)
+          {
+              res.json({result:"success"});
+          }
+          else
+          {
+              res.json({result:"fail"});
+          }
+      }
+      catch(err)
+      {
+          console.error('userController.updateUser error:', err);
+          res.status(err.status || 500).json({
+              result: "fail",
+              message: err.message || "Server error"
+          });
+      }
+  }
+
+
+  exports.getUser = async(req, res) => {
+    if (!req.body) {
+        res.status(400).send({
+          message: "There is no content."
+        });
+      }
+      let {id} = req.body;
+      try
+      {
+          let rows = await user.getUser(id);
+          if(rows !== null)
+          {
+              res.json({result:"success", items: rows});
+          }
+          else
+          {
+              res.json({result:"fail"});
+          }
+      }
+      catch(err)
+      {
+          console.error('userController.getUser error:', err);
+          res.status(err.status || 500).json({
+              result: "fail",
+              message: err.message || "Server error"
+          });
+      }
+  }
+
+  exports.getUserPictureUrl = async(req, res) => {
+    if (!req.body) {
+        res.status(400).send({
+          message: "There is no content."
+        });
+      }
+      let {id} = req.body;
+      try
+      {
+          let rows = await user.getUserPictureUrl(id);
+          if(rows !== null)
+          {
+              res.json({result:"success", items: rows});
+          }
+          else
+          {
+              res.json({result:"fail"});
+          }
+      }
+      catch(err)
+      {
+          console.error('userController.getUserPictureUrl error:', err);
+          res.status(err.status || 500).json({
+              result: "fail",
+              message: err.message || "Server error"
+          });
+      }
+  }
+
+
+  exports.getUserName = async(req, res) => {
+    if (!req.body) {
+        res.status(400).send({
+          message: "There is no content."
+        });
+      }
+      let {id} = req.body;
+      try
+      {
+          let rows = await user.getUserName(id);
+          if(rows !== null)
+          {
+              res.json({result:"success", items: rows});
+          }
+          else
+          {
+              res.json({result:"fail"});
+          }
+      }
+      catch(err)
+      {
+          console.error('userController.getUserName error:', err);
+          res.status(err.status || 500).json({
+              result: "fail",
+              message: err.message || "Server error"
+          });
+      }
+  }
+
+
+
+  exports.getUserList = async(req, res) => {
+    if (!req.body) {
+        res.status(400).send({
+          message: "There is no content."
+        });
+      }
+      let {id} = req.body;
+      try
+      {
+          let rows = await user.getUserList(id);
+          if(rows !== null)
+          {
+              res.json({result:"success", items: rows});
+          }
+          else
+          {
+              res.json({result:"fail"});
+          }
+      }
+      catch(err)
+      {
+          console.error('userController.getUserList error:', err);
+          res.status(err.status || 500).json({
+              result: "fail",
+              message: err.message || "Server error"
+          });
+      }
+  }
+
+
+  

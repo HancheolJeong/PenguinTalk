@@ -94,3 +94,19 @@ CREATE TABLE chat_history (
     FOREIGN KEY (sender_id) REFERENCES user(id) ON DELETE CASCADE,
     FOREIGN KEY (receiver_id) REFERENCES user(id) ON DELETE CASCADE
 );
+
+
+# routes
+
+|url|method|requset|response|
+|------|---|---|---|
+|/user/register|post|id, pw, name, birthday, gender|result|
+|/user/login|post|id, pw|result|
+|/user|delete|id|result|
+|/user/update/pw|post|id, pw|result|
+|/user/update/url|post|id, url|result|
+|/user/update/info|post|id, name, birthday, gender|result|
+|/user/get/info|post|id|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
+|/user/get/name|post|id|result, items[name]|
+|/user/get/url|post|id|result, items[picture_url]|
+|/user/get/list|post|id|list, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|

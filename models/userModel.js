@@ -28,7 +28,7 @@ const {pool, transaction} = require("./db.js");
       {
         throw{message: 'db error', status:404};
       }
-      return result;
+      return true;
     }
     catch(error)
     {
@@ -46,7 +46,7 @@ const {pool, transaction} = require("./db.js");
       {
         throw{message: 'db error', status:404};
       }
-      return result;
+      return true;
     }
     catch(error)
     {
@@ -64,7 +64,7 @@ const {pool, transaction} = require("./db.js");
       {
         throw{message: 'db error', status:404};
       }
-      return result;
+      return true;
     }
     catch(error)
     {
@@ -83,7 +83,7 @@ const {pool, transaction} = require("./db.js");
       {
         throw{message: 'db error', status:404};
       }
-      return result;
+      return true;
     }
     catch(error)
     {
@@ -119,19 +119,14 @@ const {pool, transaction} = require("./db.js");
       console.error('userModel.loginUser error:', error);
       throw{message: "Server error", status:500};
     }
-
-
-
-
-
   }
 
   exports.getUser = async(id) =>{
     try
     {
-      const query = `SELECT id, name, birthday, gender, create_dt, login_dt, picture_url WHERE id = ?;`;
+      const query = `SELECT id, name, birthday, gender, create_dt, login_dt, picture_url FROM user WHERE id = ?;`;
       const result = await pool(query, [id]);
-      return (result.length < 0)? null : result[0];;
+      return (result.length < 0)? null : result[0];
     }
     catch(error)
     {
@@ -145,9 +140,9 @@ const {pool, transaction} = require("./db.js");
   exports.getUserName = async(id) =>{
     try
     {
-      const query = `SELECT name WHERE id = ?;`;
+      const query = `SELECT name FROM user WHERE id = ?;`;
       const result = await pool(query, [id]);
-      return (result.length < 0)? null : result[0];;
+      return (result.length < 0)? null : result[0];
     }
     catch(error)
     {
@@ -161,13 +156,29 @@ const {pool, transaction} = require("./db.js");
   exports.getUserPictureUrl = async(id) =>{
     try
     {
-      const query = `SELECT picturl_url WHERE id = ?;`;
+      const query = `SELECT picture_url FROM user WHERE id = ?;`;
       const result = await pool(query, [id]);
-      return (result.length < 0)? null : result[0];;
+      return (result.length < 0)? null : result[0];
     }
     catch(error)
     {
       console.error('userModel.getUserPictureUrl error:', error);
+      throw{message: "Server error", status:500};
+    }
+    
+  };
+
+  //차단된 친구를 제외한 모든 사람 출력 차단 가능한 사람들..
+  exports.getUserList = async(id) =>{
+    try
+    {
+      const query = `SELECT id, name, birthday, gender, picture_url FROM user WHERE id != ? AND id NOT IN (SELECT blocked_user_id FROM friend_blocking WHERE user_id = ?);`;
+      const result = await pool(query, [id, id]);
+      return (result.length < 0)? null : result;
+    }
+    catch(error)
+    {
+      console.error('userModel.getUserList error:', error);
       throw{message: "Server error", status:500};
     }
     
