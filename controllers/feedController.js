@@ -1,39 +1,68 @@
 const feed = require('../models/feedModel.js');
 
-exports.insertFriendList = async(req, res) => {
+//글 추가
+exports.insertPost = async(req, res) => {
   if (!req.body) {
-    res.status(400).send({
-      message: "There is no content."
-    });
-  }
-  let {id, pw, name, birthday, gender} = req.body;
-  let encryptedPassword = crypto.pbkdf2Sync(pw, process.env.SECRET_KEY, 1, 32, 'sha512');
-
-  try
-  {
-      let is_success = await user.registerUser(id, encryptedPassword.toString('base64'), name, birthday, gender);
-      if(is_success)
-      {
-          res.json({result:"success"});
-      }
-      else
-      {
-          res.json({result:"fail"});
-      }
-  }
-  catch(err)
-  {
-      console.error('userController.registerUser error:', err);
-      res.status(err.status || 500).json({
-          result: "fail",
-          message: err.message || "Server error"
+      res.status(400).send({
+        message: "There is no content."
       });
-  }
+    }
+    let {id, title, content_url, scope} = req.body;
+    try
+    {
+        let is_success = await feed.insertPost(id, title, content_url, scope);
+        if(is_success)
+        {
+            res.json({result:"success"});
+        }
+        else
+        {
+            res.json({result:"fail"});
+        }
+    }
+    catch(err)
+    {
+        console.error('feedController.insertPost error:', err);
+        res.status(err.status || 500).json({
+            result: "fail",
+            message: err.message || "Server error"
+        });
+    }
+}
 
-};
+//글 수정
+exports.updatePost = async(req, res) => {
+  if (!req.body) {
+      res.status(400).send({
+        message: "There is no content."
+      });
+    }
+    let {id, title, content_url, scope} = req.body;
+    try
+    {
+        let is_success = await feed.updatePost(title, content_url, scope, id);
+        if(is_success)
+        {
+            res.json({result:"success"});
+        }
+        else
+        {
+            res.json({result:"fail"});
+        }
+    }
+    catch(err)
+    {
+        console.error('feedController.updatePost error:', err);
+        res.status(err.status || 500).json({
+            result: "fail",
+            message: err.message || "Server error"
+        });
+    }
+}
 
 
-exports.getUserList = async(req, res) => {
+//글 삭제
+exports.deletePost = async(req, res) => {
   if (!req.body) {
       res.status(400).send({
         message: "There is no content."
@@ -42,7 +71,40 @@ exports.getUserList = async(req, res) => {
     let {id} = req.body;
     try
     {
-        let rows = await user.getUserList(id);
+        let is_success = await feed.deletePost(id);
+        if(is_success)
+        {
+            res.json({result:"success"});
+        }
+        else
+        {
+            res.json({result:"fail"});
+        }
+    }
+    catch(err)
+    {
+        console.error('feedController.deletePost error:', err);
+        res.status(err.status || 500).json({
+            result: "fail",
+            message: err.message || "Server error"
+        });
+    }
+}
+
+
+
+//로그인 상태에서 글 불러오기
+exports.getPostWhileLogin = async(req, res) => {
+  if (!req.body) {
+      res.status(400).send({
+        message: "There is no content."
+      });
+    }
+    let {id, page} = req.body;
+    page = (page - 1) * 10
+    try
+    {
+        let rows = await feed.getPostWhileLogin(id, page);
         if(rows !== null)
         {
             res.json({result:"success", items: rows});
@@ -54,7 +116,7 @@ exports.getUserList = async(req, res) => {
     }
     catch(err)
     {
-        console.error('userController.getUserList error:', err);
+        console.error('feedController.getPostWhileLogin error:', err);
         res.status(err.status || 500).json({
             result: "fail",
             message: err.message || "Server error"
@@ -62,3 +124,191 @@ exports.getUserList = async(req, res) => {
     }
 }
 
+
+
+//로그아웃 상태에서 글 불러오기
+exports.getPostWhileLogout = async(req, res) => {
+  if (!req.body) {
+      res.status(400).send({
+        message: "There is no content."
+      });
+    }
+    let {id, page} = req.body;
+    page = (page - 1) * 10
+    try
+    {
+        let rows = await feed.getPostWhileLogout(page);
+        if(rows !== null)
+        {
+            res.json({result:"success", items: rows});
+        }
+        else
+        {
+            res.json({result:"fail"});
+        }
+    }
+    catch(err)
+    {
+        console.error('feedController.getPostWhileLogout error:', err);
+        res.status(err.status || 500).json({
+            result: "fail",
+            message: err.message || "Server error"
+        });
+    }
+}
+
+
+//댓글, 태그 추가 
+exports.insertCommentAndTags = async(req, res) => {
+  if (!req.body) {
+      res.status(400).send({
+        message: "There is no content."
+      });
+    }
+    let {post_id, user_id, content, users} = req.body;
+    try
+    {
+        let is_success = await feed.insertCommentAndTags(post_id, user_id, content, users);
+        if(is_success)
+        {
+            res.json({result:"success"});
+        }
+        else
+        {
+            res.json({result:"fail"});
+        }
+    }
+    catch(err)
+    {
+        console.error('feedController.insertCommentAndTags error:', err);
+        res.status(err.status || 500).json({
+            result: "fail",
+            message: err.message || "Server error"
+        });
+    }
+}
+
+//댓글 수정
+exports.updateComment = async(req, res) => {
+  if (!req.body) {
+      res.status(400).send({
+        message: "There is no content."
+      });
+    }
+    let {id, content} = req.body;
+    try
+    {
+        let is_success = await feed.updateComment(content, id);
+        if(is_success)
+        {
+            res.json({result:"success"});
+        }
+        else
+        {
+            res.json({result:"fail"});
+        }
+    }
+    catch(err)
+    {
+        console.error('feedController.updateComment error:', err);
+        res.status(err.status || 500).json({
+            result: "fail",
+            message: err.message || "Server error"
+        });
+    }
+}
+
+
+//댓글 삭제
+exports.deleteComment = async(req, res) => {
+  if (!req.body) {
+      res.status(400).send({
+        message: "There is no content."
+      });
+    }
+    let {id} = req.body;
+    try
+    {
+        let is_success = await feed.deleteComment(id);
+        if(is_success)
+        {
+            res.json({result:"success"});
+        }
+        else
+        {
+            res.json({result:"fail"});
+        }
+    }
+    catch(err)
+    {
+        console.error('feedController.deleteComment error:', err);
+        res.status(err.status || 500).json({
+            result: "fail",
+            message: err.message || "Server error"
+        });
+    }
+}
+
+
+//댓글 불러오기
+exports.getComment = async(req, res) => {
+  if (!req.body) {
+      res.status(400).send({
+        message: "There is no content."
+      });
+    }
+    let {post_id, page} = req.body;
+    page = (page - 1) * 10
+    try
+    {
+        let rows = await feed.getComment(post_id, page);
+        if(rows !== null)
+        {
+            res.json({result:"success", items: rows});
+        }
+        else
+        {
+            res.json({result:"fail"});
+        }
+    }
+    catch(err)
+    {
+        console.error('feedController.getComment error:', err);
+        res.status(err.status || 500).json({
+            result: "fail",
+            message: err.message || "Server error"
+        });
+    }
+}
+
+
+//받은 태그 모두 불러오기
+exports.getTag = async(req, res) => {
+  if (!req.body) {
+      res.status(400).send({
+        message: "There is no content."
+      });
+    }
+    let {user_id, page} = req.body;
+    page = (page - 1) * 10
+    try
+    {
+        let rows = await feed.getTag(user_id, page);
+        if(rows !== null)
+        {
+            res.json({result:"success", items: rows});
+        }
+        else
+        {
+            res.json({result:"fail"});
+        }
+    }
+    catch(err)
+    {
+        console.error('feedController.getComment error:', err);
+        res.status(err.status || 500).json({
+            result: "fail",
+            message: err.message || "Server error"
+        });
+    }
+}

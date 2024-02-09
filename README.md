@@ -68,7 +68,7 @@ CREATE TABLE comments (
 CREATE TABLE tags (
     comment_id INT NOT NULL,
     user_id VARCHAR(10) NOT NULL,
-    checking TINYINT NOT NULL DEFAULT 0,
+    checking TINYINT NOT NULL DEFAULT 0, # 0:미확인, 1:확인
     create_dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (comment_id, user_id),
     FOREIGN KEY (comment_id) REFERENCES comment(id) ON DELETE CASCADE,
@@ -149,3 +149,14 @@ CREATE TABLE chat_history (
 |/user/block/pos|post|user_id|result, items[id, name, birthday, gender, picture_url]|
 |/user/block/add|post|user_id, blocked_id|result|
 |/user/block/del|delete|user_id, blocked_id|result|
+|------|---|---|---|
+|/feed/:page|get|page||
+|/feed|post|id, page||
+|/feed/add|post|id, title, content_url, scope||
+|/feed/mod|post|id, title, content_url, scope||
+|/feed/del|delete|id||
+|/feed/comment|post|post_id, page||
+|/feed/comment/add|post|post_id, user_id, content, users||
+|/feed/comment/mod|post|id, content||
+|/feed/comment/del|delete|id||
+|/feed/tag|post|user_id, page||
