@@ -29,39 +29,12 @@ exports.insertFriendList = async(user_id, friend_id) =>{
 친구 삭제
 */
   exports.deleteFriendList = async (user_id, friend_id) => {
-    try {
-        const connection = await pool.getConnection();
-        await connection.beginTransaction();
-
-        try {
-            const query = `DELETE FROM friend_list WHERE 
-                (user_id = ? AND friend_id = ?) OR 
-                (user_id = ? AND friend_id = ?)`;
-            const result = await connection.query(query, [user_id, friend_id, friend_id, user_id]);
-
-            await connection.commit();
-
-            if (result.affectedRows === 0) {
-                throw { message: 'No records deleted', status: 404 };
-            }
-
-            return result;
-        } catch (error) {
-            await connection.rollback();
-            throw error;
-        } finally {
-            connection.release();
-        }
-    } catch (error) {
-        console.error('friendModel.deleteFriendList error:', error);
-        throw { message: 'Server error', status: 500 };
-    }
-
     try
     {
-      const query = `INSERT INTO user (id, passwd, name, birthday, gender)
-      VALUES (?,?,?,?,?)`;
-      const result = await pool(query, [id, passwd, name, birthday, gender]);
+      const query = `DELETE FROM friend_list WHERE 
+      (user_id = ? AND friend_id = ?) OR 
+      (user_id = ? AND friend_id = ?)`;
+      const result = await pool(query, [user_id, friend_id, friend_id, user_id]);
       if(result.affectedRows === 0)
       {
         throw{message: 'db error', status:404};

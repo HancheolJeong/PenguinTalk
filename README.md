@@ -2,36 +2,26 @@
 
 # File Structure
 
-project-root/
-|-- penguintalk/
-|   |-- node_modules/
-|   |-- config/
-|   |   |-- db.config.js
-|   |-- controller/
-|   |   |-- feedControllers.js
-|   |   |-- userControllers.js
-|   |-- models/
-|   |   |-- feedModel.js
-|   |   |-- userModel.js
-|   |-- routes/
-|   |   |-- userModel.js
-|   |   |-- routes.js
-|   |-- react-app/
-|   |   |-- node_modules/
-|   |   |-- build/
-|   |   |-- public/
-|   |   |-- src/
-|   |   |   |-- App.css
-|   |   |   |-- App.js
-|   |   |   |-- App.test.js
-|   |   |   |-- index.css
-|   |   |   |-- index.js
-|   |-- server.js
-|   |-- .env
-|   |-- .gitignore
-|   |-- package-lock.json
-|   |-- package.json
-|   |-- README.md
+front-root/
+|-- node_modules/
+|-- controllers/
+|   |-- chatController.js
+|   |-- feedController.js
+|   |-- friendController.js
+|   |-- userController.js
+|-- models/
+|   |-- chatModel.js
+|   |-- feedModel.js
+|   |-- friendModel.js
+|   |-- userModel.js
+|-- routes/
+|   |-- routes.js
+|-- server.js
+|-- .env
+|-- .gitignore
+|-- package-lock.json
+|-- package.json
+|-- README.md
 
 
 # create table
