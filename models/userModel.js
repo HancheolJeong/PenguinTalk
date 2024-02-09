@@ -1,17 +1,16 @@
-const sql = require("./db.js");
+const {pool, transaction} = require("./db.js");
 
-/*패스워드 보안작업 필요 */
-  exports.registerUser = async(id, passwd, name, birthday, gender, create_dt, login_dt, picture_url) =>{
+  exports.registerUser = async(id, passwd, name, birthday, gender) =>{
     try
     {
-      const query = `INSERT INTO user (id, passwd, name, birthday, gender, create_dt, login_dt, picture_url)
-      VALUES (?,?,?,?,?,?,?,?)`;
-      const result = await pool(query, [id, passwd, name, birthday, gender, create_dt, login_dt, picture_url]);
+      const query = `INSERT INTO user (id, passwd, name, birthday, gender)
+      VALUES (?,?,?,?,?)`;
+      const result = await pool(query, [id, passwd, name, birthday, gender]);
       if(result.affectedRows === 0)
       {
         throw{message: 'db error', status:404};
       }
-      return result;
+      return true;
     }
     catch(error)
     {
@@ -25,6 +24,24 @@ const sql = require("./db.js");
     {
       const query = `UPDATE user SET name = ?, birthday = ?, gender = ? WHERE id = ?`;
       const result = await pool(query, [name, birthday, gender, id]);
+      if(result.affectedRows === 0)
+      {
+        throw{message: 'db error', status:404};
+      }
+      return result;
+    }
+    catch(error)
+    {
+      console.error('userModel.updateUser error:', error);
+      throw{message: "Server error", status:500};
+    }
+  };
+
+  exports.updatePictureUrl = async(picture_url, id) =>{
+    try
+    {
+      const query = `UPDATE user SET picture_url = ? WHERE id = ?`;
+      const result = await pool(query, [picture_url, id]);
       if(result.affectedRows === 0)
       {
         throw{message: 'db error', status:404};
@@ -57,25 +74,6 @@ const sql = require("./db.js");
   };
 
 
-  exports.updatelogin_dt = async(passwd, id) =>{
-    try
-    {
-      const query = `UPDATE user SET login_dt = ? WHERE id = ?`;
-      const result = await pool(query, [login_dt, id]);
-      if(result.affectedRows === 0)
-      {
-        throw{message: 'db error', status:404};
-      }
-      return result;
-    }
-    catch(error)
-    {
-      console.error('userModel.updatelogin_dt error:', error);
-      throw{message: "Server error", status:500};
-    }
-  };
-
-
   exports.deleteUser = async(id) =>{
     try
     {
@@ -94,6 +92,39 @@ const sql = require("./db.js");
     }
   };
 
+  exports.loginUser = async(id, passwd) =>
+  {
+    try
+    {
+      const queries = [
+        {
+          queryString : `SELECT id FROM user WHERE id = ? AND passwd = ?`,
+          params: [id, passwd]
+        },
+        {
+          queryString : `UPDATE user SET login_dt = CURRENT_TIMESTAMP WHERE id = ?`,
+          params: [id]
+        }
+  
+      ];
+      const result = await transaction(queries);
+      if(result[1].affectedRows === 0)
+      {
+        throw{message: 'db error', status:404};
+      }
+      return true;
+    }
+    catch(error)
+    {
+      console.error('userModel.loginUser error:', error);
+      throw{message: "Server error", status:500};
+    }
+
+
+
+
+
+  }
 
   exports.getUser = async(id) =>{
     try

@@ -70,7 +70,7 @@ const pool = require("./db.js");
 /*
 글 불러오기 scope 0 : 전체, 1 : 친구만, 2 : 나만보기 (로그인 상태)
 */
-  exports.getPost = async(user_id, start, end, start, end) =>{
+  exports.getPost = async(user_id, start, end) =>{
     try
     {
       const query = `
@@ -119,7 +119,7 @@ const pool = require("./db.js");
   /*
 글 불러오기 scope 0 : 전체, 1 : 친구만, 2 : 나만보기 (로그아웃 상태)
 */
-exports.getPost = async(user_id, start, end, start, end) =>{
+exports.getPost = async(user_id, start, end) =>{
   try
   {
     const query = `
