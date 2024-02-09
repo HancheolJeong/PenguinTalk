@@ -2,11 +2,11 @@
 
 # File Structure
 
-back-end/
-|-- node_modules/
-|-- controllers/
-|   |-- chatController.js
-|   |-- feedController.js
+back-end/<br>
+|-- node_modules/<br>
+|-- controllers/<br>
+|   |-- chatController.js<br>
+|   |-- feedController.js<br>
 |   |-- friendController.js
 |   |-- userController.js
 |-- models/
