@@ -133,7 +133,7 @@ exports.getPostWhileLogout = async(req, res) => {
         message: "There is no content."
       });
     }
-    let {id, page} = req.body;
+    let page = req.query.page;
     page = (page - 1) * 10
     try
     {

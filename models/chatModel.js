@@ -1,4 +1,4 @@
-const {pool, transaction} = require("./db.js");
+const {pool} = require("./db.js");
 /*
 채팅 추가
 */

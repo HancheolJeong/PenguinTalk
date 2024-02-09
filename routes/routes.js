@@ -43,7 +43,7 @@ router.post("/user/block/add", friendController.insertBlockedFriend);
 router.delete("/user/block/del", friendController.deleteBlockedFriend);
 
 //feed
-router.get("/feed/:page", feedController.getPostWhileLogout);
+router.get("/feed", feedController.getPostWhileLogout);
 router.post("/feed", feedController.getPostWhileLogin);
 router.post("/feed/add", feedController.insertPost);
 router.post("/feed/mod", feedController.updatePost);

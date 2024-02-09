@@ -1,4 +1,4 @@
-const {pool, transaction} = require("./db.js");
+const {pool, commentTransaction} = require("./db.js");
 
 
 /*
@@ -219,7 +219,7 @@ exports.getPostWhileLogout = async(page) =>{
     try
     {
       const query = `
-      SELECT l.id as id, l.post_id as post_id, l.user_id as user_id, l.content as content, l.create_dt as create_dt, COUNT(r.comment_id) as comment_id
+      SELECT l.id as id, l.post_id as post_id, l.user_id as user_id, l.content as content, l.create_dt as create_dt, COUNT(r.comment_id) as tagged_count
       FROM comments as l
       LEFT JOIN tags as r ON l.id = r.comment_id
       WHERE l.post_id = ?

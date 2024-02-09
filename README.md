@@ -1,3 +1,26 @@
+## FRONT-END
+
+# File Structure
+front-end/<br>
+|-- node_modules/<br>
+|-- build/<br>
+|-- public/<br>
+|-- src/<br>
+|   |-- App.css<br>
+|   |-- App.js<br>
+|   |-- App.test.js<br>
+|   |-- http-common.js<br>
+|   |-- index.css<br>
+|   |-- index.js<br>
+|   |-- service.js<br>
+|   |-- app.css<br>
+|-- package-lock.json<br>
+|-- package.json<br>
+|-- README.md<br>
+
+
+
+
 ## BACK-END
 
 # File Structure
@@ -135,7 +158,7 @@ CREATE TABLE chat_history (
 |/user/get/info|post|id|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
 |/user/get/name|post|id|result, items[name]|
 |/user/get/url|post|id|result, items[picture_url]|
-|/user/get/list|post|id|list, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
+|/user/get/list|post|id|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
 |------|---|---|---|
 |/user/friend|post|user_id|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
 |/user/friend/add|post|user_id, friend_id|result|
@@ -150,13 +173,13 @@ CREATE TABLE chat_history (
 |/user/block/add|post|user_id, blocked_id|result|
 |/user/block/del|delete|user_id, blocked_id|result|
 |------|---|---|---|
-|/feed/:page|get|page||
-|/feed|post|id, page||
-|/feed/add|post|id, title, content_url, scope||
-|/feed/mod|post|id, title, content_url, scope||
-|/feed/del|delete|id||
-|/feed/comment|post|post_id, page||
-|/feed/comment/add|post|post_id, user_id, content, users||
-|/feed/comment/mod|post|id, content||
-|/feed/comment/del|delete|id||
-|/feed/tag|post|user_id, page||
+|/feed:page|get|page|result, items[id, user_id, title, content_url, scope, create_dt, name]|
+|/feed|post|id, page|result, items[id, user_id, title, content_url, scope, create_dt, name]|
+|/feed/add|post|id, title, content_url, scope|result|
+|/feed/mod|post|id, title, content_url, scope|result|
+|/feed/del|delete|id|result|
+|/feed/comment|post|post_id, page|result, items[id, post_id, user_id, create_dt, tagged_count]|
+|/feed/comment/add|post|post_id, user_id, content, users|result|
+|/feed/comment/mod|post|id, content|result|
+|/feed/comment/del|delete|id|result|
+|/feed/tag|post|user_id, page|result|
