@@ -2,7 +2,7 @@
 
 # File Structure
 
-front-root/
+back-end/
 |-- node_modules/
 |-- controllers/
 |   |-- chatController.js
@@ -136,3 +136,16 @@ CREATE TABLE chat_history (
 |/user/get/name|post|id|result, items[name]|
 |/user/get/url|post|id|result, items[picture_url]|
 |/user/get/list|post|id|list, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
+|------|---|---|---|
+|/user/friend|post|user_id|result, items[]|
+|/user/friend/add|post|user_id, friend_id|result|
+|/user/friend/del|delete|user_id, friend_id|result|
+|/user/request/fm|post|sender_id|result, items[]|
+|/user/request/tm|post|receiver_id|resultm items[]|
+|/user/request/pos|post|user_id|result, items[]|
+|/user/request/add|post|sender_id, receiver_id|result|
+|/user/request/del|delete|sender_id, receiver_id|result|
+|/user/block|post|user_id|result, items[]|
+|/user/block/pos|post|user_id|result, items[]|
+|/user/block/add|post|user_id, blocked_id|result|
+|/user/block/del|delete|user_id, blocked_id|result|
