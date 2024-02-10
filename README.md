@@ -43,6 +43,8 @@ back-end/<br>
 |   |-- userModel.js<br>
 |-- routes/<br>
 |   |-- routes.js<br>
+|-- middleware/<br>
+|   |-- auth.js<br>
 |-- server.js<br>
 |-- .env<br>
 |-- .gitignore<br>
@@ -151,7 +153,7 @@ CREATE TABLE chat_history (
 
 # routes
 
-|url|method|requset|response|
+|uri|method|requset|response|
 |------|---|---|---|
 |/user/register|post|id, pw, name, birthday, gender|result|
 |/user/login|post|id, pw|result|

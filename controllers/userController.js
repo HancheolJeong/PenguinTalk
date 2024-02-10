@@ -1,5 +1,6 @@
 const user = require('../models/userModel.js');
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 
 exports.registerUser = async(req, res) => {
     if (!req.body) {
@@ -47,7 +48,13 @@ exports.registerUser = async(req, res) => {
         let is_success = await user.loginUser(id, encryptedPassword.toString('base64'));
         if(is_success)
         {
-            res.json({result:"success"});
+
+            const tokenPayload = {
+            userId: id,
+            };
+              const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+            res.json({result:"success", token:token});
         }
         else
         {

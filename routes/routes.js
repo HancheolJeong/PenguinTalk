@@ -4,7 +4,7 @@ const friendController = require("../controllers/friendController.js");
 const userController = require("../controllers/userController.js");
 const chatController = require("../controllers/chatController.js");
 const testController = require("../controllers/testController.js");
-
+const {verify} = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -12,9 +12,19 @@ const router = express.Router();
 //test
 router.post("/test", testController.Test);
 
+
+//feed
+router.get("/feed", feedController.getPostWhileLogout);
+
 //user
 router.post("/user/register", userController.registerUser);
 router.post("/user/login", userController.loginUser);
+
+router.use(verify);
+
+
+
+//user
 router.delete("/user", userController.deleteUser);
 
 router.post("/user/update/pw", userController.updatePassword);
@@ -43,7 +53,6 @@ router.post("/user/block/add", friendController.insertBlockedFriend);
 router.delete("/user/block/del", friendController.deleteBlockedFriend);
 
 //feed
-router.get("/feed", feedController.getPostWhileLogout);
 router.post("/feed", feedController.getPostWhileLogin);
 router.post("/feed/add", feedController.insertPost);
 router.post("/feed/mod", feedController.updatePost);
