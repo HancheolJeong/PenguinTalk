@@ -55,7 +55,7 @@ back-end/<br>
 
 # create table
 
-- 회원 테이블
+- user table
 
 CREATE TABLE user (
     id VARCHAR(10) PRIMARY KEY,
@@ -68,7 +68,7 @@ CREATE TABLE user (
     picture_url VARCHAR(255) NOT NULL DEFAULT ''
 );
 
-- 게시글 테이블
+- post table
 
 CREATE TABLE post (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -80,7 +80,7 @@ CREATE TABLE post (
     FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
-- 댓글 테이블
+- comment table
 
 CREATE TABLE comments (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -92,7 +92,7 @@ CREATE TABLE comments (
     FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
-- 태그 테이블
+- tag table
 
 CREATE TABLE tags (
     comment_id INT NOT NULL,
@@ -104,7 +104,7 @@ CREATE TABLE tags (
     FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
-- 친구목록 테이블
+- friend list table
 
 CREATE TABLE friend_list (
     user_id VARCHAR(10) NOT NULL,
@@ -115,7 +115,7 @@ CREATE TABLE friend_list (
     FOREIGN KEY (friend_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
-- 친구요청 테이블
+- request friend table
 
 CREATE TABLE friend_request (
     sender_id VARCHAR(10) NOT NULL,
@@ -126,7 +126,7 @@ CREATE TABLE friend_request (
     FOREIGN KEY (receiver_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
-- 친구차단 테이블
+- block user table
 
 CREATE TABLE friend_blocking (
     user_id VARCHAR(10) NOT NULL,
@@ -137,7 +137,7 @@ CREATE TABLE friend_blocking (
     FOREIGN KEY (blocked_user_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
-- 채팅기록 테이블
+- chat log table
 
 CREATE TABLE chat_history (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -192,3 +192,7 @@ CREATE TABLE chat_history (
 |------|---|---|---|
 |/chat|post|sender_id, receiver_id, message_content|result, items[id, sender_id, receiver_id, message_content, create_dt]|
 |/chat/add|post|sender_id, receiver_id, page|result|
+
+
+# execute
+![alt text](image.png)

@@ -4,13 +4,15 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const path = require('path');
-const userController = require("./controllers/userController.js");
+const morgan = require('morgan');
 const router = require('./routes/routes')
 var corsOptions = {
   origin: "http://localhost:3000"
 };
 
 app.use(cors(corsOptions));
+
+app.use(morgan('common'));
 
 // parse requests of content-type - application/json
 app.use(express.json());
