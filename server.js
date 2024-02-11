@@ -26,13 +26,14 @@ app.use((req, res, next) => { // 기본경로나 /user말고 다른곳 진입했
   res.status(404).send('Not Found');
 });
 
-// simple route
-// app.get("/", (req, res) => {
-//   res.senfFile(path.join(__dirname, 'react-app/build/index.html'));
-//   console.log(__dirname, 'react-app/build/index.html');
-// });
 
-// app.use(express.static(path.join(__dirname, 'react-app/build')));
+app.use(express.static(path.join(__dirname, 'react-app/build')));
+// simple route
+app.get("/", (req, res) => {
+  res.senfFile(path.join(__dirname, 'react-app/build/index.html'));
+});
+
+
 
 // app.get('/', function(req, res){
 //   res.sendFile(path.join(__dirname, 'react-app/build/index.html'));
