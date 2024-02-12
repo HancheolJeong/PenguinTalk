@@ -12,7 +12,7 @@ class HeaderComponent extends Component {
     render() {
         return (
             <div>
-                return <header>
+                 <header>
                     <div>
                         <div className="top-bar">
                             <a href="/" >
@@ -46,35 +46,6 @@ class HeaderComponent extends Component {
                                 <button>
                                     <img src={process.env.PUBLIC_URL + './writing.png'} alt="writing" style={{ width: 45, height: 45 }} />
                                 </button>
-                            </div>
-                        </div>
-
-                        <div className="body-container">
-                            <div className="profile-section">
-                                <img src="user-profile-image.jpg" alt="User Profile" />
-                                <div className="user-info">
-                                    <div className="user-name">John Doe</div>
-                                    <button className="hamburger-button" type="button">
-                                        &#9776;
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className="posts-section">
-                                {/* Post 1 */}
-                                <div className="post">
-                                    <div className="post-title">Lorem Ipsum</div>
-                                    <div className="post-content">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit....</p>
-                                    </div>
-                                    <div className="comments">
-                                        <div className="comment">Comment 1</div>
-                                        <div className="comment">Comment 2</div>
-                                        {/* Add more comments as needed */}
-                                    </div>
-                                </div>
-
-                                {/* Add more posts as needed */}
                             </div>
                         </div>
                     </div>

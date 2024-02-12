@@ -2,27 +2,51 @@ import axios from 'axios';
 
 const FEED_BASE_URL = "http://localhost:3000/feed";
 
-class EmployeeService {
+class feedService {
 
-    getFeed(id){
-        return axios.get(FEED_BASE_URL + '/' + id);
+    getFeed(page){
+        return axios.get(FEED_BASE_URL + '/' + page);
     }
 
-    createEmployee(employee){
-        return axios.post(FEED_BASE_URL, employee);
+    getFeed(id, page){
+        return axios.post(FEED_BASE_URL + '/' + id, page);
     }
 
-    getEmployeeById(employeeId){
-        return axios.get(FEED_BASE_URL + '/' + employeeId);
+    addFeed(id, title, content_url, scope){
+        return axios.post(FEED_BASE_URL + '/add/' + id, title, content_url, scope);
     }
 
-    updateEmployee(employee, employeeId){
-        return axios.put(FEED_BASE_URL + '/' + employeeId, employee);
+    updateFeed(id, title, content_url, scope){
+        return axios.put(FEED_BASE_URL + '/mod/' + id, title, content_url, scope);
     }
 
-    deleteEmployee(employeeId){
-        return axios.delete(FEED_BASE_URL + '/' + employeeId);
+    deleteFeed(id){
+        return axios.delete(FEED_BASE_URL + '/del/' + id);
     }
+
+    getComment(post_id, page){
+        return axios.post(FEED_BASE_URL + '/comment/' + post_id, page);
+    }
+
+    addComment(post_id, user_id, content, users){
+        return axios.post(FEED_BASE_URL + '/comment/add/' + post_id, user_id, content, users);
+    }
+
+    updateFeed(id, content){
+        return axios.put(FEED_BASE_URL + '/comment/mod/' + id, content);
+    }
+
+    deleteFeed(id){
+        return axios.delete(FEED_BASE_URL + '/comment/del' + id);
+    }
+
+    getTag(user_id, page){
+        return axios.post(FEED_BASE_URL + '/tag/' + user_id, page);
+    }
+
+    
+
+
 }
 
-export default new EmployeeService()
+export default new feedService()

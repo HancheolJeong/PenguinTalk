@@ -174,10 +174,10 @@ CREATE TABLE chat_history (
 |/friend/request/pos|post|user_id|result, items[id, name, birthday, gender, picture_url]|
 |/friend/request/add|post|sender_id, receiver_id|result|
 |/friend/request/del|delete|sender_id, receiver_id|result|
-|/user/block|post|user_id|result, items[blocked_user_id]|
-|/user/block/pos|post|user_id|result, items[id, name, birthday, gender, picture_url]|
-|/user/block/add|post|user_id, blocked_id|result|
-|/user/block/del|delete|user_id, blocked_id|result|
+|/friend/block|post|user_id|result, items[blocked_user_id]|
+|/friend/block/pos|post|user_id|result, items[id, name, birthday, gender, picture_url]|
+|/friend/block/add|post|user_id, blocked_id|result|
+|/friend/block/del|delete|user_id, blocked_id|result|
 |------|---|---|---|
 |/feed:page|get|page|result, items[id, user_id, title, content_url, scope, create_dt, name]|
 |/feed|post|id, page|result, items[id, user_id, title, content_url, scope, create_dt, name]|

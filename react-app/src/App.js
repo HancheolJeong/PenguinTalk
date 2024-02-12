@@ -2,7 +2,8 @@ import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import HeaderComponent from './components/headerComponent';
-import ListEmployeeComponent from './components/feedComponent';
+import FooterComponent from './components/footerComponent';
+import feedComponent from './components/feedComponent';
 
 
 
@@ -14,10 +15,10 @@ function App() {
         <HeaderComponent/>
           <div className='container'>
             <switch>
-              <Route path = "/" exact component = {ListEmployeeComponent}></Route>
+              {/* <Route path = "/feed" exact component = {feedComponent}></Route> */}
             </switch>
           </div>
-
+          <FooterComponent />
       </Router>
     </div>
 

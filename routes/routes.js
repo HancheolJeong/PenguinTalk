@@ -55,10 +55,10 @@ router.post("/friend/request/pos", friendController.getFriendToRequestPossible);
 router.post("/friend/request/add", friendController.insertFriendRequest);
 router.delete("/friend/request/del", friendController.deleteFriendRequest);
 
-router.post("/user/block", friendController.getBlockedFriend);
-router.post("/user/block/pos", friendController.getFriendToBlockPossible);
-router.post("/user/block/add", friendController.insertBlockedFriend);
-router.delete("/user/block/del", friendController.deleteBlockedFriend);
+router.post("/friend/block", friendController.getBlockedFriend);
+router.post("/friend/block/pos", friendController.getFriendToBlockPossible);
+router.post("/friend/block/add", friendController.insertBlockedFriend);
+router.delete("/friend/block/del", friendController.deleteBlockedFriend);
 
 //feed
 router.post("/feed", feedController.getPostWhileLogin);
