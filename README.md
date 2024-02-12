@@ -155,25 +155,25 @@ CREATE TABLE chat_history (
 
 |uri|method|requset|response|
 |------|---|---|---|
-|/user/register|post|id, pw, name, birthday, gender|result|
+|/user/add|post|id, pw, name, birthday, gender|result|
 |/user/login|post|id, pw|result|
-|/user|delete|id|result|
-|/user/update/pw|post|id, pw|result|
-|/user/update/url|post|id, url|result|
-|/user/update/info|post|id, name, birthday, gender|result|
+|/user/del|delete|id|result|
+|/user/mod/pw|patch|id, pw|result|
+|/user/mod/url|patch|id, url|result|
+|/user/mod/info|put|id, name, birthday, gender|result|
 |/user/get/info|post|id|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
 |/user/get/name|post|id|result, items[name]|
 |/user/get/url|post|id|result, items[picture_url]|
 |/user/get/list|post|id|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
 |------|---|---|---|
-|/user/friend|post|user_id|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
-|/user/friend/add|post|user_id, friend_id|result|
-|/user/friend/del|delete|user_id, friend_id|result|
-|/user/request/fm|post|sender_id|result, items[receiver_id, create_dt]|
-|/user/request/tm|post|receiver_id|resultm items[sender_id, create_dt]|
-|/user/request/pos|post|user_id|result, items[id, name, birthday, gender, picture_url]|
-|/user/request/add|post|sender_id, receiver_id|result|
-|/user/request/del|delete|sender_id, receiver_id|result|
+|/friend|post|user_id|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
+|/friend/add|post|user_id, friend_id|result|
+|/friend/del|delete|user_id, friend_id|result|
+|/friend/request/fm|post|sender_id|result, items[receiver_id, create_dt]|
+|/friend/request/tm|post|receiver_id|resultm items[sender_id, create_dt]|
+|/friend/request/pos|post|user_id|result, items[id, name, birthday, gender, picture_url]|
+|/friend/request/add|post|sender_id, receiver_id|result|
+|/friend/request/del|delete|sender_id, receiver_id|result|
 |/user/block|post|user_id|result, items[blocked_user_id]|
 |/user/block/pos|post|user_id|result, items[id, name, birthday, gender, picture_url]|
 |/user/block/add|post|user_id, blocked_id|result|
@@ -182,11 +182,11 @@ CREATE TABLE chat_history (
 |/feed:page|get|page|result, items[id, user_id, title, content_url, scope, create_dt, name]|
 |/feed|post|id, page|result, items[id, user_id, title, content_url, scope, create_dt, name]|
 |/feed/add|post|id, title, content_url, scope|result|
-|/feed/mod|post|id, title, content_url, scope|result|
+|/feed/mod|put|id, title, content_url, scope|result|
 |/feed/del|delete|id|result|
 |/feed/comment|post|post_id, page|result, items[id, post_id, user_id, create_dt, tagged_count]|
 |/feed/comment/add|post|post_id, user_id, content, users|result|
-|/feed/comment/mod|post|id, content|result|
+|/feed/comment/mod|put|id, content|result|
 |/feed/comment/del|delete|id|result|
 |/feed/tag|post|user_id, page|result, items[comment_id, post_id, sender_id, receiver_id, content, create_dt, checking]|
 |------|---|---|---|
