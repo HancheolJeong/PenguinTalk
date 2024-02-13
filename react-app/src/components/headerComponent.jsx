@@ -18,7 +18,7 @@ class HeaderComponent extends Component {
                             <a href="/" >
                                 <div className="logo">
                                     <img className=".profile" src={process.env.PUBLIC_URL + './logo.png'} style={{ width: 50, height: 50, borderRadius: '50%' }} />
-                                    <span>PenguinTalk2</span>
+                                    <span>PenguinTalk</span>
                                 </div>
                             </a>
                             <div className="search-box">

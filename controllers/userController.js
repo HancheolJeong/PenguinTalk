@@ -1,6 +1,7 @@
 const user = require('../models/userModel.js');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const path = require('path');
 
 exports.registerUser = async(req, res) => {
     if (!req.body) {
@@ -204,6 +205,40 @@ exports.registerUser = async(req, res) => {
           if(rows !== null)
           {
               res.json({result:"success", items: rows});
+          }
+          else
+          {
+              res.json({result:"fail"});
+          }
+      }
+      catch(err)
+      {
+          console.error('userController.getUser error:', err);
+          res.status(err.status || 500).json({
+              result: "fail",
+              message: err.message || "Server error"
+          });
+      }
+  }
+
+
+  exports.getPicture = async(req, res) => {
+    if (!req.body) {
+        res.status(400).send({
+          message: "There is no content."
+        });
+      }
+      let {id} = req.body;
+      console.log(id);
+      try
+      {
+          let rows = await user.getUserPictureUrl(id);
+          if(rows !== null)
+          {
+            let picturePath = rows && rows[0] && rows[0].picture_url ? rows[0].picture_url : '/default.png';
+            console.log(rows);
+            let imgPath = path.join(__dirname, '../resources/images/',picturePath);
+            res.sendFile(imgPath);
           }
           else
           {

@@ -6,11 +6,9 @@ const app = express();
 const path = require('path');
 const morgan = require('morgan');
 const router = require('./routes/routes')
-var corsOptions = {
-  origin: "http://localhost:3000"
-};
 
-app.use(cors(corsOptions));
+
+app.use(cors());
 
 app.use(morgan('common'));
 

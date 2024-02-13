@@ -74,7 +74,7 @@ const {pool, commentTransaction} = require("./db.js");
     {
       const query = `
       SELECT l.id as id, l.user_id as user_id, l.title as title, l.content_url as content_url, 
-      l.scope as scope, l.create_dt as create_dt, r.name as name
+      l.scope as scope, l.create_dt as create_dt, r.name as name, IFNULL(c.cnt, 0) as count_comment
       FROM(
         SELECT id, user_id, title, content_url, scope, create_dt 
         FROM (
@@ -99,7 +99,12 @@ const {pool, commentTransaction} = require("./db.js");
           WHERE user_id = ?) as r 
         ON l.user_id = r.friend_id
         ) as l
-		    JOIN user as r
+		    LEFT JOIN (
+          SELECT COUNT(*) AS cnt, post_id 
+          FROM comments 
+          GROUP BY post_id) as c
+        ON l.id = c.post_id
+        JOIN user as r
         ON l.user_id = r.id
         ORDER BY create_dt desc
         LIMIT ?,10
@@ -123,12 +128,15 @@ exports.getPostWhileLogout = async(page) =>{
   {
     const query = `
     SELECT l.id as id, l.user_id as user_id, l.title as title, l.content_url as content_url, 
-    l.scope as scope, l.create_dt as create_dt, r.name as name
+    l.scope as scope, l.create_dt as create_dt, r.name as name, IFNULL(c.cnt, 0) AS count_comment
     FROM post as l
+    LEFT JOIN (SELECT post_id, count(*) AS cnt FROM comments GROUP BY post_id) AS c
+    ON l.id = c.post_id
     JOIN user as r
     ON l.user_id = r.id
     WHERE l.scope = 0
-    LIMIT ?, 10
+    ORDER BY l.create_dt DESC
+    LIMIT 0, 10
       `;
       const result = await pool(query, [ page]);
       return (result.length < 0)? null : result;
@@ -226,6 +234,17 @@ exports.getPostWhileLogout = async(page) =>{
       GROUP BY l.id
       LIMIT ?, 10
       `;
+      console.log(
+        `
+        SELECT l.id as id, l.post_id as post_id, l.user_id as user_id, l.content as content, l.create_dt as create_dt, COUNT(r.comment_id) as tagged_count
+        FROM comments as l
+        LEFT JOIN tags as r ON l.id = r.comment_id
+        WHERE l.post_id = ${post_id}
+        GROUP BY l.id
+        LIMIT ${page}, 10
+        `
+
+      )
         const result = await pool(query, [post_id, page]);
         return (result.length < 0)? null : result;
     }

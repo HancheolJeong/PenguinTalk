@@ -6,6 +6,18 @@ front-end/<br>
 |-- build/<br>
 |-- public/<br>
 |-- src/<br>
+|   |-- components/<br>
+|   |   |-- feedComponent.jsx<br>
+|   |   |-- footerComponent.jsx<br>
+|   |   |-- headerComponent.jsx<br>
+|   |   |-- mailComponent.jsx<br>
+|   |   |-- messageComponent.jsx<br>
+|   |   |-- registerComponent.jsx<br>
+|   |-- services/<br>
+|   |   |-- chatService.js<br>
+|   |   |-- feedService.js<br>
+|   |   |-- friendService.js<br>
+|   |   |-- userService.js<br>
 |   |-- App.css<br>
 |   |-- App.js<br>
 |   |-- App.test.js<br>
@@ -17,6 +29,9 @@ front-end/<br>
 |-- package-lock.json<br>
 |-- package.json<br>
 |-- README.md<br>
+
+# execute
+![alt text](home.png)
 
 
 
@@ -179,8 +194,9 @@ CREATE TABLE chat_history (
 |/friend/block/add|post|user_id, blocked_id|result|
 |/friend/block/del|delete|user_id, blocked_id|result|
 |------|---|---|---|
-|/feed:page|get|page|result, items[id, user_id, title, content_url, scope, create_dt, name]|
-|/feed|post|id, page|result, items[id, user_id, title, content_url, scope, create_dt, name]|
+|/feed:page|get|page|result, items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
+|/feed|post|id, page|result, items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
+|/feed/get/img|post|id|file(blob)|
 |/feed/add|post|id, title, content_url, scope|result|
 |/feed/mod|put|id, title, content_url, scope|result|
 |/feed/del|delete|id|result|

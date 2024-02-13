@@ -21,6 +21,7 @@ router.get("/",(req, res) => {
 
 //test
 router.post("/test", testController.Test);
+router.post("/feed/get/img", userController.getPicture);
 
 
 //feed
@@ -30,7 +31,7 @@ router.get("/feed", feedController.getPostWhileLogout);
 router.post("/user/add", userController.registerUser);
 router.post("/user/login", userController.loginUser);
 
-router.use(verify);
+// router.use(verify);
 
 //user
 router.delete("/user/del", userController.deleteUser);
