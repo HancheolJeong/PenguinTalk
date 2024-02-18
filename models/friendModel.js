@@ -62,7 +62,7 @@ const {pool, transaction} = require("./db.js");
 /*
 친구 불러오기
 */
-  exports.getFriendList = async(user_id) =>{
+  exports.getFriendList = async(user_id, page) =>{
     try
     {
       const query = `
@@ -72,8 +72,10 @@ const {pool, transaction} = require("./db.js");
           SELECT friend_id 
           FROM friend_list 
           WHERE user_id = ?)
+      ORDER BY create_dt DESC
+      LIMIT ?, 10
         `;
-        const result = await pool(query, [user_id]);
+        const result = await pool(query, [user_id, page]);
         return (result.length < 0)? null : result;
     }
     catch(error)
@@ -83,6 +85,32 @@ const {pool, transaction} = require("./db.js");
     }
     
   };
+
+  /*
+친구 불러오기
+*/
+exports.getFriendListAll = async(user_id, page) =>{
+  try
+  {
+    const query = `
+    SELECT id, name, birthday, gender, create_dt, login_dt, picture_url
+    FROM user
+    WHERE id IN(
+        SELECT friend_id 
+        FROM friend_list 
+        WHERE user_id = ?)
+    ORDER BY create_dt DESC
+      `;
+      const result = await pool(query, [user_id, page]);
+      return (result.length < 0)? null : result;
+  }
+  catch(error)
+  {
+      console.error('friendModel.getFriendListAll error:', error);
+      throw{message: "Server error", status:500};
+  }
+  
+};
 
   
 /*
@@ -131,12 +159,19 @@ exports.insertFriendRequest = async(sender_id, receiver_id) =>{
 /*
 친구 요청 목록 (내가 보낸 요청)
 */
-exports.getFriendRequestFromMe = async(sender_id) =>{
+exports.getFriendRequestFromMe = async(sender_id, page) =>{
     try
     {
-      const query = `SELECT receiver_id, create_dt FROM friend_request WHERE sender_id = ?
+      const query = `
+      SELECT id, name, birthday, gender, l.create_dt as create_dt, picture_url  
+      FROM friend_request as l 
+      JOIN user as r 
+      ON l.receiver_id = r.id 
+      WHERE l.sender_id = ?
+      ORDER BY l.create_dt DESC
+      LIMIT ?,10
         `;
-        const result = await pool(query, [sender_id]);
+        const result = await pool(query, [sender_id, page]);
         return (result.length < 0)? null : result;
     }
     catch(error)
@@ -150,12 +185,19 @@ exports.getFriendRequestFromMe = async(sender_id) =>{
 /*
 친구 요청 목록 (내가 받은 요청)
 */
-exports.getFriendRequestToMe = async(receiver_id) =>{
+exports.getFriendRequestToMe = async(receiver_id, page) =>{
     try
     {
-      const query = `SELECT sender_id, create_dt FROM friend_request WHERE receiver_id = ?
+      const query = `
+      SELECT id, name, birthday, gender, l.create_dt as create_dt, picture_url  
+      FROM friend_request as l 
+      JOIN user as r 
+      ON l.sender_id = r.id 
+      WHERE l.receiver_id = ?
+      ORDER BY l.create_dt DESC
+      LIMIT ?, 10
         `;
-        const result = await pool(query, [receiver_id]);
+        const result = await pool(query, [receiver_id, page]);
         return (result.length < 0)? null : result;
     }
     catch(error)
@@ -215,12 +257,19 @@ exports.insertBlockedFriend = async(user_id, blocked_user_id) =>{
 /*
 차단 친구 목록
 */
-exports.getBlockedFriend = async(user_id) =>{
+exports.getBlockedFriend = async(user_id, page) =>{
     try
     {
-      const query = `SELECT blocked_user_id FROM friend_blocking WHERE user_id = ?
+      const query = `
+      SELECT id, name, birthday, gender, l.create_dt as create_dt, picture_url
+      FROM friend_blocking as l 
+      JOIN user as r
+      ON l.blocked_user_id = r.id
+      WHERE l.user_id = ?
+      ORDER BY l.create_dt
+      LIMIT ?, 10
         `;
-        const result = await pool(query, [user_id]);
+        const result = await pool(query, [user_id, page]);
         return (result.length < 0)? null : result;
     }
     catch(error)
@@ -234,18 +283,20 @@ exports.getBlockedFriend = async(user_id) =>{
 /*
 친구 요청이 가능한 사람
 */
-exports.getFriendToRequestPossible = async(id) =>{
+exports.getFriendToRequestPossible = async(id, page) =>{
   try
   {
     const query = `
-    SELECT id, name, birthday, gender, picture_url FROM user WHERE id != ? AND (
+    SELECT id, name, birthday, gender, picture_url, create_dt FROM user WHERE id != ? AND (
       (id NOT IN (SELECT blocked_user_id FROM friend_blocking WHERE user_id = ?))AND
       (id NOT IN (SELECT sender_id FROM friend_request WHERE receiver_id = ?)) AND 
       (id NOT IN (SELECT receiver_id FROM friend_request WHERE sender_id = ?)) AND
       (id NOT IN (SELECT friend_id FROM friend_list WHERE user_id = ?))
       )
+      ORDER BY create_dt DESC
+      LIMIT ?, 10
     `;
-    const result = await pool(query, [id, id, id, id, id]);
+    const result = await pool(query, [id, id, id, id, id, page]);
     return (result.length < 0)? null : result;
   }
   catch(error)

@@ -121,6 +121,61 @@ const {pool, commentTransaction} = require("./db.js");
   };
 
   /*
+글 불러오기 scope 0 : 전체, 1 : 친구만, 2 : 나만보기 (로그인 상태)
+*/
+exports.getSearchedPostWhileLogin = async(user_id, keyword, page) =>{
+  try
+  {
+    const query = `
+    SELECT l.id as id, l.user_id as user_id, l.title as title, l.content_url as content_url, 
+    l.scope as scope, l.create_dt as create_dt, r.name as name, IFNULL(c.cnt, 0) as count_comment
+    FROM(
+      SELECT id, user_id, title, content_url, scope, create_dt 
+      FROM (
+        SELECT * 
+        FROM post 
+        WHERE user_id NOT IN (
+          SELECT blocked_user_id 
+          FROM friend_blocking 
+          WHERE user_id = ?)) as l
+      WHERE scope = 0 OR user_id = ?
+
+      UNION ALL
+
+      SELECT l.id, l.user_id, l.title, l.content_url, l.scope, l.create_dt 
+      FROM (
+        SELECT * 
+        FROM post 
+        WHERE scope = 1) as l 
+      JOIN (
+        SELECT * 
+        FROM friend_list 
+        WHERE user_id = ?) as r 
+      ON l.user_id = r.friend_id
+      ) as l
+      LEFT JOIN (
+        SELECT COUNT(*) AS cnt, post_id 
+        FROM comments 
+        GROUP BY post_id) as c
+      ON l.id = c.post_id
+      JOIN user as r
+      ON l.user_id = r.id
+      WHERE l.title LIKE %?%
+      ORDER BY create_dt desc
+      LIMIT ?,10
+      `;
+      const result = await pool(query, [user_id, user_id, user_id, keyword, page]);
+      return (result.length < 0)? null : result;
+  }
+  catch(error)
+  {
+      console.error('feedModel.getPost error:', error);
+      throw{message: "Server error", status:500};
+  }
+  
+};
+
+  /*
 글 불러오기 scope 0 : 전체, 1 : 친구만, 2 : 나만보기 (로그아웃 상태)
 */
 exports.getPostWhileLogout = async(page) =>{
@@ -136,9 +191,35 @@ exports.getPostWhileLogout = async(page) =>{
     ON l.user_id = r.id
     WHERE l.scope = 0
     ORDER BY l.create_dt DESC
-    LIMIT 0, 10
+    LIMIT ?, 10
       `;
       const result = await pool(query, [ page]);
+      return (result.length < 0)? null : result;
+  }
+  catch(error)
+  {
+      console.error('feedModel.getPost error:', error);
+      throw{message: "Server error", status:500};
+  }
+  
+};
+
+exports.getSearchedPostWhileLogout = async(keyword,page) =>{
+  try
+  {
+    const query = `
+    SELECT l.id as id, l.user_id as user_id, l.title as title, l.content_url as content_url, 
+    l.scope as scope, l.create_dt as create_dt, r.name as name, IFNULL(c.cnt, 0) AS count_comment
+    FROM post as l
+    LEFT JOIN (SELECT post_id, count(*) AS cnt FROM comments GROUP BY post_id) AS c
+    ON l.id = c.post_id
+    JOIN user as r
+    ON l.user_id = r.id
+    WHERE l.scope = 0 AND l.title LIKE %?%
+    ORDER BY l.create_dt DESC
+    LIMIT ?, 10
+      `;
+      const result = await pool(query, [keyword, page]);
       return (result.length < 0)? null : result;
   }
   catch(error)

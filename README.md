@@ -181,15 +181,15 @@ CREATE TABLE chat_history (
 |/user/get/url|post|id|result, items[picture_url]|
 |/user/get/list|post|id|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
 |------|---|---|---|
-|/friend|post|user_id|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
+|/friend|post|user_id, page|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
 |/friend/add|post|user_id, friend_id|result|
 |/friend/del|delete|user_id, friend_id|result|
-|/friend/request/fm|post|sender_id|result, items[receiver_id, create_dt]|
-|/friend/request/tm|post|receiver_id|resultm items[sender_id, create_dt]|
-|/friend/request/pos|post|user_id|result, items[id, name, birthday, gender, picture_url]|
+|/friend/request/fm|post|sender_id, page|result, items[receiver_id, create_dt]|
+|/friend/request/tm|post|receiver_id, page|resultm items[sender_id, create_dt]|
+|/friend/request/pos|post|user_id, page|result, items[id, name, birthday, gender, picture_url]|
 |/friend/request/add|post|sender_id, receiver_id|result|
 |/friend/request/del|delete|sender_id, receiver_id|result|
-|/friend/block|post|user_id|result, items[blocked_user_id]|
+|/friend/block|post|user_id, page|result, items[blocked_user_id]|
 |/friend/block/pos|post|user_id|result, items[id, name, birthday, gender, picture_url]|
 |/friend/block/add|post|user_id, blocked_id|result|
 |/friend/block/del|delete|user_id, blocked_id|result|

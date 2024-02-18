@@ -108,9 +108,10 @@ const {pool, transaction} = require("./db.js");
   
       ];
       const result = await transaction(queries);
-      if(result[1].affectedRows === 0)
+      console.log(result[0]);
+      if(result[0].length === 0)
       {
-        throw{message: 'db error', status:404};
+        return false;
       }
       return true;
     }

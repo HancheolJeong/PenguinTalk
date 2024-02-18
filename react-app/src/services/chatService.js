@@ -8,14 +8,26 @@ class chatService {
         return axios.post(CHAT_BASE_URL + '/' ,{
             sender_id:sender_id, 
             receiver_id:receiver_id, 
-            message_content:message_content});
+            message_content:message_content},
+            {
+                headers: 
+                {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
     }
 
     addChat(sender_id, receiver_id, page){
         return axios.post(CHAT_BASE_URL + '/add', {
             sender_id:sender_id, 
             receiver_id:receiver_id, 
-            page:page});
+            page:page},
+            {
+                headers: 
+                {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
     }
 
 }

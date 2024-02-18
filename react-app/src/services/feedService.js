@@ -6,28 +6,54 @@ class feedService {
 
     getFeed(page) {
         return axios.get(FEED_BASE_URL, {
-            params: { page: page },
-            headers: {
-                'Accept': `*/*`,
-            }
+            params: { page: page }
+
+        });
+    }
+    getSearchedFeed(page,keyword) {
+        return axios.get(FEED_BASE_URL + '/search', {
+            params: { page: page, keyword: keyword }
 
         });
     }
 
-    getFeed2(id, page) {
-        return axios.post(FEED_BASE_URL + '/', {
+    getFeedLoggedIn(id, page) {
+        return axios.post(FEED_BASE_URL + '/', 
+        {
             id: id,
             page: page
+        },
+        {
+            headers: 
+            {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+    }
+    getSearchedFeedLoggedIn(id, page, keyword) {
+        return axios.post(FEED_BASE_URL + '/search', 
+        {
+            id: id,
+            page: page,
+            keyword: keyword,
+        },
+        {
+            headers: 
+            {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
         });
     }
 
     getPicture(id) {
         return axios.post(FEED_BASE_URL + '/get/img', { id: id }, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
             responseType: 'blob'
-
-
         });
     }
+
 
     addFeed(id, title, content_url, scope) {
         return axios.post(FEED_BASE_URL + '/add', {
@@ -38,12 +64,19 @@ class feedService {
         });
     }
 
+
     updateFeed(id, title, content_url, scope) {
         return axios.put(FEED_BASE_URL + '/mod', {
             id: id,
             title: title,
             content_url: content_url,
             scope: scope
+        },
+        {
+            headers: 
+            {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
         });
     }
 
@@ -51,6 +84,12 @@ class feedService {
         return axios.delete(FEED_BASE_URL + '/del',
             {
                 id: id
+            },
+            {
+                headers: 
+                {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
             });
     }
 
@@ -58,6 +97,12 @@ class feedService {
         return axios.post(FEED_BASE_URL + '/comment/', {
             post_id: post_id,
             page: page
+        },
+        {
+            headers: 
+            {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
         });
     }
 
@@ -67,6 +112,12 @@ class feedService {
             user_id: user_id,
             content: content,
             users: users
+        },
+        {
+            headers: 
+            {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
         });
     }
 
@@ -74,19 +125,37 @@ class feedService {
         return axios.put(FEED_BASE_URL + '/comment/mod', {
             id: id,
             content: content
+        },
+        {
+            headers: 
+            {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
         });
     }
 
     deleteFeed(id) {
         return axios.delete(FEED_BASE_URL + '/comment/del', {
             id: id
+        },
+        {
+            headers: 
+            {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
         });
     }
 
     getTag(user_id, page) {
-        return axios.post(FEED_BASE_URL + '/tag' ,{
+        return axios.post(FEED_BASE_URL + '/tag', {
             user_id: user_id,
             page: page
+        },
+        {
+            headers: 
+            {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
         });
     }
 

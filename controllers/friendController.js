@@ -69,10 +69,11 @@ exports.getFriendList = async(req, res) => {
         message: "There is no content."
       });
     }
-    let {user_id} = req.body;
+    let {user_id, page} = req.body;
+    page = (page - 1) * 10
     try
     {
-        let rows = await friend.getFriendList(user_id);
+        let rows = await friend.getFriendList(user_id, page);
         if(rows !== null)
         {
             res.json({result:"success", items: rows});
@@ -91,6 +92,36 @@ exports.getFriendList = async(req, res) => {
         });
     }
 }
+
+//친구 전체 불러오기
+exports.getFriendListAll = async(req, res) => {
+    if (!req.body) {
+        res.status(400).send({
+          message: "There is no content."
+        });
+      }
+      let {user_id} = req.body;
+      try
+      {
+          let rows = await friend.getFriendListAll(user_id);
+          if(rows !== null)
+          {
+              res.json({result:"success", items: rows});
+          }
+          else
+          {
+              res.json({result:"fail"});
+          }
+      }
+      catch(err)
+      {
+          console.error('friendController.getFriendList error:', err);
+          res.status(err.status || 500).json({
+              result: "fail",
+              message: err.message || "Server error"
+          });
+      }
+  }
 
 
 //친구 요청 추가
@@ -161,10 +192,11 @@ exports.getFriendRequestFromMe = async(req, res) => {
         message: "There is no content."
       });
     }
-    let {sender_id} = req.body;
+    let {sender_id, page} = req.body;
+    page = (page - 1) * 10
     try
     {
-        let rows = await friend.getFriendRequestFromMe(sender_id);
+        let rows = await friend.getFriendRequestFromMe(sender_id, page);
         if(rows !== null)
         {
             res.json({result:"success", items: rows});
@@ -191,10 +223,12 @@ exports.getFriendRequestToMe = async(req, res) => {
         message: "There is no content."
       });
     }
-    let {receiver_id} = req.body;
+    let {receiver_id, page} = req.body;
+    page = (page - 1) * 10
+    // console.log(receiver_id, page)
     try
     {
-        let rows = await friend.getFriendRequestToMe(receiver_id);
+        let rows = await friend.getFriendRequestToMe(receiver_id, page);
         if(rows !== null)
         {
             res.json({result:"success", items: rows});
@@ -283,10 +317,11 @@ exports.getBlockedFriend = async(req, res) => {
         message: "There is no content."
       });
     }
-    let {user_id} = req.body;
+    let {user_id, page} = req.body;
+    page = (page - 1) * 10
     try
     {
-        let rows = await friend.getBlockedFriend(user_id);
+        let rows = await friend.getBlockedFriend(user_id, page);
         if(rows !== null)
         {
             res.json({result:"success", items: rows});
@@ -314,10 +349,12 @@ exports.getFriendToRequestPossible = async(req, res) => {
         message: "There is no content."
       });
     }
-    let {user_id} = req.body;
+    let {user_id, page} = req.body;
+    page = (page - 1) * 10
+    console.log(page)
     try
     {
-        let rows = await friend.getFriendToRequestPossible(user_id);
+        let rows = await friend.getFriendToRequestPossible(user_id, page);
         if(rows !== null)
         {
             res.json({result:"success", items: rows});

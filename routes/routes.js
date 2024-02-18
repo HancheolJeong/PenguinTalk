@@ -14,6 +14,8 @@ const router = express.Router();
 
 
 router.use(express.static(path.join(__dirname, '../react-app/build')));
+// app.use('/static', express.static('../resource/'));
+
 router.get("/",(req, res) => {
     res.sendFile(path.join(__dirname, '../react-app/build/index.html'));
     // res.redirect("/feed?page=1");
@@ -21,11 +23,14 @@ router.get("/",(req, res) => {
 
 //test
 router.post("/test", testController.Test);
+router.post("/user/get/img", userController.getPicture);
 router.post("/feed/get/img", userController.getPicture);
-
+router.post("/friend/get/img", userController.getPicture);
+router.post("/feed/search", feedController.getSearchedPostWhileLogin);
 
 //feed
 router.get("/feed", feedController.getPostWhileLogout);
+router.get("/feed/search", feedController.getSearchedPostWhileLogout);
 
 //user
 router.post("/user/add", userController.registerUser);
@@ -47,6 +52,7 @@ router.post("/user/get/list", userController.getUserList);
 
 //friend
 router.post("/friend", friendController.getFriendList);
+router.post("/friend/all", friendController.getFriendListAll);
 router.post("/friend/add", friendController.insertFriendList);
 router.delete("/friend/del", friendController.deleteFriendList);
 
