@@ -28,7 +28,6 @@ function FeedComponent() {
         setIsLoading(true);
         try {
             const commentsRes = await feedService.getComment(itemId, page); 
-            console.log(commentsRes);
             setComments(commentsRes.data.items);
             setCommentsPage(page);
         } catch (error) {
@@ -61,9 +60,18 @@ function FeedComponent() {
     };
 
     const submitComment = async (itemId) => {
-        console.log("Submitting comment:", newComment);
+        console.log(`id는 ${itemId}`);
+        let comment = inputComment;
+        tags.forEach(tag => {
+            const tagRegex = new RegExp(`@\\[${tag.display}\\]\\(${tag.id}\\)`, 'g');
+            comment = comment.replace(tagRegex, `@${tag.display} `);
+        });
+        const idArray = tags.map(tag => tag.id);
+        console.log("Submitting comment:", comment);
+        console.log("Submitting comment:", idArray);
 
         setNewComment(''); 
+        setTags([]);
     };
     const fetchFeed = async () => {
         setIsLoading(true);
@@ -153,8 +161,7 @@ function FeedComponent() {
             </nav>
         );
     };
-
-
+    
     return (
         <div className="container">
             <div className="row">
@@ -188,28 +195,7 @@ function FeedComponent() {
                                                     setInputComment(newValue);
                                                     setTags(mentions);
                                                 }}
-                                                style={{
-                                                    control: {
-                                                        backgroundColor: '#fff',
-                                                        fontSize: '14px',
-                                                        fontWeight: 'normal',
-                                                    },
-                                                    suggestions: {
-                                                        border: '1px solid #ccc',
-                                                        borderRadius: '4px',
-                                                        boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-                                                        maxHeight: '150px',
-                                                        minWidth: '400px',
-                                                        overflowY: 'auto',
-                                                        padding: '5px',
-                                                        backgroundColor: 'white',
-                                                        color: 'black',
-                                                    },
-                                                    suggestion: {
-                                                        backgroundColor: '#f0f0f0',
-                                                        cursor: 'pointer',
-                                                    }
-                                                }}
+                                                className="mentionsInput"
                                             >
                                                 <Mention
                                                     trigger="@"
@@ -224,10 +210,10 @@ function FeedComponent() {
                                             </MentionsInput>
                                         </div>
                                         <div className="modal-footer">
-                                            <button className="btn btn-primary" disabled={commentsPage === 1} onClick={handlePrevCommentsPage}>Previous</button>
-                                            <button className="btn btn-primary" onClick={handleNextCommentsPage}>Next</button>
-                                            <button className="btn btn-primary" onClick={() => submitComment(selectedItem.id)}>Submit Comment</button>
-                                            <button className="btn btn-secondary" onClick={closePopup}>Close</button>
+                                            <button className="btn btn-primary" disabled={commentsPage === 1} onClick={handlePrevCommentsPage}>이전 페이지</button>
+                                            <button className="btn btn-primary" onClick={handleNextCommentsPage}>다음 페이지</button>
+                                            <button className="btn btn-primary" onClick={() => submitComment(selectedItem.id)}>전송</button>
+                                            <button className="btn btn-secondary" onClick={closePopup}>닫기</button>
                                         </div>
                                     </div>
                                 </div>

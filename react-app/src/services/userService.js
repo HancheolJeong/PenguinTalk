@@ -23,14 +23,17 @@ class userService {
 
     deleteUser(id) {
         return axios.delete(USER_BASE_URL + '/del', {
-            id: id
-        },
-        {
-            headers: 
-            {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            data: {
+
+                id: id
             }
-        });
+        },
+            {
+                headers:
+                {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
     }
 
     updateUserPassword(id, pw) {
@@ -38,12 +41,12 @@ class userService {
             id: id,
             pw: pw
         },
-        {
-            headers: 
             {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
+                headers:
+                {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
     }
 
     updateUserPictureURL(id, url) {
@@ -51,12 +54,12 @@ class userService {
             id: id,
             url: url
         },
-        {
-            headers: 
             {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
+                headers:
+                {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
     }
 
     updateUser(id, name, birthday, gender) {
@@ -66,60 +69,60 @@ class userService {
             birthday: birthday,
             gender: gender
         },
-        {
-            headers: 
             {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
+                headers:
+                {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
     }
 
     getUserInformation(id) {
         return axios.post(USER_BASE_URL + '/get/info', {
             id: id
         },
-        {
-            headers: 
             {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
+                headers:
+                {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
     }
 
     getUserName(id) {
         return axios.post(USER_BASE_URL + '/get/name', {
-            id:id
+            id: id
         },
-        {
-            headers: 
             {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
+                headers:
+                {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
     }
 
     getUserPictureURL(id) {
-        return axios.post(USER_BASE_URL + '/get/url',{
-            id:id
+        return axios.post(USER_BASE_URL + '/get/url', {
+            id: id
         },
-        {
-            headers: 
             {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
+                headers:
+                {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
     }
 
     getUserList(id) {
-        return axios.post(USER_BASE_URL + '/get/list',{
-            id:id
+        return axios.post(USER_BASE_URL + '/get/list', {
+            id: id
         },
-        {
-            headers: 
             {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
+                headers:
+                {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
     }
 
     getPicture(id) {

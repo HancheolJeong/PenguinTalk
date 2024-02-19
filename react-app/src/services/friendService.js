@@ -9,24 +9,24 @@ class friendService {
             user_id: user_id,
             page: page
         },
-        {
-            headers: 
             {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
+                headers:
+                {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
     }
 
     getFriendAll(user_id) {
         return axios.post(FRIEND_BASE_URL + '/all', {
             user_id: user_id,
         },
-        {
-            headers: 
             {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
+                headers:
+                {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
     }
 
     addFriend(user_id, friend_id) {
@@ -34,25 +34,28 @@ class friendService {
             user_id: user_id,
             friend_id: friend_id
         },
-        {
-            headers: 
             {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
+                headers:
+                {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
     }
 
     deleteFriend(user_id, friend_id) {
         return axios.delete(FRIEND_BASE_URL + '/del', {
-            user_id: user_id,
-            friend_id: friend_id
-        },
-        {
-            headers: 
-            {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            data: {
+                user_id: user_id,
+                friend_id: friend_id
+
             }
-        });
+        },
+            {
+                headers:
+                {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
     }
 
     getRequestFromMe(sender_id, page) {
@@ -60,12 +63,12 @@ class friendService {
             sender_id: sender_id,
             page: page
         },
-        {
-            headers: 
             {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
+                headers:
+                {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
     }
 
     getRequestToMe(receiver_id, page) {
@@ -73,12 +76,12 @@ class friendService {
             receiver_id: receiver_id,
             page: page
         },
-        {
-            headers: 
             {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
+                headers:
+                {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
     }
 
     getRequestPossible(user_id, page) {
@@ -86,12 +89,12 @@ class friendService {
             user_id: user_id,
             page: page
         },
-        {
-            headers: 
             {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
+                headers:
+                {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
     }
 
     addRequest(sender_id, receiver_id) {
@@ -99,25 +102,29 @@ class friendService {
             sender_id: sender_id,
             receiver_id: receiver_id
         },
-        {
-            headers: 
             {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
+                headers:
+                {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
     }
 
     deleteRequest(sender_id, receiver_id) {
+        console.log(sender_id, receiver_id);
         return axios.delete(FRIEND_BASE_URL + '/request/del', {
-            sender_id: sender_id,
-            receiver_id: receiver_id
-        },
-        {
-            headers: 
-            {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            data: {
+
+                sender_id: sender_id,
+                receiver_id: receiver_id
             }
-        });
+        },
+            {
+                headers:
+                {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
     }
 
     getBlock(user_id, page) {
@@ -125,24 +132,24 @@ class friendService {
             user_id: user_id,
             page: page
         },
-        {
-            headers: 
             {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
+                headers:
+                {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
     }
 
     getBlockPossible(user_id) {
         return axios.post(FRIEND_BASE_URL + '/block/pos', {
             user_id: user_id
         },
-        {
-            headers: 
             {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
+                headers:
+                {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
     }
 
     addBlock(user_id, blocked_id) {
@@ -150,25 +157,28 @@ class friendService {
             user_id: user_id,
             blocked_id: blocked_id
         },
-        {
-            headers: 
             {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
+                headers:
+                {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
     }
 
     deleteBlock(user_id, blocked_id) {
         return axios.delete(FRIEND_BASE_URL + '/block/del', {
-            user_id: user_id,
-            blocked_id: blocked_id
-        },
-        {
-            headers: 
-            {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            data: {
+
+                user_id: user_id,
+                blocked_id: blocked_id
             }
-        });
+        },
+            {
+                headers:
+                {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
     }
 
     getPicture(id) {

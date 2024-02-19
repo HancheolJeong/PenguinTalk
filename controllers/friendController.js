@@ -225,7 +225,6 @@ exports.getFriendRequestToMe = async(req, res) => {
     }
     let {receiver_id, page} = req.body;
     page = (page - 1) * 10
-    // console.log(receiver_id, page)
     try
     {
         let rows = await friend.getFriendRequestToMe(receiver_id, page);
@@ -351,7 +350,6 @@ exports.getFriendToRequestPossible = async(req, res) => {
     }
     let {user_id, page} = req.body;
     page = (page - 1) * 10
-    console.log(page)
     try
     {
         let rows = await friend.getFriendToRequestPossible(user_id, page);

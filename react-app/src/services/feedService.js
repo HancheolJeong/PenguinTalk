@@ -83,7 +83,10 @@ class feedService {
     deleteFeed(id) {
         return axios.delete(FEED_BASE_URL + '/del',
             {
-                id: id
+                data : {
+
+                    id: id
+                }
             },
             {
                 headers: 
@@ -106,12 +109,13 @@ class feedService {
         });
     }
 
-    addComment(post_id, user_id, content, users) {
+    addComment(post_id, user_id, content, users, tags) {
         return axios.post(FEED_BASE_URL + '/comment/add', {
             post_id: post_id,
             user_id: user_id,
             content: content,
-            users: users
+            users: users,
+            tags: tags
         },
         {
             headers: 
@@ -136,7 +140,10 @@ class feedService {
 
     deleteFeed(id) {
         return axios.delete(FEED_BASE_URL + '/comment/del', {
-            id: id
+            data: {
+
+                id: id
+            }
         },
         {
             headers: 

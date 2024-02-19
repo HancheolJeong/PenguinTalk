@@ -229,14 +229,12 @@ exports.registerUser = async(req, res) => {
         });
       }
       let {id} = req.body;
-      console.log(id);
       try
       {
           let rows = await user.getUserPictureUrl(id);
           if(rows !== null)
           {
             let picturePath = rows && rows[0] && rows[0].picture_url ? rows[0].picture_url : '/default.png';
-            console.log(rows);
             let imgPath = path.join(__dirname, '../resources/images/',picturePath);
             res.sendFile(imgPath);
           }

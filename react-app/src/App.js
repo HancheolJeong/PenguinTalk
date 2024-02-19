@@ -16,10 +16,9 @@ import WritingComponent from './components/writingComponent';
 function App() {
 
   return (
-    <div className='app-container'>
       <Router>
         <HeaderComponent />
-        <div className='content-wrap'>
+        <div id = "wrapper">
           <Routes>
             <Route path="/" element={<FeedComponent />} /> 
             <Route path="/signup" element={<SignUpComponent />} />
@@ -29,10 +28,9 @@ function App() {
             <Route path="/message" element={<MessageComponent />} />
             <Route path="/writing" element={<WritingComponent />} />
           </Routes>
-        </div>
+          </div>
         <FooterComponent />
       </Router>
-    </div>
 
   );
 }

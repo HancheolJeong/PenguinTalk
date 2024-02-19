@@ -369,7 +369,6 @@ exports.getComment = async(req, res) => {
     }
     let {post_id, page} = req.body;
     page = (page - 1) * 10
-    console.log(post_id + "!!!!!")
     try
     {
         let rows = await feed.getComment(post_id, page);

@@ -22,59 +22,78 @@ exports.pool = (queryString, params) => {
 }
 
 
-exports.transaction = (queries) => {
-  return new Promise((resolve, reject) => {
-    connection.getConnection((err, connection) => {
-      if (err) {
-        reject(err);
-        return;
-      }
+// exports.transaction = (queries) => {
+//   return new Promise((resolve, reject) => {
+//     connection.getConnection((err, connection) => {
+//       if (err) {
+//         reject(err);
+//         return;
+//       }
 
-      connection.beginTransaction((beginErr) => {
-        if (beginErr) {
-          connection.release();
-          reject(beginErr);
-          return;
-        }
+//       connection.beginTransaction((beginErr) => {
+//         if (beginErr) {
+//           connection.release();
+//           reject(beginErr);
+//           return;
+//         }
 
-        const resultsArray = [];
+//         const resultsArray = [];
 
-        const executeQuery = (queryIndex) => {
-          if (queryIndex === queries.length) { //마지막 재귀 함수
-            connection.commit((commitErr) => {
-              if (commitErr) {
-                connection.rollback(() => {
-                  connection.release();
-                  reject(commitErr);
-                });
-              } else {
-                connection.release();
-                resolve(resultsArray);
-              }
-            });
-          } else {
-            const { queryString, params } = queries[queryIndex];
-            connection.query(queryString, params, (queryErr, rows) => {
-              if (queryErr) {
-                connection.rollback(() => {
-                  connection.release();
-                  reject(queryErr);
-                });
-              } else {
-                resultsArray.push(rows);
-                executeQuery(queryIndex + 1);
-              }
-            });
-          }
-        };
+//         const executeQuery = (queryIndex) => {
+//           if (queryIndex === queries.length) { //마지막 재귀 함수
+//             connection.commit((commitErr) => {
+//               if (commitErr) {
+//                 connection.rollback(() => {
+//                   connection.release();
+//                   reject(commitErr);
+//                 });
+//               } else {
+//                 connection.release();
+//                 resolve(resultsArray);
+//               }
+//             });
+//           } else {
+//             const { queryString, params } = queries[queryIndex];
+//             connection.query(queryString, params, (queryErr, rows) => {
+//               if (queryErr) {
+//                 connection.rollback(() => {
+//                   connection.release();
+//                   reject(queryErr);
+//                 });
+//               } else {
+//                 resultsArray.push(rows);
+//                 executeQuery(queryIndex + 1);
+//               }
+//             });
+//           }
+//         };
 
-        executeQuery(0);
-      });
-    });
-  });
+//         executeQuery(0);
+//       });
+//     });
+//   });
+// };
+
+exports.transaction = async (queries) => {
+  const connection = await pool.getConnection();
+  try {
+    await connection.beginTransaction();
+
+    const resultsArray = [];
+    for (const { queryString, params } of queries) {
+      const [rows] = await connection.query(queryString, params);
+      resultsArray.push(rows);
+    }
+
+    await connection.commit();
+    return resultsArray;
+  } catch (error) {
+    await connection.rollback();
+    throw error; // Rethrow the error after rollback
+  } finally {
+    connection.release();
+  }
 };
-
-
 
 
 

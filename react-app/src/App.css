@@ -1,9 +1,23 @@
-body {
+html, body {
     margin: 0;
+    height: 100%;
     font-family: 'Arial', sans-serif;
   }
   
-  
+
+
+  #wrapper{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  footer{
+    height: 70px;
+    position : relative;
+  }
+
 .signin-background{
   min-height: 100vh; /* Full viewport height */
   background: url('../public/background5.png') no-repeat center center / cover, rgba(255, 255, 255, 0.5);
@@ -11,3 +25,25 @@ body {
 }
 
 
+.mentionsInput {
+  background-color: #fff;
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.mentionsSuggestions {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  max-height: 150px;
+  min-width: 400px;
+  overflow-y: auto;
+  padding: 5px;
+  background-color: white;
+  color: black;
+}
+
+.mentionSuggestion {
+  background-color: #f0f0f0;
+  cursor: pointer;
+}

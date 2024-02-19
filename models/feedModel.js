@@ -315,17 +315,6 @@ exports.getSearchedPostWhileLogout = async(keyword,page) =>{
       GROUP BY l.id
       LIMIT ?, 10
       `;
-      console.log(
-        `
-        SELECT l.id as id, l.post_id as post_id, l.user_id as user_id, l.content as content, l.create_dt as create_dt, COUNT(r.comment_id) as tagged_count
-        FROM comments as l
-        LEFT JOIN tags as r ON l.id = r.comment_id
-        WHERE l.post_id = ${post_id}
-        GROUP BY l.id
-        LIMIT ${page}, 10
-        `
-
-      )
         const result = await pool(query, [post_id, page]);
         return (result.length < 0)? null : result;
     }
