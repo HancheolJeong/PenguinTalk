@@ -1,4 +1,4 @@
-const {pool} = require("./db.js");
+const { executeQuery } = require("./db.js");
 /*
 채팅 추가
 */
@@ -7,7 +7,7 @@ const {pool} = require("./db.js");
     {
       const query = `INSERT INTO chat_history (sender_id, receiver_id, message_content)
       VALUES (?,?,?)`;
-      const result = await pool(query, [sender_id, receiver_id, message_content]);
+      const result = await executeQuery(query, [sender_id, receiver_id, message_content]);
       if(result.affectedRows === 0)
       {
         throw{message: 'db error', status:404};
@@ -34,7 +34,7 @@ const {pool} = require("./db.js");
       ORDER BY create_dt DESC
       LIMIT ?, 10
         `;
-        const result = await pool(query, [sender_id, receiver_id, receiver_id, sender_id, page]);
+        const result = await executeQuery(query, [sender_id, receiver_id, receiver_id, sender_id, page]);
         return (result.length < 0)? null : result;
     }
     catch(error)

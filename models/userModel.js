@@ -1,11 +1,11 @@
-const {pool, transaction} = require("./db.js");
+const { pool, executeQuery } = require("./db.js");
 
   exports.registerUser = async(id, passwd, name, birthday, gender) =>{
     try
     {
       const query = `INSERT INTO user (id, passwd, name, birthday, gender)
       VALUES (?,?,?,?,?)`;
-      const result = await pool(query, [id, passwd, name, birthday, gender]);
+      const result = await executeQuery(query, [id, passwd, name, birthday, gender]);
       if(result.affectedRows === 0)
       {
         throw{message: 'db error', status:404};
@@ -23,7 +23,7 @@ const {pool, transaction} = require("./db.js");
     try
     {
       const query = `UPDATE user SET name = ?, birthday = ?, gender = ? WHERE id = ?`;
-      const result = await pool(query, [name, birthday, gender, id]);
+      const result = await executeQuery(query, [name, birthday, gender, id]);
       if(result.affectedRows === 0)
       {
         throw{message: 'db error', status:404};
@@ -41,7 +41,7 @@ const {pool, transaction} = require("./db.js");
     try
     {
       const query = `UPDATE user SET picture_url = ? WHERE id = ?`;
-      const result = await pool(query, [picture_url, id]);
+      const result = await executeQuery(query, [picture_url, id]);
       if(result.affectedRows === 0)
       {
         throw{message: 'db error', status:404};
@@ -59,7 +59,7 @@ const {pool, transaction} = require("./db.js");
     try
     {
       const query = `UPDATE user SET passwd = ? WHERE id = ?`;
-      const result = await pool(query, [passwd, id]);
+      const result = await executeQuery(query, [passwd, id]);
       if(result.affectedRows === 0)
       {
         throw{message: 'db error', status:404};
@@ -78,7 +78,7 @@ const {pool, transaction} = require("./db.js");
     try
     {
       const query = `DELETE FROM user WHERE id = ?`;
-      const result = await pool(query, [id]);
+      const result = await executeQuery(query, [id]);
       if(result.affectedRows === 0)
       {
         throw{message: 'db error', status:404};
@@ -94,39 +94,38 @@ const {pool, transaction} = require("./db.js");
 
   exports.loginUser = async(id, passwd) =>
   {
-    try
-    {
-      const queries = [
-        {
-          queryString : `SELECT id FROM user WHERE id = ? AND passwd = ?`,
-          params: [id, passwd]
-        },
-        {
-          queryString : `UPDATE user SET login_dt = CURRENT_TIMESTAMP WHERE id = ?`,
-          params: [id]
-        }
+    const connection = await pool.getConnection();
+    connection.beginTransaction();
+    const results = [];
+    try{
+      await connection.beginTransaction();
+      let query = `SELECT id FROM user WHERE id = ? AND passwd = ?`;
+      let [res] = await connection.execute(query, [id, passwd]);
+      results.push(res);
   
-      ];
-      const result = await transaction(queries);
-      console.log(result[0]);
-      if(result[0].length === 0)
-      {
-        return false;
-      }
-      return true;
+      query = `UPDATE user SET login_dt = CURRENT_TIMESTAMP WHERE id = ?`;
+      [res] = await connection.execute(query, [id]);
+      results.push(res);
+
+      await connection.commit();
     }
-    catch(error)
+    catch (error)
     {
-      console.error('userModel.loginUser error:', error);
-      throw{message: "Server error", status:500};
+      console.error('error occured ', error);
+      await connection.rollback();
+      return false;
+    }finally{
+      connection.release();
     }
+    return true;
+
   }
 
   exports.getUser = async(id) =>{
     try
     {
       const query = `SELECT id, name, birthday, gender, create_dt, login_dt, picture_url FROM user WHERE id = ?;`;
-      const result = await pool(query, [id]);
+      const result = await executeQuery(query, [id]);
       return (result.length < 0)? null : result;
     }
     catch(error)
@@ -142,7 +141,7 @@ const {pool, transaction} = require("./db.js");
     try
     {
       const query = `SELECT name FROM user WHERE id = ?;`;
-      const result = await pool(query, [id]);
+      const result = await executeQuery(query, [id]);
       return (result.length < 0)? null : result;
     }
     catch(error)
@@ -158,7 +157,7 @@ const {pool, transaction} = require("./db.js");
     try
     {
       const query = `SELECT picture_url FROM user WHERE id = ?;`;
-      const result = await pool(query, [id]);
+      const result = await executeQuery(query, [id]);
       return (result.length < 0)? null : result;
     }
     catch(error)
@@ -174,7 +173,7 @@ const {pool, transaction} = require("./db.js");
     try
     {
       const query = `SELECT id, name, birthday, gender, picture_url FROM user WHERE id != ? AND id NOT IN (SELECT blocked_user_id FROM friend_blocking WHERE user_id = ?);`;
-      const result = await pool(query, [id, id]);
+      const result = await executeQuery(query, [id, id]);
       return (result.length < 0)? null : result;
     }
     catch(error)

@@ -1,41 +1,42 @@
-const { pool, transaction } = require("./db.js");
-
+const { pool, executeQuery } = require("./db.js");
 
 /**
  * 친구 추가하는 함수 
  * @param {string} user_id : 사용자 ID
  * @param {string} friend_id : 사용자의 친구 ID
  * @returns {boolean} 처리 결과
- * 트랜 잭션 처리, 친구 목록은 사용자 ID와 친구 ID 쌍으로 저장하며
+ * 트랜잭션 처리, 친구 목록은 사용자 ID와 친구 ID 쌍으로 저장하며
  * 친구 요청 테이블 레코드를 동시에 삭제 함
  */
 exports.insertFriendList = async (user_id, friend_id) => {
-  try {
-    const queries = [
-      {
-        queryString: `INSERT INTO friend_list (user_id, friend_id) VALUES (?,?)`,
-        params: [user_id, friend_id]
-      },
-      {
-        queryString: `INSERT INTO friend_list (user_id, friend_id) VALUES (?,?)`,
-        params: [friend_id, user_id]
-      },
-      {
-        queryString: `DELETE FROM friend_request WHERE sender_id = ? AND receiver_id = ?`,
-        params: [friend_id, user_id]
-      },
+  const connection = await pool.getConnection();
+  connection.beginTransaction();
+  const results = [];
+  try{
+    await connection.beginTransaction();
+    let query = `INSERT INTO friend_list (user_id, friend_id) VALUES (?,?)`;
+    let [res] = await connection.execute(query, [user_id, friend_id]);
+    results.push(res);
 
-    ];
-    const result = await transaction(queries);
-    if (result[0].affectedRows === 0 || result[1].affectedRows === 0) {
-      return false;
-    }
-    return true;
+    query = `INSERT INTO friend_list (user_id, friend_id) VALUES (?,?)`;
+    [res] = await connection.execute(query, [friend_id, user_id]);
+    results.push(res);
+
+    query = `DELETE FROM friend_request WHERE sender_id = ? AND receiver_id = ?`;
+    [res] = await connection.execute(query, [friend_id, user_id]);
+    results.push(res);
+
+    await connection.commit();
   }
-  catch (error) {
-    console.error('friendModel.insertFriendList error:', error);
-    throw { message: "Server error", status: 500 };
+  catch (error)
+  {
+    console.error('error occured ', error);
+    await connection.rollback();
+    return false;
+  }finally{
+    connection.release();
   }
+  return true;
 };
 
 
@@ -50,7 +51,7 @@ exports.deleteFriendList = async (user_id, friend_id) => {
     const query = `DELETE FROM friend_list WHERE 
       (user_id = ? AND friend_id = ?) OR 
       (user_id = ? AND friend_id = ?)`;
-    const result = await pool(query, [user_id, friend_id, friend_id, user_id]);
+    const result = await executeQuery(query, [user_id, friend_id, friend_id, user_id]);
     if (result.affectedRows === 0) {
       return false;
     }
@@ -81,7 +82,7 @@ exports.getFriendList = async (user_id, page) => {
       ORDER BY create_dt DESC
       LIMIT ?, 10
         `;
-    const result = await pool(query, [user_id, page]);
+    const result = await executeQuery(query, [user_id, page]);
     return (result.length < 0) ? null : result;
   }
   catch (error) {
@@ -107,7 +108,7 @@ exports.getFriendListAll = async (user_id) => {
         WHERE user_id = ?)
     ORDER BY create_dt DESC
       `;
-    const result = await pool(query, [user_id]);
+    const result = await executeQuery(query, [user_id]);
     return (result.length < 0) ? null : result;
   }
   catch (error) {
@@ -127,7 +128,7 @@ exports.insertFriendRequest = async (sender_id, receiver_id) => {
   try {
     const query = `INSERT INTO friend_request (sender_id, receiver_id)
       VALUES (?,?)`;
-    const result = await pool(query, [sender_id, receiver_id]);
+    const result = await executeQuery(query, [sender_id, receiver_id]);
     if (result.affectedRows === 0) {
       return false;
     }
@@ -150,7 +151,7 @@ exports.insertFriendRequest = async (sender_id, receiver_id) => {
 exports.deleteFriendRequest = async (sender_id, receiver_id) => {
   try {
     const query = `DELETE FROM friend_request WHERE sender_id = ? AND receiver_id = ?`;
-    const result = await pool(query, [sender_id, receiver_id]);
+    const result = await executeQuery(query, [sender_id, receiver_id]);
     if (result.affectedRows === 0) {
       return false;
     }
@@ -180,7 +181,7 @@ exports.getFriendRequestFromMe = async (sender_id, page) => {
       ORDER BY l.create_dt DESC
       LIMIT ?,10
         `;
-    const result = await pool(query, [sender_id, page]);
+    const result = await executeQuery(query, [sender_id, page]);
     return (result.length < 0) ? null : result;
   }
   catch (error) {
@@ -207,7 +208,7 @@ exports.getFriendRequestToMe = async (receiver_id, page) => {
       ORDER BY l.create_dt DESC
       LIMIT ?, 10
         `;
-    const result = await pool(query, [receiver_id, page]);
+    const result = await executeQuery(query, [receiver_id, page]);
     return (result.length < 0) ? null : result;
   }
   catch (error) {
@@ -226,41 +227,43 @@ exports.getFriendRequestToMe = async (receiver_id, page) => {
  * 트랜잭션 처리 , 유저를 차단 할 때, 친구목록에서 삭제하고, 친구 요청도 삭제한다.
  */
 exports.insertBlockedFriend = async (user_id, friend_id) => {
-  try {
-    const queries = [
-      {
-        queryString: `INSERT INTO friend_blocking (user_id, blocked_user_id) 
-        VALUES (?,?)`, // 차단 추가
-        params: [user_id, friend_id]
-      },
-      {
-        queryString: `DELETE FROM friend_list WHERE user_id = ? AND friend_id = ?`, //친구 삭제
-        params: [user_id, friend_id]
-      },
-      {
-        queryString: `DELETE FROM friend_list WHERE user_id = ? AND friend_id = ?`, //친구 삭제
-        params: [friend_id, user_id]
-      },
-      {
-        queryString: `DELETE FROM friend_request WHERE sender_id = ? AND receiver_id = ?`, // 친구 요청 삭제
-        params: [user_id, friend_id]
-      },
-      {
-        queryString: `DELETE FROM friend_request WHERE sender_id = ? AND receiver_id = ?`, // 친구 요청 삭제
-        params: [friend_id, user_id]
-      },
+  const connection = await pool.getConnection();
+  connection.beginTransaction();
+  const results = [];
+  try{
+    await connection.beginTransaction();
+    let query = `INSERT INTO friend_blocking (user_id, blocked_user_id) VALUES (?,?)`;
+    let [res] = await connection.execute(query, [user_id, friend_id]);
+    results.push(res);
 
-    ];
-    const result = await transaction(queries);
-    if (result[0].affectedRows === 0) {
-      return false;
-    }
-    return true;
+    query = `DELETE FROM friend_list WHERE user_id = ? AND friend_id = ?`;
+    [res] = await connection.execute(query, [user_id, friend_id]);
+    results.push(res);
+
+    query = `DELETE FROM friend_list WHERE user_id = ? AND friend_id = ?`;
+    [res] = await connection.execute(query, [friend_id, user_id]);
+    results.push(res);
+
+    query = `DELETE FROM friend_request WHERE sender_id = ? AND receiver_id = ?`;
+    [res] = await connection.execute(query, [user_id, friend_id]);
+    results.push(res);
+
+    query = `DELETE FROM friend_request WHERE sender_id = ? AND receiver_id = ?`;
+    [res] = await connection.execute(query, [friend_id, user_id]);
+    results.push(res);
+
+    await connection.commit();
+  }catch(error)
+  {
+    console.error('error occured ', error);
+    await connection.rollback();
+    return false;
+  }finally
+  {
+    connection.release();
   }
-  catch (error) {
-    console.error('friendModel.insertBlockedFriend error:', error);
-    throw { message: "Server error", status: 500 };
-  }
+
+  return true;
 };
 
 /*
@@ -276,7 +279,7 @@ exports.insertBlockedFriend = async (user_id, friend_id) => {
 exports.deleteBlockedFriend = async (user_id, blocked_user_id) => {
   try {
     const query = `DELETE FROM friend_blocking WHERE user_id = ? AND blocked_user_id = ?`;
-    const result = await pool(query, [user_id, blocked_user_id]);
+    const result = await executeQuery(query, [user_id, blocked_user_id]);
     if (result.affectedRows === 0) {
       return false;
     }
@@ -307,7 +310,7 @@ exports.getBlockedFriend = async (user_id, page) => {
       ORDER BY l.create_dt
       LIMIT ?, 10
         `;
-    const result = await pool(query, [user_id, page]);
+    const result = await executeQuery(query, [user_id, page]);
     return (result.length < 0) ? null : result;
   }
   catch (error) {
@@ -337,7 +340,7 @@ exports.getFriendToRequestPossible = async (id, page) => {
       ORDER BY create_dt DESC
       LIMIT ?, 10
     `;
-    const result = await pool(query, [id, id, id, id, id, page]);
+    const result = await executeQuery(query, [id, id, id, id, id, page]);
     return (result.length < 0) ? null : result;
   }
   catch (error) {
@@ -359,7 +362,7 @@ exports.getFriendToBlockPossible = async (id) => {
     SELECT id, name, birthday, gender, picture_url FROM user WHERE id != ? AND 
     id NOT IN (SELECT blocked_user_id FROM friend_blocking WHERE user_id = ?)
     `;
-    const result = await pool(query, [id, id]);
+    const result = await executeQuery(query, [id, id]);
     return (result.length < 0) ? null : result;
   }
   catch (error) {

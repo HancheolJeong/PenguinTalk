@@ -1,4 +1,4 @@
-const {pool, commentTransaction} = require("./db.js");
+const { pool, executeQuery } = require("./db.js");
 
 
 /*
@@ -9,7 +9,7 @@ const {pool, commentTransaction} = require("./db.js");
     {
       const query = `INSERT INTO post (user_id, title, content_url, scope)
       VALUES (?,?,?,?)`;
-      const result = await pool(query, [user_id, title, content_url, scope]);
+      const result = await executeQuery(query, [user_id, title, content_url, scope]);
       if(result.affectedRows === 0)
       {
         throw{message: 'db error', status:404};
@@ -31,7 +31,7 @@ const {pool, commentTransaction} = require("./db.js");
     {
         const query = `UPDATE post SET title = ?, content_url = ?, scope = ?
         WHERE id = ?`;
-        const result = await pool(query, [title, content_url, scope, id]);
+        const result = await executeQuery(query, [title, content_url, scope, id]);
         if(result.affectedRows === 0)
         {
             throw{message: 'db error', status:404};
@@ -52,7 +52,7 @@ const {pool, commentTransaction} = require("./db.js");
     try
     {
         const query = `DELETE FROM post WHERE id = ?`;
-        const result = await pool(query, [id]);
+        const result = await executeQuery(query, [id]);
         if(result.affectedRows === 0)
         {
             throw{message: 'db error', status:404};
@@ -109,7 +109,7 @@ const {pool, commentTransaction} = require("./db.js");
         ORDER BY create_dt desc
         LIMIT ?,10
         `;
-        const result = await pool(query, [user_id, user_id, user_id, page]);
+        const result = await executeQuery(query, [user_id, user_id, user_id, page]);
         return (result.length < 0)? null : result;
     }
     catch(error)
@@ -164,7 +164,7 @@ exports.getSearchedPostWhileLogin = async(user_id, keyword, page) =>{
       ORDER BY create_dt desc
       LIMIT ?,10
       `;
-      const result = await pool(query, [user_id, user_id, user_id, keyword, page]);
+      const result = await executeQuery(query, [user_id, user_id, user_id, keyword, page]);
       return (result.length < 0)? null : result;
   }
   catch(error)
@@ -193,7 +193,7 @@ exports.getPostWhileLogout = async(page) =>{
     ORDER BY l.create_dt DESC
     LIMIT ?, 10
       `;
-      const result = await pool(query, [ page]);
+      const result = await executeQuery(query, [ page]);
       return (result.length < 0)? null : result;
   }
   catch(error)
@@ -219,7 +219,7 @@ exports.getSearchedPostWhileLogout = async(keyword,page) =>{
     ORDER BY l.create_dt DESC
     LIMIT ?, 10
       `;
-      const result = await pool(query, [keyword, page]);
+      const result = await executeQuery(query, [keyword, page]);
       return (result.length < 0)? null : result;
   }
   catch(error)
@@ -264,7 +264,7 @@ exports.getSearchedPostWhileLogout = async(keyword,page) =>{
     {
       const query = `UPDATE comments SET content = ?
       WHERE id = ?`;
-      const result = await pool(query, [content, id]);
+      const result = await executeQuery(query, [content, id]);
       if(result.affectedRows === 0)
       {
         throw{message: 'db error', status:404};
@@ -286,7 +286,7 @@ exports.getSearchedPostWhileLogout = async(keyword,page) =>{
     try
     {
       const query = `DELETE FROM comments WHERE id = ?`;
-      const result = await pool(query, [id]);
+      const result = await executeQuery(query, [id]);
       if(result.affectedRows === 0)
       {
         throw{message: 'db error', status:404};
@@ -315,7 +315,7 @@ exports.getSearchedPostWhileLogout = async(keyword,page) =>{
       GROUP BY l.id
       LIMIT ?, 10
       `;
-        const result = await pool(query, [post_id, page]);
+        const result = await executeQuery(query, [post_id, page]);
         return (result.length < 0)? null : result;
     }
     catch(error)
@@ -334,7 +334,7 @@ exports.getSearchedPostWhileLogout = async(keyword,page) =>{
     {
       const query = `INSERT INTO tags (comment_id, user_id)
       VALUES (?,?)`;
-      const result = await pool(query, [comment_id, user_id]);
+      const result = await executeQuery(query, [comment_id, user_id]);
       if(result.affectedRows === 0)
       {
         throw{message: 'db error', status:404};
@@ -363,7 +363,7 @@ exports.getSearchedPostWhileLogout = async(keyword,page) =>{
       LIMIT ?, 10
 
       `;
-      const result = await pool(query, [user_id, page]);
+      const result = await executeQuery(query, [user_id, page]);
       return (result.length < 0)? null : result;
     }
     catch(error)
