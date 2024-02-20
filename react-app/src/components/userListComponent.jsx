@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import friendService from '../services/friendService';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useCallback } from 'react';
 
 function UserListComponent() {
     const [users, setUsers] = useState([]);
     const [page, setPage] = useState(1);
+    const navigate = useNavigate();
     const location = useLocation();
-    const type = location.state.keyword;
+    const type = location.state.state;
 
     const fetchUsers = useCallback(async () => {
         let res = null;
@@ -28,7 +29,6 @@ function UserListComponent() {
                     break;
                 case 'fromMe':
                     res = await friendService.getRequestFromMe(localStorage.getItem('userId'), page); // 내가 보낸 요청
-                    console.log('1');
                     break;
                 default:
                     console.error("redux error");
@@ -85,7 +85,7 @@ function UserListComponent() {
             case 'user':
                 return (
                     <ul className="dropdown-menu">
-                        <li><button className="dropdown-item">작성한 글 보기</button></li>
+                        <li><button className="dropdown-item" onClick={() => handleNavigatePosts(id, 'findNonFriends')}>작성한 글 보기</button></li>
                         <li><button className="dropdown-item" onClick={() => handleFriendRequest(id)}>친구 요청</button></li>
                         <li><button className="dropdown-item" onClick={() => handleUserBlock(id)}>차단</button></li>
                     </ul>
@@ -93,7 +93,7 @@ function UserListComponent() {
             case 'friend':
                 return (
                     <ul className="dropdown-menu">
-                        <li><button className="dropdown-item">작성한 글 보기</button></li>
+                        <li><button className="dropdown-item" onClick={() => handleNavigatePosts(id, 'findFriends')}>작성한 글 보기</button></li>
                         <li><button className="dropdown-item" onClick={() => handleDeleteFriend(id)}>친구 삭제</button></li>
                         <li><button className="dropdown-item" onClick={() => handleUserBlock(id)}>차단</button></li>
                     </ul>
@@ -221,7 +221,7 @@ function UserListComponent() {
 
 
     /**
-    * 서버에게 친구추가 요청하는 함수
+    * 서버에게 차단을 요청하는 함수
     * @param {string} id : 사용자 Id 
     */
     const handleCancelBlock = async (id) => {
@@ -235,6 +235,14 @@ function UserListComponent() {
             alert("차단해제 실패했습니다..");
         }
     };
+
+    /**
+    * 친구가 작성한 게시글 페이지로 이동하는 함수
+    * @param {string} id : 사용자 Id 
+    */
+        const handleNavigatePosts = (id, state) => {
+            navigate('/', { state: { state: state, userId:id} });
+        };
 
 
     const renderUserList = () => {

@@ -21,6 +21,7 @@ function App() {
         <div id = "wrapper">
           <Routes>
             <Route path="/" element={<FeedComponent />} /> 
+            <Route path="/feed" element={<FeedComponent />} /> 
             <Route path="/signup" element={<SignUpComponent />} />
             <Route path="/signin" element={<SignInComponent />} />
             <Route path="/userInfo" element={<UserInfoComponent />} />

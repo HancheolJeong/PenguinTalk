@@ -49,11 +49,38 @@ function UserInfoComponent() {
         }
     };
 
+    /**
+    * 서버에게 친구추가 요청하는 함수
+    * @param {string} id : 사용자 Id 
+    */
+    const handleNavigateMyposts = async () => {
+        navigate('/', { state: { state: 'findMine', userId: localStorage.getItem('userId') } });
+    };
+
+
     const handleLogout = () => {
         localStorage.setItem('isLoggedIn', false);
         localStorage.removeItem('userId');
         localStorage.removeItem('token');
         navigate('/');
+    };
+
+    const handleDeleteAccount = async () => {
+        const isConfirmed = window.confirm("정말 탈퇴하시겠습니까?");
+        if (isConfirmed) {
+            try {
+                await userService.deleteUser(localStorage.getItem('userId'));
+                alert('회원 탈퇴 처리가 완료되었습니다.');
+    
+                handleLogout();
+                navigate('/');
+            } catch (error) {
+                console.error("회원 탈퇴 중 오류 발생:", error);
+                alert('회원 탈퇴 처리 중 문제가 발생했습니다. 다시 시도해 주세요.');
+            }
+        } else {
+            // 사용자가 '아니오'를 선택한 경우, 아무런 동작을 하지 않음
+        }
     };
 
     if (!user) {
@@ -80,10 +107,10 @@ function UserInfoComponent() {
                             <li className="list-group-item">가입 날짜: {formattedCreateDate}</li>
                         </ul>
                         <div className="mt-4 d-grid gap-2 d-md-flex justify-content-md-center">
-                            <button className="btn btn-primary" onClick={() => navigate('/editProfile')}>내가 작성한 글 보기</button>
+                            <button className="btn btn-primary" onClick={() => handleNavigateMyposts()}>내가 작성한 글 보기</button>
                             <button className="btn btn-info" onClick={() => navigate('/editProfile')}>프로필 사진 업데이트</button>
                             <button className="btn btn-warning" onClick={() => navigate('/editProfile')}>회원 정보 수정</button>
-                            <button className="btn btn-danger" onClick={() => navigate('/editProfile')}>회원 탈퇴</button>
+                            <button className="btn btn-danger" onClick={handleDeleteAccount}>회원 탈퇴</button>
                             <button className="btn btn-secondary" onClick={handleLogout}>로그아웃</button>
                         </div>
                     </div>

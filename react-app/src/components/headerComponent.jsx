@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 function HeaderComponent() {
@@ -32,20 +32,37 @@ function HeaderComponent() {
 
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
+
     };
 
-    const handleSearchSubmit = () => {
+    const handleSearchSubmit = (event) => {
+        event.preventDefault();
         if (searchQuery) {
-            triggerNavigate(`/feed/search?keyword=${encodeURIComponent(searchQuery)}`);
+            triggerNavigate('/', 'search', searchQuery);
         }
+        // setSearchQuery('');
     };
 
 
-    const triggerNavigate = (path, keyword = null) => {
-        if (localStorage.getItem('isLoggedIn') === 'true') {
-            if (keyword) {
-                // 'type' 파라미터가 주어진 경우
-                navigate(path, { state: { keyword:keyword }, replace: true });
+    /**
+     * 다른 url로 이동하는 함수
+     * @param {string} path : 이동할 url
+     * @param {string} param : state UserListComponent, feedComponent의 상태를 변경
+     * @param {string} keyword : feedComponent의 검색 키워드
+     */
+    const triggerNavigate = (path, param = null, keyword = null) => {
+        if (localStorage.getItem('isLoggedIn') === 'true') { // 로그인일때
+            if (param) { // param 주어졌을때,
+
+                if (keyword)  // keyword 주어졌을때,
+                {
+                    navigate(path, { state: { state: param, keyword: keyword } }); // feedComponent
+
+                }
+                else {
+                    navigate(path, { state: { state: param } }); //userListComponent
+
+                }
             } else {
                 // 'type' 파라미터가 없는 경우
                 navigate(path);
@@ -55,15 +72,28 @@ function HeaderComponent() {
             navigate('/signin');
         }
     };
+    /**
+     * 강제 로그아웃
+     */
+    const handleLogout = () => {
+        localStorage.setItem('isLoggedIn', false);
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+        navigate('/');
+    };
 
     return (
         <div>
             <nav className="navbar navbar-expand-lg navbar-light bg-primary">
                 <div className="container-fluid">
-                    <a className="navbar-brand text-light" href="/">
+                    {/* <a className="navbar-brand text-light" href="/">
                         <img src={process.env.PUBLIC_URL + './logo.png'} alt="Logo" style={{ width: 50, height: 50, borderRadius: '50%', marginRight: '10px' }} />
                         PenguinTalk
-                    </a>
+                    </a> */}
+                    <Link to="/" className="navbar-brand text-light">
+                        <img src={process.env.PUBLIC_URL + './logo.png'} alt="Logo" style={{ width: 50, height: 50, borderRadius: '50%', marginRight: '10px' }} />
+                        PenguinTalk
+                    </Link>
 
 
                     <div className="collapse navbar-collapse" id="navbarNavDropdown">
@@ -105,6 +135,11 @@ function HeaderComponent() {
                             </li>
                             <li className="nav-item me-3">
                                 <button className="btn btn-link text-light" onClick={() => triggerNavigate('/writing')} style={{ padding: 0 }}>
+                                    <img src={process.env.PUBLIC_URL + './writing.png'} alt="writing" style={{ width: 30, height: 30 }} />
+                                </button>
+                            </li>
+                            <li className="nav-item me-3">
+                                <button className="btn btn-link text-light" onClick={handleLogout} style={{ padding: 0 }}>
                                     <img src={process.env.PUBLIC_URL + './writing.png'} alt="writing" style={{ width: 30, height: 30 }} />
                                 </button>
                             </li>

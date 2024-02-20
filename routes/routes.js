@@ -27,6 +27,9 @@ router.post("/user/get/img", userController.getPicture);
 router.post("/feed/get/img", userController.getPicture);
 router.post("/friend/get/img", userController.getPicture);
 router.post("/feed/search", feedController.getSearchedPostWhileLogin);
+router.post("/feed/my", feedController.getMyPosts);
+router.post("/feed/friend", feedController.getFriendPosts);
+router.post("/feed/nonfriend", feedController.getNonFriendPosts);
 
 //feed
 router.get("/feed", feedController.getPostWhileLogout);

@@ -2,32 +2,38 @@ import React, { useState, useEffect } from 'react';
 import feedService from '../services/feedService';
 import { MentionsInput, Mention } from 'react-mentions';
 import friendService from '../services/friendService';
-
+import { useLocation } from 'react-router-dom';
 
 function FeedComponent() {
     const [feed, setFeed] = useState([]); //feed 정보 배열
     const [page, setPage] = useState(1); // feed page
-    const [isLoading, setIsLoading] = useState(false); // 
+    const [isLoading, setIsLoading] = useState(false); // 비동기 작업 호출 확인
     const [isPopupVisible, setIsPopupVisible] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
     const [comments, setComments] = useState([]); // 댓글 정보 배열
     const [commentsPage, setCommentsPage] = useState(1); //댓글 팝업 페이지
-    const [newComment, setNewComment] = useState(''); // 테스트용
     const [tags, setTags] = useState([]); // 태그된 id 배열
     const [inputComment, setInputComment] = useState(''); // insert될 댓글
-    const [friends, setFriends] = useState([ // 나의 친구 목록
-        { id: "hancheol", display: "한철" },
-        { id: "ms", display: "민수" },
-    ]);
+    const [friends, setFriends] = useState([]); // 나의 친구 목록
+
+    const location = useLocation();
+    let state = location.state?.state || 'common';
+    let keyword = location.state?.keyword || '';
+    let userId = location.state?.userId || '';
 
     useEffect(() => {
         fetchFeed();
-    }, [page]); 
+    }, [page, state]);
+
+    useEffect(() => {
+        fetchFeed();
+        setPage(1);
+    }, [state]);
 
     const fetchComments = async (itemId, page = 1) => {
         setIsLoading(true);
         try {
-            const commentsRes = await feedService.getComment(itemId, page); 
+            const commentsRes = await feedService.getComment(itemId, page);
             setComments(commentsRes.data.items);
             setCommentsPage(page);
         } catch (error) {
@@ -47,6 +53,7 @@ function FeedComponent() {
 
     const closePopup = () => {
         setIsPopupVisible(false);
+        fetchFeed();
     };
 
     const handleNextCommentsPage = () => {
@@ -59,8 +66,12 @@ function FeedComponent() {
         fetchComments(selectedItem.id, prevPage);
     };
 
-    const submitComment = async (itemId) => {
-        console.log(`id는 ${itemId}`);
+    /**
+     * 게시글id, 유저id, 댓글내용, 태그를 서버에 저장을 요청하는 함수
+     * @param {string} post_id : 게시글 id
+     * 요청에 성공하면 팝업창은 리로드가 되고 입력 필드, 사용자 목록은 초기화 됩니다,.
+     */
+    const submitComment = async (post_id) => {
         let comment = inputComment;
         tags.forEach(tag => {
             const tagRegex = new RegExp(`@\\[${tag.display}\\]\\(${tag.id}\\)`, 'g');
@@ -70,10 +81,19 @@ function FeedComponent() {
         console.log("Submitting comment:", comment);
         console.log("Submitting comment:", idArray);
 
-        setNewComment(''); 
-        setTags([]);
+        const res = await feedService.addComment(post_id, localStorage.getItem('userId'), comment, idArray);
+        if (res.data.result === "fail") {
+            alert("댓글 추가 실패했습니다...");
+        } else {
+
+            await fetchComments(post_id, commentsPage); //팝업창 리로드
+            setInputComment(''); // 입력 필드 초기화
+            setTags([]); // 태그된 사용자 목록 초기화
+        }
     };
     const fetchFeed = async () => {
+        console.log(state);
+        window.scrollTo(0, 0); //최상단 스크롤 위치로 이동
         setIsLoading(true);
         const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
         if (isLoggedIn) {
@@ -92,7 +112,60 @@ function FeedComponent() {
         }
 
         try {
-            const res = isLoggedIn ? await feedService.getFeedLoggedIn(localStorage.getItem('userId'), page) : await feedService.getFeed(page);
+            let res;
+            if (isLoggedIn) // 로그인일때
+            {
+                switch (state) {
+                    case 'common': // 모든 게시글
+                        res = await feedService.getFeedLoggedIn(localStorage.getItem('userId'), page);
+                        break;
+                    case 'search':// 게시글 검색
+                        res = await feedService.getSearchedFeedLoggedIn(localStorage.getItem('userId'), page, keyword);
+                        break;
+                    case 'findMine': // 내가 작성한 게시글
+                        res = await feedService.getMyPosts(localStorage.getItem('userId'), page);
+                        break;
+                    case 'findFriends': // 친구가 작성한 게시글
+                    console.log(userId);
+                        res = await feedService.getFriendPosts(userId, page);
+                        break;
+                    case 'findNonFriends': // 다른 유저가 작성한 게시글
+                        res = await feedService.getNonFriendPosts(userId, page);
+                        break;
+                    default: // 해당 사항이 없음..
+                        console.log('feedComponent.jsx not find state');
+                        res = await feedService.getFeedLoggedIn(localStorage.getItem('userId'), page)
+                        break;
+
+                }
+            }
+            else//로그아웃일때
+            {
+                switch (state) {
+                    case 'common': // 모든 게시글
+                        res = await feedService.getFeed(page)
+                        break;
+                    case 'search': // 게시글 검색
+                        res = await feedService.getSearchedFeed(page, keyword);
+                        break;
+                    case 'findMine': // 내가 작성한 게시글 (이쪽으로 올 수 없음)
+                        res = await feedService.getMyPosts(localStorage.getItem('userId'), page, keyword);
+                        break;
+                    case 'findFriends': // 친구가 작성한 게시글 (이쪽으로 올 수 없음)
+                        res = await feedService.getFriendPosts(userId, page, keyword);
+                        break;
+                    case 'findNonFriends': // 다른 유저가 작성한 게시글 (이쪽으로 올 수 없음)
+                        res = await feedService.getNonFriendPosts(userId, page, keyword);
+                        break;
+                    default: // 해당 사항이 없음..
+                        console.log('feedComponent.jsx not find state');
+                        res = await feedService.getFeedLoggedIn(localStorage.getItem('userId'), page)
+                        break;
+
+                }
+            }
+            // let res = isLoggedIn ? await feedService.getFeedLoggedIn(localStorage.getItem('userId'), page) : await feedService.getFeed(page);
+
             const feedItems = res.data.items;
             for (let item of feedItems) {
                 try {
@@ -161,13 +234,24 @@ function FeedComponent() {
             </nav>
         );
     };
-    
+
     return (
         <div className="container">
             <div className="row">
                 <div className="col">
-                    {feed.map(renderFeedItem)}
-                    {renderPagination()}
+                    {isLoading ? (
+                        <div className="d-flex justify-content-center">
+                            <div className="spinner-border text-primary" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    ) : (
+                        <>
+                            {feed.map(renderFeedItem)}
+                            {renderPagination()}
+                            {/* 기타 컴포넌트 렌더링 */}
+                        </>
+                    )}
                     <div className="feed-container">
                         {isPopupVisible && selectedItem && (
                             <div className="modal show" style={{ display: 'block' }} tabIndex="-1">

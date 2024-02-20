@@ -123,7 +123,7 @@ const { pool, executeQuery } = require("./db.js");
   /*
 글 불러오기 scope 0 : 전체, 1 : 친구만, 2 : 나만보기 (로그인 상태)
 */
-exports.getSearchedPostWhileLogin = async(user_id, keyword, page) =>{
+exports.getSearchedPostWhileLogin = async(user_id, page, keyword) =>{
   try
   {
     const query = `
@@ -160,16 +160,16 @@ exports.getSearchedPostWhileLogin = async(user_id, keyword, page) =>{
       ON l.id = c.post_id
       JOIN user as r
       ON l.user_id = r.id
-      WHERE l.title LIKE %?%
+      WHERE l.title LIKE ?
       ORDER BY create_dt desc
       LIMIT ?,10
       `;
-      const result = await executeQuery(query, [user_id, user_id, user_id, keyword, page]);
+      const result = await executeQuery(query, [user_id, user_id, user_id, `%${keyword}%`, page]);
       return (result.length < 0)? null : result;
   }
   catch(error)
   {
-      console.error('feedModel.getPost error:', error);
+      console.error('feedModel.getSearchedPostWhileLogin error:', error);
       throw{message: "Server error", status:500};
   }
   
@@ -215,10 +215,10 @@ exports.getSearchedPostWhileLogout = async(keyword,page) =>{
     ON l.id = c.post_id
     JOIN user as r
     ON l.user_id = r.id
-    WHERE l.scope = 0 AND l.title LIKE %?%
+    WHERE l.scope = 0 AND l.title LIKE %?% 
     ORDER BY l.create_dt DESC
     LIMIT ?, 10
-      `;
+      `; // 전체 공개는 0이므로 where scope = 0
       const result = await executeQuery(query, [keyword, page]);
       return (result.length < 0)? null : result;
   }
@@ -230,30 +230,142 @@ exports.getSearchedPostWhileLogout = async(keyword,page) =>{
   
 };
 
+/**
+ * 나의 게시글을 불러오는 함수
+ * @param {string} id : 사용자 ID 
+ * @param {string} page : 불러올 데이터 페이지
+ * @returns json
+ */
+exports.getMyPosts = async(id,page) =>{
+  try
+  {
+    const query = `
+    SELECT l.id as id, l.user_id as user_id, l.title as title, l.content_url as content_url, l.scope as scope, l.create_dt as create_dt, r.name as name, IFNULL(c.cnt, 0) as count_comment
+    FROM post as l
+    LEFT JOIN (
+	    SELECT COUNT(*) AS cnt, post_id 
+	    FROM comments 
+	    GROUP BY post_id) as c
+	  ON l.id = c.post_id
+    JOIN user as r
+    ON l.user_id = r.id
+    WHERE l.user_id = ? AND (l.scope IN (0, 1, 2))
+    ORDER BY create_dt desc
+    LIMIT ?,10
+      `;
+      const result = await executeQuery(query, [id, page]);
+      return (result.length < 0)? null : result;
+  }
+  catch(error)
+  {
+      console.error('feedModel.getMyPosts error:', error);
+      throw{message: "Server error", status:500};
+  }
+  
+};
+
+/**
+ * 친구 게시글을 불러오는 함수
+ * @param {string} id : 사용자 ID 
+ * @param {string} page : 불러올 데이터 페이지
+ * @returns json
+ */
+exports.getFriendPosts = async(id,page) =>{
+  try
+  {
+    const query = `
+    SELECT l.id as id, l.user_id as user_id, l.title as title, l.content_url as content_url, l.scope as scope, l.create_dt as create_dt, r.name as name, IFNULL(c.cnt, 0) as count_comment
+    FROM post as l
+    LEFT JOIN (
+	    SELECT COUNT(*) AS cnt, post_id 
+	    FROM comments 
+	    GROUP BY post_id) as c
+	  ON l.id = c.post_id
+    JOIN user as r
+    ON l.user_id = r.id
+    WHERE l.user_id = ? AND (l.scope IN (0, 1))
+    ORDER BY create_dt desc
+    LIMIT ?,10
+      `;
+      const result = await executeQuery(query, [id, page]);
+      return (result.length < 0)? null : result;
+  }
+  catch(error)
+  {
+      console.error('feedModel.getFriendPosts error:', error);
+      throw{message: "Server error", status:500};
+  }
+  
+};
+
+/**
+ * 친구가 아닌 유저의 게시글을 불러오는 함수
+ * @param {string} id : 사용자 ID 
+ * @param {string} page : 불러올 데이터 페이지
+ * @returns json
+ */
+exports.getNonFriendPosts = async(id,page) =>{
+  try
+  {
+    const query = `
+    SELECT l.id as id, l.user_id as user_id, l.title as title, l.content_url as content_url, l.scope as scope, l.create_dt as create_dt, r.name as name, IFNULL(c.cnt, 0) as count_comment
+    FROM post as l
+    LEFT JOIN (
+	    SELECT COUNT(*) AS cnt, post_id 
+	    FROM comments 
+	    GROUP BY post_id) as c
+	  ON l.id = c.post_id
+    JOIN user as r
+    ON l.user_id = r.id
+    WHERE l.user_id = ? AND l.scope = 0
+    ORDER BY create_dt desc
+    LIMIT ?,10
+      `;
+      const result = await executeQuery(query, [id, page]);
+      return (result.length < 0)? null : result;
+  }
+  catch(error)
+  {
+      console.error('feedModel.getNonFriendPosts error:', error);
+      throw{message: "Server error", status:500};
+  }
+  
+};
+
+
+
 /*
 댓글 추가
 */
   exports.insertCommentAndTags = async(post_id, user_id, content, taggedUsers) =>{
-    try
-    {
-      const queries = [{
-        queryString : `INSERT INTO comments (post_id, user_id, content) VALUES (?,?,?)`,
-        params: [post_id, user_id, content]
-      }];
 
-      const result = await commentTransaction(queries, taggedUsers);
+    const connection = await pool.getConnection();
+    connection.beginTransaction();
+    const results = [];
+    try{
+      await connection.beginTransaction();
+      let query = `INSERT INTO comments (post_id, user_id, content) VALUES (?,?,?)`; // 댓글 추가
+      let [res] = await connection.execute(query, [post_id, user_id, content]);
+      let commentId = res.insertId;
+      results.push(res);
 
-      if(result.affectedRows === 0)
+      for(let i = 0; i < taggedUsers.length; i++)
       {
-        throw{message: 'db error', status:404};
+        query = `INSERT INTO tags (comment_id, user_id) VALUES (?,?)`;
+        [res] = await connection.execute(query, [commentId, taggedUsers[i]]);
+        results.push(res);
       }
-      return true;
+      await connection.commit();
     }
-    catch(error)
+    catch (error)
     {
-      console.error('insertCommentAndTags.Test error:', error);
-      throw{message: "Server error", status:500};
+      console.error('error occured ', error);
+      await connection.rollback();
+      return false;
+    }finally{
+      connection.release();
     }
+    return true;
   };
   
 /*
@@ -313,6 +425,7 @@ exports.getSearchedPostWhileLogout = async(keyword,page) =>{
       LEFT JOIN tags as r ON l.id = r.comment_id
       WHERE l.post_id = ?
       GROUP BY l.id
+      ORDER BY l.create_dt DESC
       LIMIT ?, 10
       `;
         const result = await executeQuery(query, [post_id, page]);
