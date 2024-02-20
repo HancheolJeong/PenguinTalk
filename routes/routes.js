@@ -5,6 +5,7 @@ const friendController = require("../controllers/friendController.js");
 const userController = require("../controllers/userController.js");
 const chatController = require("../controllers/chatController.js");
 const testController = require("../controllers/testController.js");
+const upload = require("../middleware/upload.js");
 const {verify} = require('../middleware/auth');
 
 const router = express.Router();
@@ -45,7 +46,7 @@ router.post("/user/login", userController.loginUser);
 router.delete("/user/del", userController.deleteUser);
 
 router.patch("/user/mod/pw", userController.updatePassword);
-router.patch("/user/mod/url", userController.updatePictureUrl);
+router.patch("/user/mod/picture", upload.single('picture'), userController.updatePicture);
 router.put("/user/mod/info", userController.updateUser);
 
 router.post("/user/get/info", userController.getUser);

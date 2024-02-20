@@ -102,6 +102,10 @@ const { pool, executeQuery } = require("./db.js");
       let query = `SELECT id FROM user WHERE id = ? AND passwd = ?`;
       let [res] = await connection.execute(query, [id, passwd]);
       results.push(res);
+      if (res.length === 0) {
+        await connection.rollback();
+        return false;
+      }
   
       query = `UPDATE user SET login_dt = CURRENT_TIMESTAMP WHERE id = ?`;
       [res] = await connection.execute(query, [id]);

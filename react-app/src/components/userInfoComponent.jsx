@@ -108,8 +108,8 @@ function UserInfoComponent() {
                         </ul>
                         <div className="mt-4 d-grid gap-2 d-md-flex justify-content-md-center">
                             <button className="btn btn-primary" onClick={() => handleNavigateMyposts()}>내가 작성한 글 보기</button>
-                            <button className="btn btn-info" onClick={() => navigate('/editProfile')}>프로필 사진 업데이트</button>
-                            <button className="btn btn-warning" onClick={() => navigate('/editProfile')}>회원 정보 수정</button>
+                            <button className="btn btn-info" onClick={() => navigate('/userinfo/edit/info')}>회원 정보 수정</button>
+                            <button className="btn btn-warning" onClick={() => navigate('/userinfo/edit/pw')}>비밀번호 변경</button>
                             <button className="btn btn-danger" onClick={handleDeleteAccount}>회원 탈퇴</button>
                             <button className="btn btn-secondary" onClick={handleLogout}>로그아웃</button>
                         </div>

@@ -49,11 +49,11 @@ class userService {
             });
     }
 
-    updateUserPictureURL(id, url) {
-        return axios.patch(USER_BASE_URL + '/mod/url', {
-            id: id,
-            url: url
-        },
+    updateUserPicture(formData) {
+        for (let [key, value] of formData.entries()) {
+            console.log(key, value);
+        }
+        return axios.patch(USER_BASE_URL + '/mod/picture', formData,
             {
                 headers:
                 {
@@ -63,7 +63,7 @@ class userService {
     }
 
     updateUser(id, name, birthday, gender) {
-        return axios.patch(USER_BASE_URL + '/mod/info', {
+        return axios.put(USER_BASE_URL + '/mod/info', {
             id: id,
             name: name,
             birthday: birthday,

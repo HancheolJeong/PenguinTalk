@@ -11,6 +11,8 @@ import UserInfoComponent from './components/userInfoComponent';
 import UserListComponent from './components/userListComponent';
 import MessageComponent from './components/messageComponent';
 import WritingComponent from './components/writingComponent';
+import EditPasswordComponent from './components/editPasswordComponent';
+import UserEditComponent from './components/userEditComponent';
 
 
 function App() {
@@ -25,6 +27,8 @@ function App() {
             <Route path="/signup" element={<SignUpComponent />} />
             <Route path="/signin" element={<SignInComponent />} />
             <Route path="/userInfo" element={<UserInfoComponent />} />
+            <Route path="/userInfo/edit/info" element={<UserEditComponent />} />
+            <Route path="/userInfo/edit/pw" element={<EditPasswordComponent />} />
             <Route path="/userList" element={<UserListComponent />} />
             <Route path="/message" element={<MessageComponent />} />
             <Route path="/writing" element={<WritingComponent />} />

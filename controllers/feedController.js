@@ -159,9 +159,28 @@ exports.getSearchedPostWhileLogin = async (req, res) => {
   try {
     let rows = await feed.getSearchedPostWhileLogin(id, page, keyword);
     if (rows !== null) {
-      res.json({ result: "success", items: rows });
-    }
-    else {
+      // Process each row to read the file content
+      const items = await Promise.all(rows.map(async (row) => {
+        try {
+          // Read the content of the file specified by content_url
+          const filePath = path.resolve(__dirname, '../resources/contents', row.content_url); // Adjust based on actual path
+          console.log('Reading file:', filePath)
+          const content = await fs2.readFile(row.content_url, 'utf8');
+          return {
+            ...row,
+            content_url: content, // Replace the file path with the file content
+          };
+        } catch (err) {
+          console.error('Error reading file:', row.content_url, err);
+          return {
+            ...row,
+            content_url: 'Error reading content', // Handle file read error
+          };
+        }
+      }));
+
+      res.json({ result: "success", items });
+    } else {
       res.json({ result: "fail" });
     }
   }
@@ -236,9 +255,28 @@ exports.getSearchedPostWhileLogout = async (req, res) => {
   try {
     let rows = await feed.getPostWhileLogout(keyword, page);
     if (rows !== null) {
-      res.json({ result: "success", items: rows });
-    }
-    else {
+      // Process each row to read the file content
+      const items = await Promise.all(rows.map(async (row) => {
+        try {
+          // Read the content of the file specified by content_url
+          const filePath = path.resolve(__dirname, '../resources/contents', row.content_url); // Adjust based on actual path
+          console.log('Reading file:', filePath)
+          const content = await fs2.readFile(row.content_url, 'utf8');
+          return {
+            ...row,
+            content_url: content, // Replace the file path with the file content
+          };
+        } catch (err) {
+          console.error('Error reading file:', row.content_url, err);
+          return {
+            ...row,
+            content_url: 'Error reading content', // Handle file read error
+          };
+        }
+      }));
+
+      res.json({ result: "success", items });
+    } else {
       res.json({ result: "fail" });
     }
   }
@@ -263,9 +301,28 @@ exports.getMyPosts = async (req, res) => {
   try {
     let rows = await feed.getMyPosts(id, page);
     if (rows !== null) {
-      res.json({ result: "success", items: rows });
-    }
-    else {
+      // Process each row to read the file content
+      const items = await Promise.all(rows.map(async (row) => {
+        try {
+          // Read the content of the file specified by content_url
+          const filePath = path.resolve(__dirname, '../resources/contents', row.content_url); // Adjust based on actual path
+          console.log('Reading file:', filePath)
+          const content = await fs2.readFile(row.content_url, 'utf8');
+          return {
+            ...row,
+            content_url: content, // Replace the file path with the file content
+          };
+        } catch (err) {
+          console.error('Error reading file:', row.content_url, err);
+          return {
+            ...row,
+            content_url: 'Error reading content', // Handle file read error
+          };
+        }
+      }));
+
+      res.json({ result: "success", items });
+    } else {
       res.json({ result: "fail" });
     }
   }
@@ -291,9 +348,28 @@ exports.getFriendPosts = async (req, res) => {
   try {
     let rows = await feed.getFriendPosts(id, page);
     if (rows !== null) {
-      res.json({ result: "success", items: rows });
-    }
-    else {
+      // Process each row to read the file content
+      const items = await Promise.all(rows.map(async (row) => {
+        try {
+          // Read the content of the file specified by content_url
+          const filePath = path.resolve(__dirname, '../resources/contents', row.content_url); // Adjust based on actual path
+          console.log('Reading file:', filePath)
+          const content = await fs2.readFile(row.content_url, 'utf8');
+          return {
+            ...row,
+            content_url: content, // Replace the file path with the file content
+          };
+        } catch (err) {
+          console.error('Error reading file:', row.content_url, err);
+          return {
+            ...row,
+            content_url: 'Error reading content', // Handle file read error
+          };
+        }
+      }));
+
+      res.json({ result: "success", items });
+    } else {
       res.json({ result: "fail" });
     }
   }
@@ -318,9 +394,28 @@ exports.getNonFriendPosts = async (req, res) => {
   try {
     let rows = await feed.getNonFriendPosts(id, page);
     if (rows !== null) {
-      res.json({ result: "success", items: rows });
-    }
-    else {
+      // Process each row to read the file content
+      const items = await Promise.all(rows.map(async (row) => {
+        try {
+          // Read the content of the file specified by content_url
+          const filePath = path.resolve(__dirname, '../resources/contents', row.content_url); // Adjust based on actual path
+          console.log('Reading file:', filePath)
+          const content = await fs2.readFile(row.content_url, 'utf8');
+          return {
+            ...row,
+            content_url: content, // Replace the file path with the file content
+          };
+        } catch (err) {
+          console.error('Error reading file:', row.content_url, err);
+          return {
+            ...row,
+            content_url: 'Error reading content', // Handle file read error
+          };
+        }
+      }));
+
+      res.json({ result: "success", items });
+    } else {
       res.json({ result: "fail" });
     }
   }
