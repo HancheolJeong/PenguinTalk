@@ -19,7 +19,7 @@ function UserEditComponent() {
 
     const fetchUserInformation = async () => {
         try {
-            const userId = localStorage.getItem('userId');
+            const userId = sessionStorage.getItem('userId');
             const response = await userService.getUserInformation(userId);
             if (response.data.result === 'success' && response.data.items.length > 0) {
                 const user = response.data.items[0];
@@ -51,7 +51,7 @@ function UserEditComponent() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const userId = localStorage.getItem('userId');
+        const userId = sessionStorage.getItem('userId');
 
         if (profilePicture) {
             const pictureFormData = new FormData();
@@ -85,11 +85,10 @@ function UserEditComponent() {
     };
 
     return (
-        <div className="container my-4">
+        <div className="container my-4 ">
             <h2>회원 정보 수정</h2>
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                    <img src={user.pictureUrl || defaultImageUrl} alt="Profile" className="rounded-circle img-fluid" style={{ width: "100px", height: "100px" }} />
                     <label htmlFor="profilePicture" className="form-label">프로필 사진</label>
                     <input className="form-control" type="file" id="profilePicture" onChange={handleProfilePictureChange} />
                 </div>

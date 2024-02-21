@@ -14,9 +14,16 @@ import WritingComponent from './components/writingComponent';
 import EditPasswordComponent from './components/editPasswordComponent';
 import UserEditComponent from './components/userEditComponent';
 import ChatComponent from './components/chatComponent';
+import { useEffect } from 'react';
 
 
 function App() {
+  useEffect(() => {
+    if(sessionStorage.getItem('isLoggedIn') === null) //로그인 인증기능이 없다면
+    {
+      sessionStorage.setItem('isLoggedIn', 'false');
+    }
+  })
 
   return (
       <Router>

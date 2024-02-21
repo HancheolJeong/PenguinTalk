@@ -67,7 +67,7 @@ function FeedComponent() {
     };
 
     const handleDeleteItem = async (post_id, user_id) => {
-        const userId = localStorage.getItem('userId');
+        const userId = sessionStorage.getItem('userId');
         const isConfirmed = window.confirm("정말 삭제하시겠습니까?");
         if(isConfirmed)
         {
@@ -106,7 +106,7 @@ function FeedComponent() {
         });
         const idArray = tags.map(tag => tag.id);
 
-        const res = await feedService.addComment(post_id, localStorage.getItem('userId'), comment, idArray);
+        const res = await feedService.addComment(post_id, sessionStorage.getItem('userId'), comment, idArray);
         if (res.data.result === "fail") {
             alert("댓글 추가 실패했습니다...");
         } else {
@@ -119,10 +119,10 @@ function FeedComponent() {
     const fetchFeed = async () => {
         window.scrollTo(0, 0); //최상단 스크롤 위치로 이동
         setIsLoading(true);
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
         if (isLoggedIn) {
             try {
-                const friendsRes = await friendService.getFriendAll(localStorage.getItem('userId'));
+                const friendsRes = await friendService.getFriendAll(sessionStorage.getItem('userId'));
                 if (friendsRes.data.result === "success") {
                     const friendsData = friendsRes.data.items.map(friend => ({
                         id: friend.id,

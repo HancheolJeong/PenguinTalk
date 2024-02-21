@@ -14,18 +14,9 @@ function HeaderComponent() {
     const location = useLocation();
 
 
-    useEffect(() => {
-        const fetchTags = async () => {
-            try {
-                const res = await feedService.getTag(localStorage.getItem('userId'));
-                setTags(res.data.items); // API 응답 형식에 따라 조정이 필요할 수 있습니다.
-            } catch (error) {
-                console.error("Error fetching tags:", error);
-            }
-        };
+    // useEffect(() => {
 
-        fetchTags();
-    },[location])
+    // },[location])
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -44,6 +35,17 @@ function HeaderComponent() {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
+
+        const fetchTags = async () => {
+            try {
+                const res = await feedService.getTag(sessionStorage.getItem('userId'));
+                setTags(res.data.items); // API 응답 형식에 따라 조정이 필요할 수 있습니다.
+            } catch (error) {
+                console.error("Error fetching tags:", error);
+            }
+        };
+
+        fetchTags();
     }, [isLoggedIn]);
 
     const handleSearchChange = (event) => {
@@ -67,7 +69,7 @@ function HeaderComponent() {
      * @param {string} keyword : feedComponent의 검색 키워드
      */
     const triggerNavigate = (path, param = null, keyword = null) => {
-        if (localStorage.getItem('isLoggedIn') === 'true') { // 로그인일때
+        if (sessionStorage.getItem('isLoggedIn') === 'true') { // 로그인일때
             if (param) { // param 주어졌을때,
 
                 if (keyword)  // keyword 주어졌을때,

@@ -44,13 +44,13 @@ function SignUpComponent() {
             const { data } = response;
 
             if (data.result === 'success') {
-                alert('Signup successful!');
+                alert('회원가입 완료했습니다.');
                 navigate('/signin'); 
             } else {
                 setErrorMessage('Signup failed. Please try again.');
             }
         } catch (error) {
-            console.error("Signup error: ", error);
+            console.error("오류가 발생했습니다.: ", error);
             setErrorMessage('An error occurred during signup.');
         }
     };
@@ -64,22 +64,22 @@ function SignUpComponent() {
                         <input type="text" className="form-control" name="id" value={id} onChange={handleInputChange} />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="pw" className="form-label">Password:</label>
+                        <label htmlFor="pw" className="form-label">패스워드:</label>
                         <input type="password" className="form-control" name="pw" value={pw} onChange={handleInputChange} />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="name" className="form-label">Name:</label>
+                        <label htmlFor="name" className="form-label">이름:</label>
                         <input type="text" className="form-control" name="name" value={name} onChange={handleInputChange} />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="birthday" className="form-label">Birthday:</label>
+                        <label htmlFor="birthday" className="form-label">생일:</label>
                         <input type="date" className="form-control" name="birthday" value={birthday} onChange={handleInputChange} />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="gender" className="form-label">Gender:</label>
+                        <label htmlFor="gender" className="form-label">성별:</label>
                         <select className="form-select" name="gender" value={gender} onChange={handleInputChange}>
-                            <option value="0">Male</option>
-                            <option value="1">Female</option>
+                            <option value="0">남자</option>
+                            <option value="1">여자</option>
                         </select>
                     </div>
                     <div className="d-grid gap-2">

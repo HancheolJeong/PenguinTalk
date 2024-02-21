@@ -26,7 +26,7 @@ function UserInfoComponent() {
 
     const fetchUserInformation = async () => {
         try {
-            const userId = localStorage.getItem('userId');
+            const userId = sessionStorage.getItem('userId');
             const response = await userService.getUserInformation(userId);
             if (response.data.result === 'success' && response.data.items.length > 0) {
                 const user = response.data.items[0];
@@ -54,14 +54,14 @@ function UserInfoComponent() {
     * @param {string} id : 사용자 Id 
     */
     const handleNavigateMyposts = async () => {
-        navigate('/', { state: { state: 'findMine', userId: localStorage.getItem('userId') } });
+        navigate('/', { state: { state: 'findMine', userId: sessionStorage.getItem('userId') } });
     };
 
 
     const handleLogout = () => {
-        localStorage.setItem('isLoggedIn', false);
-        localStorage.removeItem('userId');
-        localStorage.removeItem('token');
+        sessionStorage.setItem('isLoggedIn', false);
+        sessionStorage.removeItem('userId');
+        sessionStorage.removeItem('token');
         navigate('/');
     };
 
@@ -69,7 +69,7 @@ function UserInfoComponent() {
         const isConfirmed = window.confirm("정말 탈퇴하시겠습니까?");
         if (isConfirmed) {
             try {
-                await userService.deleteUser(localStorage.getItem('userId'));
+                await userService.deleteUser(sessionStorage.getItem('userId'));
                 alert('회원 탈퇴 처리가 완료되었습니다.');
     
                 handleLogout();
@@ -87,7 +87,7 @@ function UserInfoComponent() {
         return <div>Loading user information...</div>;
     }
 
-    const gender = user.gender === 0 ? 'Male' : 'Female';
+    const gender = user.gender === 0 ? '남자' : '여자';
     const formattedCreateDate = new Date(user.create_dt).toLocaleDateString();
     const defaultImageUrl = process.env.PUBLIC_URL + '/defaultProfileImageUrl.png';
 

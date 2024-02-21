@@ -38,7 +38,7 @@ class userService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -51,7 +51,7 @@ class userService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -64,7 +64,7 @@ class userService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -79,7 +79,7 @@ class userService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -91,7 +91,7 @@ class userService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -103,7 +103,7 @@ class userService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -115,7 +115,7 @@ class userService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -127,7 +127,7 @@ class userService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -135,7 +135,7 @@ class userService {
     getPicture(id) {
         return axios.post(USER_BASE_URL + '/get/img', { id: id }, {
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
             },
             responseType: 'blob'
         });

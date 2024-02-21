@@ -30,9 +30,9 @@ function SignInComponent() {
             if (data.result === 'success') {
 
                 dispatch(login(data.token))
-                localStorage.setItem('isLoggedIn', true);
-                localStorage.setItem('userId', id);
-                localStorage.setItem('token', data.token);
+                sessionStorage.setItem('isLoggedIn', true);
+                sessionStorage.setItem('userId', id);
+                sessionStorage.setItem('token', data.token);
 
 
                 navigate('/'); 
@@ -54,7 +54,7 @@ function SignInComponent() {
                         <input type="text" className="form-control" name="id" value={id} onChange={handleInputChange} />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="pw" className="form-label">Password:</label>
+                        <label htmlFor="pw" className="form-label">패스워드:</label>
                         <input type="password" className="form-control" name="pw" value={pw} onChange={handleInputChange} />
                     </div>
                     <div className="d-grid gap-2 mb-3">

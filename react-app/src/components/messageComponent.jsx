@@ -67,10 +67,10 @@ function MessageComponent() {
   };
   const fetchFeed = async () => {
       setIsLoading(true);
-      const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+      const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
       if (isLoggedIn) {
           try {
-              const friendsRes = await friendService.getFriendAll(localStorage.getItem('userId'));
+              const friendsRes = await friendService.getFriendAll(sessionStorage.getItem('userId'));
               if (friendsRes.data.result === "success") {
                   const friendsData = friendsRes.data.items.map(friend => ({
                       id: friend.id,
@@ -84,7 +84,7 @@ function MessageComponent() {
       }
 
       try {
-          const res = isLoggedIn ? await feedService.getFeedLoggedIn(localStorage.getItem('userId'), page) : await feedService.getFeed(page);
+          const res = isLoggedIn ? await feedService.getFeedLoggedIn(sessionStorage.getItem('userId'), page) : await feedService.getFeed(page);
           const feedItems = res.data.items;
           for (let item of feedItems) {
               try {

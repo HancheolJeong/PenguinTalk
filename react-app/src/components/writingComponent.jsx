@@ -25,7 +25,7 @@ function WritingComponent() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const userId = localStorage.getItem('userId'); 
+        const userId = sessionStorage.getItem('userId'); 
 
         feedService.addFeed(userId, title, body, scope)
             .then(response => {
@@ -39,25 +39,25 @@ function WritingComponent() {
     return (
         <form onSubmit={handleSubmit} className="container mt-5">
             <div className="mb-3">
-                <label htmlFor="title" className="form-label">Title</label>
+                <label htmlFor="title" className="form-label">제목</label>
                 <input type="text" className="form-control" id="title" value={title} onChange={onTitleChange} />
             </div>
 
             <div className="mb-3">
-                <label className="form-label">Body</label>
+                <label className="form-label">본문</label>
                 <CKEditor editor={ClassicEditor} data={body} onChange={onBodyChange} />
             </div>
 
             <div className="mb-3">
-                <label htmlFor="scope" className="form-label">Scope</label>
+                <label htmlFor="scope" className="form-label">공개 범위</label>
                 <select className="form-select" value={scope} onChange={onScopeChange}>
-                    <option value="0">Public</option>
-                    <option value="1">Friends</option>
-                    <option value="2">Only Me</option>
+                    <option value="0">전체</option>
+                    <option value="1">친구</option>
+                    <option value="2">나만</option>
                 </select>
             </div>
 
-            <button type="submit" className="btn btn-primary">Send</button>
+            <button type="submit" className="btn btn-primary">전송</button>
         </form>
     );
 }
