@@ -428,6 +428,51 @@ exports.getNonFriendPosts = async (req, res) => {
   }
 }
 
+//태그된 게시물 가져오기
+exports.getPostwithTags = async (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "There is no content."
+    });
+  }
+  let { id } = req.body;
+  try {
+    let rows = await feed.getPostwithTags(id);
+    if (rows !== null) {
+      // Process each row to read the file content
+      const items = await Promise.all(rows.map(async (row) => {
+        try {
+          // Read the content of the file specified by content_url
+          const filePath = path.resolve(__dirname, '../resources/contents', row.content_url); // Adjust based on actual path
+          console.log('Reading file:', filePath)
+          const content = await fs2.readFile(row.content_url, 'utf8');
+          return {
+            ...row,
+            content_url: content, // Replace the file path with the file content
+          };
+        } catch (err) {
+          console.error('Error reading file:', row.content_url, err);
+          return {
+            ...row,
+            content_url: 'Error reading content', // Handle file read error
+          };
+        }
+      }));
+
+      res.json({ result: "success", items });
+    } else {
+      res.json({ result: "fail" });
+    }
+  }
+  catch (err) {
+    console.error('feedController.getNonFriendPosts error:', err);
+    res.status(err.status || 500).json({
+      result: "fail",
+      message: err.message || "Server error"
+    });
+  }
+}
+
 
 //댓글, 태그 추가 
 exports.insertCommentAndTags = async (req, res) => {
@@ -545,10 +590,9 @@ exports.getTag = async (req, res) => {
       message: "There is no content."
     });
   }
-  let { user_id, page } = req.body;
-  page = (page - 1) * 10
+  let { user_id } = req.body;
   try {
-    let rows = await feed.getTag(user_id, page);
+    let rows = await feed.getTag(user_id);
     if (rows !== null) {
       res.json({ result: "success", items: rows });
     }

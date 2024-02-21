@@ -30,11 +30,10 @@ exports.getChat = async(req, res) => {
         message: "There is no content."
       });
     }
-    let {sender_id, receiver_id, page} = req.body;
-    page = (page - 1) * 10
+    let {sender_id, receiver_id} = req.body;
     try
     {
-        let rows = await chat.getChat(sender_id, receiver_id, page);
+        let rows = await chat.getChat(sender_id, receiver_id);
         if(rows !== null)
         {
             res.json({result:"success", items: rows});

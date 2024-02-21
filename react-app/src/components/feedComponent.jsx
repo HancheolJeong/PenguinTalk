@@ -66,6 +66,33 @@ function FeedComponent() {
         fetchComments(selectedItem.id, prevPage);
     };
 
+    const handleDeleteItem = async (post_id, user_id) => {
+        const userId = localStorage.getItem('userId');
+        const isConfirmed = window.confirm("정말 삭제하시겠습니까?");
+        if(isConfirmed)
+        {
+            if (user_id === userId) {
+                try {
+                    const res = await feedService.deleteFeed(post_id);
+                    if (res.data.result === "success") {
+                        alert("게시글 삭제 완료했습니다.");
+                        fetchFeed();
+                    }else
+                    {
+                        alert("게시글 삭제 실패했습니다.");
+                    }
+                } catch (error) {
+                    console.error("Failed to delete item:", error);
+                    // 실패했다면 사용자에게 알립니다.
+                    alert("게시글 삭제 실패했습니다.");
+                }
+            } else {
+                alert("자신의 게시글만 삭제할 수 있습니다.");
+            }
+        }
+
+    };
+
     /**
      * 게시글id, 유저id, 댓글내용, 태그를 서버에 저장을 요청하는 함수
      * @param {string} post_id : 게시글 id
@@ -128,6 +155,9 @@ function FeedComponent() {
                     case 'findNonFriends': // 다른 유저가 작성한 게시글
                         res = await feedService.getNonFriendPosts(userId, page);
                         break;
+                        case 'tag': // 태그된 게시물
+                        res = await feedService.getPostWithTags(keyword);
+                        break;
                     default: // 해당 사항이 없음..
                         console.log('feedComponent.jsx not find state');
                         res = await feedService.getFeedLoggedIn(localStorage.getItem('userId'), page)
@@ -160,7 +190,6 @@ function FeedComponent() {
 
                 }
             }
-            // let res = isLoggedIn ? await feedService.getFeedLoggedIn(localStorage.getItem('userId'), page) : await feedService.getFeed(page);
 
             const feedItems = res.data.items;
             for (let item of feedItems) {
@@ -198,9 +227,7 @@ function FeedComponent() {
                             ☰
                         </button>
                         <ul className="dropdown-menu">
-                            <li><button className="dropdown-item" >수정</button></li>
-                            <li><button className="dropdown-item" >삭제</button></li>
-                            <li><button className="dropdown-item" >신고</button></li>
+                            <li><button className="dropdown-item" onClick={() => handleDeleteItem(item.id, item.user_id)}>삭제</button></li>
                         </ul>
 
                     </div>

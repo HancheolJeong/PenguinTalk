@@ -333,6 +333,39 @@ exports.getNonFriendPosts = async(id,page) =>{
 };
 
 
+/**
+ * 친구가 아닌 유저의 게시글을 불러오는 함수
+ * @param {string} id : 사용자 ID 
+ * @param {string} page : 불러올 데이터 페이지
+ * @returns json
+ */
+exports.getPostwithTags = async(id) =>{
+  try
+  {
+    const query = `
+    SELECT l.id as id, l.user_id as user_id, l.title as title, l.content_url as content_url, l.scope as scope, l.create_dt as create_dt, r.name as name, IFNULL(c.cnt, 0) as count_comment
+    FROM post as l
+    LEFT JOIN (
+	    SELECT COUNT(*) AS cnt, post_id 
+	    FROM comments 
+	    GROUP BY post_id) as c
+	  ON l.id = c.post_id
+    JOIN user as r
+    ON l.user_id = r.id
+    WHERE l.id = ?
+      `;
+      const result = await executeQuery(query, [id]);
+      return (result.length < 0)? null : result;
+  }
+  catch(error)
+  {
+      console.error('feedModel.getPostwithTags error:', error);
+      throw{message: "Server error", status:500};
+  }
+  
+};
+
+
 
 /*
 댓글 추가
@@ -464,19 +497,42 @@ exports.getNonFriendPosts = async(id,page) =>{
 /*
 태그된 친구 불러오기
 */
-  exports.getTag = async(user_id, page) =>{
+  exports.getTag = async(user_id) =>{
     try
     {
       const query = `
-      SELECT id as comment_id, post_id, l.user_id as sender_id, r.user_id as receiver_id, content, r.create_dt as create_dt, checking
-      FROM comments as l
-      JOIN tags as r
-      ON l.id = r.comment_id
-      WHERE r.user_id = ?
-      LIMIT ?, 10
-
+      SELECT p.id as p_id, c_id, title, t.content as comments, t.user_id as user_id, name, t.create_dt as create_dt
+      FROM post AS p
+      JOIN  
+        (SELECT l.id as c_id, post_id, l.user_id as user_id, content, name, r.create_dt as create_dt 
+          FROM comments as l 
+          JOIN 
+        (SELECT * FROM tags WHERE user_id = ?) AS r
+        ON l.id = r.comment_id
+          JOIN user as u
+          ON l.user_id = u.id
+          ) AS t
+      ON p.id = t.post_id
+      ORDER BY create_dt DESC
+      LIMIT 0,10
       `;
-      const result = await executeQuery(query, [user_id, page]);
+      console.log(`
+      SELECT p.id as p_id, c_id, title, t.content as comments, t.user_id as user_id, name, t.create_dt as create_dt
+      FROM post AS p
+      JOIN  
+        (SELECT l.id as c_id, post_id, l.user_id as user_id, content, name, r.create_dt as create_dt 
+          FROM comments as l 
+          JOIN 
+        (SELECT * FROM tags WHERE user_id = ${user_id}) AS r
+        ON l.id = r.comment_id
+          JOIN user as u
+          ON l.user_id = u.id
+          ) AS t
+      ON p.id = t.post_id
+      ORDER BY create_dt DESC
+      LIMIT 0,10
+      `)
+      const result = await executeQuery(query, [user_id]);
       return (result.length < 0)? null : result;
     }
     catch(error)

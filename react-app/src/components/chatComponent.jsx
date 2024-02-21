@@ -19,25 +19,44 @@ function ChatComponent() {
         newSocket.on("connect", () => console.log("Socket connected: ", newSocket.id));
         newSocket.on('receive_message', (data) => {
             const { senderId, message } = data;
-            setChatHistory(prevChatHistory => {
-                const newMessage = {
-                    sender_id: selectedFriendId,
-                    receiver_id: senderId,
-                    message_content: message,
-                    create_dt: new Date().toISOString() // 실제 서버 시간을 사용하는 것이 더 정확할 수 있습니다.
-                };
-                const updatedChatHistory = [...prevChatHistory, newMessage];
-                // 채팅 기록이 10개를 초과할 경우, 가장 오래된 메시지를 제거
-                return updatedChatHistory.length > 10 ? updatedChatHistory.slice(-10) : updatedChatHistory;
-            });
+            console.log(senderId, selectedFriendId);
+            if(selectedFriendId === senderId)
+            {
+                setChatHistory(prevChatHistory => {
+                    const newMessage = {
+                        sender_id: selectedFriendId,
+                        receiver_id: senderId,
+                        message_content: message,
+                        create_dt: new Date().toISOString() // 서버 시간을 가져오는게 아니므로 오차가 있을수도 있음.
+                    };
+                    const updatedChatHistory = [...prevChatHistory, newMessage];
+                    // 채팅 기록이 10개를 초과할 경우, 가장 오래된 메시지를 제거
+                    return updatedChatHistory.length > 10 ? updatedChatHistory.slice(-10) : updatedChatHistory;
+                });
+            }
+
         });
         return () => newSocket.disconnect();
-    }, []);
+    }, [selectedFriendId]);
 
     useEffect(() => {
         const loadFriends = async () => {
             const res = await friendService.getFriend(userId, page);
-            setFriends(res.data.items);
+            const feedItems = res.data.items;
+            for(let item of feedItems)
+            {
+                try{
+                    const PictureRes = await friendService.getPicture(item.id);
+                    const picture = URL.createObjectURL(PictureRes.data);
+                    item.picture = picture;
+                }catch (error)
+                {
+                    console.error("Error loading picture", error);
+                    item.picture = 'default';
+                }
+
+            }
+            setFriends(feedItems);
         };
         loadFriends();
     }, [page]);
@@ -46,7 +65,7 @@ function ChatComponent() {
         const loadChatHistory = async () => {
             if (!selectedFriendId) return;
             try {
-                const res = await chatService.getChat(userId, selectedFriendId, '10');
+                const res = await chatService.getChat(userId, selectedFriendId);
                 const reversedData = [...res.data.items].reverse();
                 setChatHistory(reversedData);
             } catch (error) {
@@ -60,8 +79,7 @@ function ChatComponent() {
     const sendMessage = (e) => {
         e.preventDefault();
         if (socket && selectedFriendId && message.trim()) {
-            // socket.emit("chat message", { to: selectedFriendId, message: message });
-            socket.emit("send_to_user", {senderId : userId, recipientId : selectedFriendId, message : message})
+            socket.emit("send_to_user", { senderId: userId, recipientId: selectedFriendId, message: message })
             setMessage('');
             const newMessage = {
                 sender_id: userId,
@@ -83,6 +101,7 @@ function ChatComponent() {
     };
 
     const handleFriendSelect = (id) => {
+        console.log(id);
         setSelectedFriendId(id);
     };
 
@@ -112,18 +131,29 @@ function ChatComponent() {
             <div className="row">
                 <div className="col-4">
                     <h2>친구 목록</h2>
-                    <ul className="list-group">
+                    {/* <ul className="list-group">
                         {friends.map((friend) => (
                             <li key={friend.id} className="list-group-item" onClick={() => handleFriendSelect(friend.id)}>
                                 아이디 : {friend.id}
                                 이름 : {friend.name}
                             </li>
                         ))}
+                    </ul> */}
+                    <ul className="list-group">
+                        {friends.map((friend) => (
+                            <li key={friend.id} className="list-group-item d-flex align-items-center" onClick={() => handleFriendSelect(friend.id)}>
+                                <img src={friend.picture || '기본 이미지 URL'} alt={friend.name} className="rounded-circle me-2" style={{ width: '40px', height: '40px', objectFit: 'cover' }} />
+                                <div>
+                                    <strong>이름:</strong> {friend.name} <br />
+                                    <small>ID: {friend.id}</small>
+                                </div>
+                            </li>
+                        ))}
                     </ul>
                     {renderPagination()}
                 </div>
                 <div className="col-8">
-                    <h1>Socket.IO Chat</h1>
+                    <h1>채팅</h1>
                     <div className='mb-3'>
                         {chatHistory.slice(0, 10).map((chat, index) => (
                             <div key={index} className={`message d-flex mb-2 ${chat.sender_id === userId ? 'justify-content-end' : 'justify-content-start'}`}>

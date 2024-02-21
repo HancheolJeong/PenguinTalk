@@ -1,16 +1,31 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link, useLocation  } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import feedService from '../services/feedService';
 
 function HeaderComponent() {
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [tags, setTags] = useState([]);
     const navigate = useNavigate();
     const wrapperRef = useRef(null);
     const dispatch = useDispatch();
     const isLoggedIn = useSelector(state => state.loginSlice.isLoggedIn);
     const location = useLocation();
 
+
+    useEffect(() => {
+        const fetchTags = async () => {
+            try {
+                const res = await feedService.getTag(localStorage.getItem('userId'));
+                setTags(res.data.items); // API 응답 형식에 따라 조정이 필요할 수 있습니다.
+            } catch (error) {
+                console.error("Error fetching tags:", error);
+            }
+        };
+
+        fetchTags();
+    },[location])
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -103,28 +118,40 @@ function HeaderComponent() {
                                     <img src={process.env.PUBLIC_URL + './message.png'} alt="message" style={{ width: 30, height: 30 }} />
                                 </button>
                             </li>
-                            <li className="nav-item me-3">
-                                <button className="btn btn-link text-light" style={{ padding: 0 }}>
-                                    <img src={process.env.PUBLIC_URL + './tag.png'} alt="tag" style={{ width: 30, height: 30 }} />
-                                </button>
-                            </li>
-
                             <li className="nav-item dropdown me-3">
                                 <button className="btn btn-link text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{ padding: 0 }}>
-                                    <img src={process.env.PUBLIC_URL + './friend.png'} alt="friend" style={{ width: 30, height: 30 }} />
+                                    <img src={process.env.PUBLIC_URL + './tag.png'} alt="tag" style={{ width: 30, height: 30 }} />
                                 </button>
-                                <ul className="dropdown-menu">
-                                    <li><button className="dropdown-item" onClick={() => triggerNavigate('/userList', 'user')}>유저 목록</button></li>
-                                    <li><button className="dropdown-item" onClick={() => triggerNavigate('/userList', 'friend')}>친구 목록</button></li>
-                                    <li><button className="dropdown-item" onClick={() => triggerNavigate('/userList', 'fromMe')}>보낸 친구요청</button></li>
-                                    <li><button className="dropdown-item" onClick={() => triggerNavigate('/userList', 'toMe')}>받은 친구요청</button></li>
-                                    <li><button className="dropdown-item" onClick={() => triggerNavigate('/userList', 'block')}>차단 목록</button></li>
+                                <ul className="dropdown-menu dropdown-menu-end">
+                                    {tags.map((item) => (
+                                        <li>
+                                            <button className="dropdown-item" onClick={() => triggerNavigate('', 'tag', item.p_id)}>
+                                                {`${item.name}(${item.user_id})님께서 ${item.title} 게시글에 회원님을 태그하였습니다.`}
+                                                <br />
+                                                {item.comments}
+                                                <br />
+                                                {new Date(item.create_dt).toLocaleString()}
+                                            </button>
+                                        </li>
+                                    ))}
                                 </ul>
                             </li>
                             <li className="nav-item me-3">
                                 <button className="btn btn-link text-light" onClick={() => triggerNavigate('/userInfo')} style={{ padding: 0 }}>
                                     <img src={process.env.PUBLIC_URL + './user.png'} alt="user" style={{ width: 30, height: 30 }} />
                                 </button>
+                            </li>
+                            <li className="nav-item dropdown me-3">
+                                <button className="btn btn-link text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{ padding: 0 }}>
+                                    <img src={process.env.PUBLIC_URL + './friend.png'} alt="friend" style={{ width: 30, height: 30 }} />
+                                </button>
+                                <ul className="dropdown-menu dropdown-menu-end">
+                                    <li><button className="dropdown-item" onClick={() => triggerNavigate('/userList', 'user')}>유저 목록</button></li>
+                                    <li><button className="dropdown-item" onClick={() => triggerNavigate('/userList', 'friend')}>친구 목록</button></li>
+                                    <li><button className="dropdown-item" onClick={() => triggerNavigate('/userList', 'fromMe')}>보낸 친구요청</button></li>
+                                    <li><button className="dropdown-item" onClick={() => triggerNavigate('/userList', 'toMe')}>받은 친구요청</button></li>
+                                    <li><button className="dropdown-item" onClick={() => triggerNavigate('/userList', 'block')}>차단 목록</button></li>
+                                </ul>
                             </li>
                             <li className="nav-item me-3">
                                 <button className="btn btn-link text-light" onClick={() => triggerNavigate('/writing')} style={{ padding: 0 }}>

@@ -31,6 +31,7 @@ router.post("/feed/search", feedController.getSearchedPostWhileLogin);
 router.post("/feed/my", feedController.getMyPosts);
 router.post("/feed/friend", feedController.getFriendPosts);
 router.post("/feed/nonfriend", feedController.getNonFriendPosts);
+router.post("/feed/postId", feedController.getPostwithTags);
 
 //feed
 router.get("/feed", feedController.getPostWhileLogout);

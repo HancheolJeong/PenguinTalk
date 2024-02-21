@@ -105,6 +105,24 @@ class feedService {
             });
     }
 
+    /**
+     * 서버에게 post id로 특정 게시물을 가져옵니다.
+     * @param {string} id 
+     * @returns 
+     */
+    getPostWithTags(id) {
+        return axios.post(FEED_BASE_URL + '/postId',
+            {
+                id: id
+            },
+            {
+                headers:
+                {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+    }
+
     getPicture(id) {
         return axios.post(FEED_BASE_URL + '/get/img', { id: id }, {
             headers: {
@@ -197,7 +215,7 @@ class feedService {
             });
     }
 
-    deleteFeed(id) {
+    deleteComment(id) {
         return axios.delete(FEED_BASE_URL + '/comment/del', {
             data: {
 
@@ -212,10 +230,11 @@ class feedService {
             });
     }
 
-    getTag(user_id, page) {
+
+
+    getTag(user_id) {
         return axios.post(FEED_BASE_URL + '/tag', {
-            user_id: user_id,
-            page: page
+            user_id: user_id
         },
             {
                 headers:
