@@ -28,7 +28,7 @@ function FeedComponent() {
     useEffect(() => {
         fetchFeed();
         setPage(1);
-    }, [state]);
+    }, [state, location]);
 
     const fetchComments = async (itemId, page = 1) => {
         setIsLoading(true);
@@ -78,8 +78,6 @@ function FeedComponent() {
             comment = comment.replace(tagRegex, `@${tag.display} `);
         });
         const idArray = tags.map(tag => tag.id);
-        console.log("Submitting comment:", comment);
-        console.log("Submitting comment:", idArray);
 
         const res = await feedService.addComment(post_id, localStorage.getItem('userId'), comment, idArray);
         if (res.data.result === "fail") {
@@ -92,7 +90,6 @@ function FeedComponent() {
         }
     };
     const fetchFeed = async () => {
-        console.log(state);
         window.scrollTo(0, 0); //최상단 스크롤 위치로 이동
         setIsLoading(true);
         const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
@@ -126,7 +123,6 @@ function FeedComponent() {
                         res = await feedService.getMyPosts(localStorage.getItem('userId'), page);
                         break;
                     case 'findFriends': // 친구가 작성한 게시글
-                    console.log(userId);
                         res = await feedService.getFriendPosts(userId, page);
                         break;
                     case 'findNonFriends': // 다른 유저가 작성한 게시글

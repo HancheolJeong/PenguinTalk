@@ -13,6 +13,7 @@ import MessageComponent from './components/messageComponent';
 import WritingComponent from './components/writingComponent';
 import EditPasswordComponent from './components/editPasswordComponent';
 import UserEditComponent from './components/userEditComponent';
+import ChatComponent from './components/chatComponent';
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
             <Route path="/userList" element={<UserListComponent />} />
             <Route path="/message" element={<MessageComponent />} />
             <Route path="/writing" element={<WritingComponent />} />
+            <Route path="/chat" element={<ChatComponent />} />
           </Routes>
           </div>
         <FooterComponent />

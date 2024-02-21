@@ -24,7 +24,7 @@ const { executeQuery } = require("./db.js");
 /*
 글 불러오기 scope 0 : 전체, 1 : 친구만, 2 : 나만보기
 */
-  exports.getChat = async(sender_id, receiver_id, page) =>{
+  exports.getChat = async(sender_id, receiver_id) =>{
     try
     {
       const query = `
@@ -32,9 +32,9 @@ const { executeQuery } = require("./db.js");
       FROM chat_history 
       WHERE (sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?) 
       ORDER BY create_dt DESC
-      LIMIT ?, 10
+      LIMIT 0, 10
         `;
-        const result = await executeQuery(query, [sender_id, receiver_id, receiver_id, sender_id, page]);
+        const result = await executeQuery(query, [sender_id, receiver_id, receiver_id, sender_id]);
         return (result.length < 0)? null : result;
     }
     catch(error)

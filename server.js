@@ -1,25 +1,25 @@
 require('dotenv').config();
-const jwt = require('jsonwebtoken');
+const http = require("http");
+const socketIo = require('socket.io');
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const path = require('path');
 const morgan = require('morgan');
 const router = require('./routes/routes')
+const server = http.createServer(app);
+
+const setupSocketHandler = require('./libs/socketHandler');
+
+// Socket.io 설정
+setupSocketHandler(server);
+
 
 
 app.use(cors());
-
 app.use(morgan('common'));
-
-// parse requests of content-type - application/json
 app.use(express.json());
-
-// parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
-
 app.use('/', router);
-
 
 app.use((req, res, next) => { // 기본경로나 /user말고 다른곳 진입했을경우 실행
   res.status(404).send('Not Found');
@@ -27,6 +27,6 @@ app.use((req, res, next) => { // 기본경로나 /user말고 다른곳 진입했
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });

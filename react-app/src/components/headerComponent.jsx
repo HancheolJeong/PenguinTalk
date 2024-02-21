@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation  } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 function HeaderComponent() {
@@ -9,6 +9,7 @@ function HeaderComponent() {
     const wrapperRef = useRef(null);
     const dispatch = useDispatch();
     const isLoggedIn = useSelector(state => state.loginSlice.isLoggedIn);
+    const location = useLocation();
 
 
     useEffect(() => {
@@ -72,15 +73,7 @@ function HeaderComponent() {
             navigate('/signin');
         }
     };
-    /**
-     * 강제 로그아웃
-     */
-    const handleLogout = () => {
-        localStorage.setItem('isLoggedIn', false);
-        localStorage.removeItem('userId');
-        localStorage.removeItem('token');
-        navigate('/');
-    };
+
 
     return (
         <div>
@@ -106,7 +99,7 @@ function HeaderComponent() {
                             </li>
 
                             <li className="nav-item me-3">
-                                <button className="btn btn-link text-light" onClick={() => triggerNavigate('/writing')} style={{ padding: 0 }}>
+                                <button className="btn btn-link text-light" onClick={() => triggerNavigate('/chat')} style={{ padding: 0 }}>
                                     <img src={process.env.PUBLIC_URL + './message.png'} alt="message" style={{ width: 30, height: 30 }} />
                                 </button>
                             </li>
@@ -138,11 +131,7 @@ function HeaderComponent() {
                                     <img src={process.env.PUBLIC_URL + './writing.png'} alt="writing" style={{ width: 30, height: 30 }} />
                                 </button>
                             </li>
-                            <li className="nav-item me-3">
-                                <button className="btn btn-link text-light" onClick={handleLogout} style={{ padding: 0 }}>
-                                    <img src={process.env.PUBLIC_URL + './writing.png'} alt="writing" style={{ width: 30, height: 30 }} />
-                                </button>
-                            </li>
+
                         </ul>
                     </div>
                 </div>

@@ -21,6 +21,13 @@ class userService {
         });
     }
 
+    confirmPassword(id, pw) {
+        return axios.post(USER_BASE_URL + '/confirm/pw', {
+            id: id,
+            pw: pw
+        });
+    }
+
     deleteUser(id) {
         return axios.delete(USER_BASE_URL + '/del', {
             data: {

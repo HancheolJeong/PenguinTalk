@@ -1,32 +1,24 @@
 const chat = require('../models/chatModel.js');
 
 // 채팅 추가
-  exports.insertChat = async(req, res) => {
-    if (!req.body) {
-        res.status(400).send({
-          message: "There is no content."
-        });
-      }
-      let {sender_id, receiver_id, msg} = req.body;
+  exports.insertChat = async(sender_id, receiver_id, message) => {
+
       try
       {
-          let is_success = await chat.insertChat(sender_id, receiver_id, msg);
+          let is_success = await chat.insertChat(sender_id, receiver_id, message);
           if(is_success)
           {
-              res.json({result:"success"});
+              return true;
           }
           else
           {
-              res.json({result:"fail"});
+              return false;
           }
       }
       catch(err)
       {
           console.error('chatController.insertChat error:', err);
-          res.status(err.status || 500).json({
-              result: "fail",
-              message: err.message || "Server error"
-          });
+          return false;
       }
   }
 

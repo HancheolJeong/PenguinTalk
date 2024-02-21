@@ -45,6 +45,7 @@ router.post("/user/login", userController.loginUser);
 //user
 router.delete("/user/del", userController.deleteUser);
 
+router.post("/user/confirm/pw", userController.confirmPassword);
 router.patch("/user/mod/pw", userController.updatePassword);
 router.patch("/user/mod/picture", upload.single('picture'), userController.updatePicture);
 router.put("/user/mod/info", userController.updateUser);

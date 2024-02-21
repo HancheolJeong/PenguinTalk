@@ -4,11 +4,11 @@ const CHAT_BASE_URL = "http://localhost:3000/chat";
 
 class chatService {
 
-    getChat(sender_id, receiver_id, message_content){
+    getChat(sender_id, receiver_id, page){
         return axios.post(CHAT_BASE_URL + '/' ,{
             sender_id:sender_id, 
             receiver_id:receiver_id, 
-            message_content:message_content},
+            page:page},
             {
                 headers: 
                 {
