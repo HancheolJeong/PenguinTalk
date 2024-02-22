@@ -3,6 +3,7 @@ import friendService from '../services/friendService';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useCallback } from 'react';
+import {handleError} from './libs/handleError';
 
 function UserListComponent() {
     const [users, setUsers] = useState([]);
@@ -16,19 +17,19 @@ function UserListComponent() {
         try {
             switch (type) {
                 case 'user':
-                    res = await friendService.getRequestPossible(localStorage.getItem('userId'), page);
+                    res = await friendService.getRequestPossible(sessionStorage.getItem('userId'), page);
                     break;
                 case 'friend':
-                    res = await friendService.getFriend(localStorage.getItem('userId'), page);
+                    res = await friendService.getFriend(sessionStorage.getItem('userId'), page);
                     break;
                 case 'block':
-                    res = await friendService.getBlock(localStorage.getItem('userId'), page);
+                    res = await friendService.getBlock(sessionStorage.getItem('userId'), page);
                     break;
                 case 'toMe':
-                    res = await friendService.getRequestToMe(localStorage.getItem('userId'), page); // 내가 받은 요청
+                    res = await friendService.getRequestToMe(sessionStorage.getItem('userId'), page); // 내가 받은 요청
                     break;
                 case 'fromMe':
-                    res = await friendService.getRequestFromMe(localStorage.getItem('userId'), page); // 내가 보낸 요청
+                    res = await friendService.getRequestFromMe(sessionStorage.getItem('userId'), page); // 내가 보낸 요청
                     break;
                 default:
                     console.error("redux error");
@@ -42,7 +43,7 @@ function UserListComponent() {
                     const pictureUrl = URL.createObjectURL(pictureRes.data);
                     return { ...item, pictureUrl };
                 } catch (error) {
-                    console.error("Error loading picture for item", item.id, error);
+                    handleError(error, navigate);
                     return { ...item, pictureUrl: 'defaultProfileImageURL' };
                 }
             }));
@@ -127,7 +128,7 @@ function UserListComponent() {
      * @param {string} id : 친구 요청 받은 사용자 Id 
      */
     const handleFriendRequest = async (id) => {
-        const myId = localStorage.getItem('userId');
+        const myId = sessionStorage.getItem('userId');
         try {
             await friendService.addRequest(myId, id);
             alert("친구요청 완료했습니다.");
@@ -143,7 +144,7 @@ function UserListComponent() {
     * @param {string} id : 차단될 사용자 Id 
     */
     const handleUserBlock = async (id) => {
-        const myId = localStorage.getItem('userId');
+        const myId = sessionStorage.getItem('userId');
         try {
             await friendService.addBlock(myId, id);
             alert("차단 완료했습니다.");
@@ -159,7 +160,7 @@ function UserListComponent() {
     * @param {string} id : 친구 삭제될 사용자 Id 
     */
     const handleDeleteFriend = async (id) => {
-        const myId = localStorage.getItem('userId');
+        const myId = sessionStorage.getItem('userId');
         try {
             await friendService.deleteFriend(myId, id);
             alert("친구삭제 완료했습니다.");
@@ -175,7 +176,7 @@ function UserListComponent() {
     * @param {string} id : 요청 삭제될 사용자 Id 
     */
     const handleDeleteRequest = async (id) => {
-        const myId = localStorage.getItem('userId');
+        const myId = sessionStorage.getItem('userId');
         try {
             await friendService.deleteRequest(myId, id); //sender_id, receiver_id
             alert("요청삭제 완료했습니다.");
@@ -191,7 +192,7 @@ function UserListComponent() {
     * @param {string} id : 사용자 Id 
     */
     const handleDeleteRequestToMe = async (id) => {
-        const myId = localStorage.getItem('userId');
+        const myId = sessionStorage.getItem('userId');
         try {
             await friendService.deleteRequest(id, myId); //sender_id, receiver_id
             alert("요청삭제 완료했습니다.");
@@ -208,7 +209,7 @@ function UserListComponent() {
     * @param {string} id : 사용자 Id 
     */
     const handleAddFriend = async (id) => {
-        const myId = localStorage.getItem('userId');
+        const myId = sessionStorage.getItem('userId');
         try {
             await friendService.addFriend(myId, id); //sender_id, receiver_id
             alert("친구추가 완료했습니다.");
@@ -225,7 +226,7 @@ function UserListComponent() {
     * @param {string} id : 사용자 Id 
     */
     const handleCancelBlock = async (id) => {
-        const myId = localStorage.getItem('userId');
+        const myId = sessionStorage.getItem('userId');
         try {
             await friendService.deleteBlock(myId, id); //sender_id, receiver_id
             alert("차단해제 완료했습니다.");

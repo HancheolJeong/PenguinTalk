@@ -100,7 +100,7 @@ CREATE TABLE post (
 CREATE TABLE comments (
     id INT PRIMARY KEY AUTO_INCREMENT,
     post_id INT NOT NULL,
-    user_id VARCHAR(10),
+    user_id VARCHAR(10) NOT NULL,
     content VARCHAR(100) NOT NULL,
     create_dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (post_id) REFERENCES post(id) ON DELETE CASCADE,
@@ -176,12 +176,14 @@ CREATE TABLE chat_history (
 |/user/mod/pw|patch|id, pw|result|
 |/user/mod/url|patch|id, url|result|
 |/user/mod/info|put|id, name, birthday, gender|result|
+|/user/get/img|post|id|image|
 |/user/get/info|post|id|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
 |/user/get/name|post|id|result, items[name]|
 |/user/get/url|post|id|result, items[picture_url]|
 |/user/get/list|post|id|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
 |------|---|---|---|
 |/friend|post|user_id, page|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
+|/friend/get/img|post|id|image|
 |/friend/add|post|user_id, friend_id|result|
 |/friend/del|delete|user_id, friend_id|result|
 |/friend/request/fm|post|sender_id, page|result, items[receiver_id, create_dt]|
@@ -195,8 +197,14 @@ CREATE TABLE chat_history (
 |/friend/block/del|delete|user_id, blocked_id|result|
 |------|---|---|---|
 |/feed:page|get|page|result, items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
+|/feed|get|page, keyword|result, items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
 |/feed|post|id, page|result, items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
-|/feed/get/img|post|id|file(blob)|
+|/feed/search|post|id, page, keyword|result items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
+|/feed/my|post|id, page|result items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
+|/feed/friend|post|id, page|result items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
+|/feed/nonfriend|post|id, page|result items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
+|/feed/postId|post|id|result items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
+|/feed/get/img|post|id|image|
 |/feed/add|post|id, title, content_url, scope|result|
 |/feed/mod|put|id, title, content_url, scope|result|
 |/feed/del|delete|id|result|

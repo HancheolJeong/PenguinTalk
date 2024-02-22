@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import feedService from '../services/feedService';
+import {handleError} from './libs/handleError';
 
 function HeaderComponent() {
     const [dropdownVisible, setDropdownVisible] = useState(false);
@@ -25,6 +26,17 @@ function HeaderComponent() {
             console.log('oops');
         }
 
+        const fetchTags = async () => {
+            try {
+                const res = await feedService.getTag(sessionStorage.getItem('userId'));
+                setTags(res.data.items); // API 응답 형식에 따라 조정이 필요할 수 있습니다.
+            } catch (error) {
+                handleError(error, navigate);
+            }
+        };
+
+        fetchTags();
+        
         const handleClickOutside = (event) => {
             if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
                 setDropdownVisible(false);
@@ -36,16 +48,7 @@ function HeaderComponent() {
             document.removeEventListener('mousedown', handleClickOutside);
         };
 
-        const fetchTags = async () => {
-            try {
-                const res = await feedService.getTag(sessionStorage.getItem('userId'));
-                setTags(res.data.items); // API 응답 형식에 따라 조정이 필요할 수 있습니다.
-            } catch (error) {
-                console.error("Error fetching tags:", error);
-            }
-        };
 
-        fetchTags();
     }, [isLoggedIn]);
 
     const handleSearchChange = (event) => {

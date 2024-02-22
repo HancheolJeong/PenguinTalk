@@ -3,7 +3,8 @@ import axios from 'axios';
 const CHAT_BASE_URL = "http://localhost:3000/chat";
 
 class chatService {
-
+    
+    
     getChat(sender_id, receiver_id){
         return axios.post(CHAT_BASE_URL + '/' ,{
             sender_id:sender_id, 
@@ -11,24 +12,24 @@ class chatService {
             {
                 headers: 
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
-    }
-
-    addChat(sender_id, receiver_id, page){
-        return axios.post(CHAT_BASE_URL + '/add', {
-            sender_id:sender_id, 
-            receiver_id:receiver_id, 
-            page:page},
-            {
-                headers: 
+        }
+        
+        addChat(sender_id, receiver_id, page){
+            return axios.post(CHAT_BASE_URL + '/add', {
+                sender_id:sender_id, 
+                receiver_id:receiver_id, 
+                page:page},
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-    }
-
-}
+                    headers: 
+                    {
+                        'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    }
+                });
+            }
+            
+        }
 
 export default new chatService()

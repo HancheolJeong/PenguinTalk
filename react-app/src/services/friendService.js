@@ -122,7 +122,7 @@ class friendService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -135,7 +135,7 @@ class friendService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -147,7 +147,7 @@ class friendService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -160,7 +160,7 @@ class friendService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -176,7 +176,7 @@ class friendService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -184,12 +184,13 @@ class friendService {
     getPicture(id) {
         return axios.post(FRIEND_BASE_URL + '/get/img', { id: id }, {
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
             },
             responseType: 'blob'
         });
     }
 
 }
+
 
 export default new friendService()

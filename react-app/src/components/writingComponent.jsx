@@ -3,6 +3,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import feedService from '../services/feedService';
 import { useNavigate } from 'react-router-dom'; 
+import {handleError} from './libs/handleError';
 
 function WritingComponent() {
     const [title, setTitle] = useState('');
@@ -32,7 +33,7 @@ function WritingComponent() {
                 navigate('/');
             })
             .catch(error => {
-                console.error('Error submitting post:', error);
+                handleError(error, navigate);
             });
     };
 

@@ -3,6 +3,7 @@ import userService from '../services/userService';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import {login, logout} from '../slices/loginSlice';
+import {handleError} from './libs/handleError';
 
 function SignInComponent() {
     const [id, setId] = useState('');
@@ -37,11 +38,12 @@ function SignInComponent() {
 
                 navigate('/'); 
             } else {
-                setErrorMessage('Login failed. Please check your credentials.');
+                setErrorMessage('로그인실패했습니다. 다시 확인해주세요.');
             }
         } catch (error) {
+            setErrorMessage('로그인중에 에러가 발생했습니다.');
             console.error("Login error: ", error);
-            setErrorMessage('An error occurred during login.');
+            handleError(error, navigate);
         }
     };
 

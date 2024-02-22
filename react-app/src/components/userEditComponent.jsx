@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import userService from '../services/userService'; // Ensure this is correctly set up
 import { useNavigate } from 'react-router-dom';
+import { handleError } from './libs/handleError';
 
 function UserEditComponent() {
     const [user, setUser] = useState({});
@@ -12,7 +13,7 @@ function UserEditComponent() {
     const navigate = useNavigate();
     const formatDateToYYYYMMDD = (date) => {
         return date ? new Date(date).toISOString().slice(0, 10) : '';
-      };
+    };
     useEffect(() => {
         fetchUserInformation();
     }, []);
@@ -34,14 +35,14 @@ function UserEditComponent() {
                     const pictureUrl = URL.createObjectURL(pictureRes.data);
                     user.pictureUrl = pictureUrl;
                 } catch (error) {
-                    console.error("Error fetching picture for user", user.id, error);
                     user.pictureUrl = defaultImageUrl;
+                    handleError(error, navigate);
                 }
             } else {
                 console.error("User information fetch failed or no data returned");
             }
         } catch (error) {
-            console.error("Error fetching user information:", error);
+            handleError(error, navigate);
         }
     };
 
@@ -57,31 +58,32 @@ function UserEditComponent() {
             const pictureFormData = new FormData();
             pictureFormData.append('id', userId);
             pictureFormData.append('picture', profilePicture);
-            try{
+            try {
 
                 const pictureRes = await userService.updateUserPicture(pictureFormData);
-                if(pictureRes.data.result !== "success")
-                {
+                if (pictureRes.data.result !== "success") {
                     alert('이미지 업로드 중 에러가 발생했습니다.');
                 }
-            }catch(error)
-            {
-                console.log('error : ', error);
+            } catch (error) {
+                handleError(error, navigate);
             }
         }
-
-        const modRes = await userService.updateUser(userId, name, birthday, gender === 'Male' ? 0 : 1);
-        if(modRes.data.result === "success")
-        {
-            alert('업데이트 완료했습니다.');
-            navigate('/userinfo')
+        try {
+            const modRes = await userService.updateUser(userId, name, birthday, gender === 'Male' ? 0 : 1);
+            if (modRes.data.result === "success") {
+                alert('업데이트 완료했습니다.');
+                navigate('/userinfo')
+            }
+            else {
+                alert('업데이트 실패했습니다.');
+            }
         }
-        else
-        {
-            alert('업데이트 실패했습니다.');
+        catch (error) {
+            handleError(error, navigate);
         }
 
-        console.log('Profile and user information updated');
+
+
     };
 
     return (

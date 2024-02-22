@@ -26,7 +26,7 @@ class feedService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -40,7 +40,7 @@ class feedService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -60,7 +60,7 @@ class feedService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -80,7 +80,7 @@ class feedService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -100,7 +100,7 @@ class feedService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -118,15 +118,16 @@ class feedService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
 
     getPicture(id) {
         return axios.post(FEED_BASE_URL + '/get/img', { id: id }, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            headers:
+            {
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
             },
             responseType: 'blob'
         });
@@ -139,7 +140,14 @@ class feedService {
             title: title,
             content_url: content_url,
             scope: scope
-        });
+        },
+        {
+            headers:
+            {
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+            }
+        }
+        );
     }
 
 
@@ -153,7 +161,7 @@ class feedService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -169,7 +177,7 @@ class feedService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -182,7 +190,7 @@ class feedService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -197,7 +205,7 @@ class feedService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -210,7 +218,7 @@ class feedService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -225,7 +233,7 @@ class feedService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -239,7 +247,7 @@ class feedService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -248,5 +256,8 @@ class feedService {
 
 
 }
+
+
+
 
 export default new feedService()

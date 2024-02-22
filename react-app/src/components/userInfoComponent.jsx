@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import userService from '../services/userService';
 import { useNavigate } from 'react-router-dom';
+import {handleError} from './libs/handleError';
 
 function UserInfoComponent() {
     const [user, setUser] = useState(null);
@@ -36,8 +37,8 @@ function UserInfoComponent() {
                     const pictureUrl = URL.createObjectURL(pictureRes.data);
                     user.pictureUrl = pictureUrl;
                 } catch (error) {
-                    console.error("Error fetching picture for user", user.id, error);
                     user.pictureUrl = 'defaultProfileImageUrl';
+                    handleError(error, navigate);
                 }
 
                 setUser(user);
@@ -45,7 +46,7 @@ function UserInfoComponent() {
                 console.error("User information fetch failed or no data returned");
             }
         } catch (error) {
-            console.error("Error fetching user information:", error);
+            handleError(error, navigate);
         }
     };
 
@@ -75,8 +76,8 @@ function UserInfoComponent() {
                 handleLogout();
                 navigate('/');
             } catch (error) {
-                console.error("회원 탈퇴 중 오류 발생:", error);
                 alert('회원 탈퇴 처리 중 문제가 발생했습니다. 다시 시도해 주세요.');
+                handleError(error, navigate);
             }
         } else {
             // 사용자가 '아니오'를 선택한 경우, 아무런 동작을 하지 않음

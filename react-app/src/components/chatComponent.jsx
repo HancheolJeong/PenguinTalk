@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import friendService from '../services/friendService';
 import chatService from '../services/chatService';
+import {handleError} from './libs/handleError';
+import { useNavigate } from 'react-router-dom';
 
 function ChatComponent() {
     const [message, setMessage] = useState('');
@@ -10,7 +12,8 @@ function ChatComponent() {
     const [selectedFriendId, setSelectedFriendId] = useState(null);
     const [chatHistory, setChatHistory] = useState([]);
     const [page, setPage] = useState(1);
-    const userId = localStorage.getItem('userId');
+    const userId = sessionStorage.getItem('userId');
+    const navigate = useNavigate();
 
     useEffect(() => {
         const newSocket = io("http://localhost:3000");
@@ -41,22 +44,32 @@ function ChatComponent() {
 
     useEffect(() => {
         const loadFriends = async () => {
-            const res = await friendService.getFriend(userId, page);
-            const feedItems = res.data.items;
-            for(let item of feedItems)
+            try
             {
-                try{
-                    const PictureRes = await friendService.getPicture(item.id);
-                    const picture = URL.createObjectURL(PictureRes.data);
-                    item.picture = picture;
-                }catch (error)
+                const res = await friendService.getFriend(userId, page);
+                const feedItems = res.data.items;
+                for(let item of feedItems)
                 {
-                    console.error("Error loading picture", error);
-                    item.picture = 'default';
+                    try{
+                        const PictureRes = await friendService.getPicture(item.id);
+                        const picture = URL.createObjectURL(PictureRes.data);
+                        item.picture = picture;
+                    }catch (error)
+                    {
+                        console.error("Error loading picture", error);
+                        item.picture = 'default';
+                    }
+    
                 }
-
+                setFriends(feedItems);
             }
-            setFriends(feedItems);
+            catch(error)
+            {
+                handleError(error, navigate)
+            }
+
+
+
         };
         loadFriends();
     }, [page]);
@@ -69,7 +82,7 @@ function ChatComponent() {
                 const reversedData = [...res.data.items].reverse();
                 setChatHistory(reversedData);
             } catch (error) {
-                console.error("채팅 기록 로드 중 오류 발생:", error);
+                handleError(error, navigate);
             }
         };
 

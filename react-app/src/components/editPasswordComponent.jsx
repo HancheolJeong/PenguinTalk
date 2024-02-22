@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import userService from '../services/userService';
+import {handleError} from './libs/handleError';
 
 function EditPasswordComponent() {
     const [currentPassword, setCurrentPassword] = useState('');
@@ -9,7 +10,7 @@ function EditPasswordComponent() {
     const [step, setStep] = useState(1);
     const navigate = useNavigate();
 
-    const userId = localStorage.getItem('userId');
+    const userId = sessionStorage.getItem('userId');
 
     const verifyCurrentPassword = async () => {
         try {
@@ -22,8 +23,8 @@ function EditPasswordComponent() {
                 alert('패스워드가 정확하지 않습니다.');
             }
         } catch (error) {
-            console.error(error);
-            alert('An error occurred while verifying your password.');
+            alert('에러가 발생했습니다.');
+            handleError(error, navigate);
         }
     };
 
@@ -41,8 +42,8 @@ function EditPasswordComponent() {
                 alert('패스워드 변경 실패했습니다.');
             }
         } catch (error) {
-            console.error(error);
-            alert('An error occurred while updating your password.');
+            alert('패스워드 변경중에 에러가 발생했습니다.');
+            handleError(error, navigate);
         }
     };
 

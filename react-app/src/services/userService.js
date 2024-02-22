@@ -25,6 +25,12 @@ class userService {
         return axios.post(USER_BASE_URL + '/confirm/pw', {
             id: id,
             pw: pw
+        },
+        {
+            headers:
+            {
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+            }
         });
     }
 
@@ -91,7 +97,7 @@ class userService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer a ${sessionStorage.getItem('token')}`
                 }
             });
     }
@@ -142,5 +148,7 @@ class userService {
     }
 
 }
+
+
 
 export default new userService()
