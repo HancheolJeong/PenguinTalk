@@ -4,6 +4,8 @@ import { MentionsInput, Mention } from 'react-mentions';
 import friendService from '../services/friendService';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { handleError } from './libs/handleError';
+import { selectId, selectIsLoggedIn, selectToken } from '../slices/loginSlice';
+import { useSelector } from 'react-redux';
 
 function FeedComponent() {
     const [feed, setFeed] = useState([]); //feed 정보 배열
@@ -16,6 +18,10 @@ function FeedComponent() {
     const [tags, setTags] = useState([]); // 태그된 id 배열
     const [inputComment, setInputComment] = useState(''); // insert될 댓글
     const [friends, setFriends] = useState([]); // 나의 친구 목록
+
+    const isLoggedIn = useSelector(selectIsLoggedIn);
+    const token = useSelector(selectToken);
+    const myId = useSelector(selectId);
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -35,7 +41,7 @@ function FeedComponent() {
     const fetchComments = async (itemId, page = 1) => {
         setIsLoading(true);
         try {
-            const commentsRes = await feedService.getComment(itemId, page);
+            const commentsRes = await feedService.getComment(itemId, page, token);
             setComments(commentsRes.data.items);
             setCommentsPage(page);
         } catch (error) {
@@ -47,7 +53,7 @@ function FeedComponent() {
     };
 
     const openPopup = async (item) => {
-        if (sessionStorage.getItem('isLoggedIn') === 'false') {
+        if (!isLoggedIn) {
             alert('로그인을 해주세요.');
             navigate('/signin');
             return;
@@ -76,19 +82,18 @@ function FeedComponent() {
 
     const handleDeleteItem = async (post_id, user_id) => {
 
-        if (sessionStorage.getItem('isLoggedIn') === 'false') {
+        if (!isLoggedIn) {
             alert("로그인을 해주세요.");
             navigate('/signin');
             return;
         }
 
 
-        const userId = sessionStorage.getItem('userId');
         const isConfirmed = window.confirm("정말 삭제하시겠습니까?");
         if (isConfirmed) {
-            if (user_id === userId) {
+            if (user_id === myId) {
                 try {
-                    const res = await feedService.deleteFeed(post_id);
+                    const res = await feedService.deleteFeed(post_id, token);
                     if (res.data.result === "success") {
                         alert("게시글 삭제 완료했습니다.");
                         fetchFeed();
@@ -121,7 +126,7 @@ function FeedComponent() {
 
         try {
 
-            const res = await feedService.addComment(post_id, sessionStorage.getItem('userId'), comment, idArray);
+            const res = await feedService.addComment(post_id, myId, comment, idArray, token);
             if (res.data.result === "fail") {
                 alert("댓글 추가 실패했습니다...");
             } else {
@@ -138,10 +143,9 @@ function FeedComponent() {
     const fetchFeed = async () => {
         window.scrollTo(0, 0); //최상단 스크롤 위치로 이동
         setIsLoading(true);
-        const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
         if (isLoggedIn) {
             try {
-                const friendsRes = await friendService.getFriendAll(sessionStorage.getItem('userId'));
+                const friendsRes = await friendService.getFriendAll(myId, token);
                 if (friendsRes.data.result === "success") {
                     const friendsData = friendsRes.data.items.map(friend => ({
                         id: friend.id,
@@ -160,27 +164,26 @@ function FeedComponent() {
             {
                 switch (state) {
                     case 'common': // 모든 게시글
-                        res = await feedService.getFeedLoggedIn(sessionStorage.getItem('userId'), page);
+                        res = await feedService.getFeedLoggedIn(myId, page, token);
                         break;
                     case 'search':// 게시글 검색
-                        res = await feedService.getSearchedFeedLoggedIn(sessionStorage.getItem('userId'), page, keyword);
+                        res = await feedService.getSearchedFeedLoggedIn(myId, page, keyword, token);
                         break;
                     case 'findMine': // 내가 작성한 게시글
-                        res = await feedService.getMyPosts(sessionStorage.getItem('userId'), page);
-                        console.log(sessionStorage.getItem('userId'));
+                        res = await feedService.getMyPosts(myId, page, token);
                         break;
                     case 'findFriends': // 친구가 작성한 게시글
-                        res = await feedService.getFriendPosts(userId, page);
+                        res = await feedService.getFriendPosts(userId, page, token);
                         break;
                     case 'findNonFriends': // 다른 유저가 작성한 게시글
-                        res = await feedService.getNonFriendPosts(userId, page);
+                        res = await feedService.getNonFriendPosts(userId, page, token);
                         break;
                     case 'tag': // 태그된 게시물
-                        res = await feedService.getPostWithTags(keyword);
+                        res = await feedService.getPostWithTags(keyword, token);
                         break;
                     default: // 해당 사항이 없음..
                         console.log('feedComponent.jsx not find state');
-                        res = await feedService.getFeedLoggedIn(sessionStorage.getItem('userId'), page)
+                        res = await feedService.getFeedLoggedIn(myId, page, token)
                         break;
 
                 }
@@ -194,18 +197,9 @@ function FeedComponent() {
                     case 'search': // 게시글 검색
                         res = await feedService.getSearchedFeed(page, keyword);
                         break;
-                    case 'findMine': // 내가 작성한 게시글 (이쪽으로 올 수 없음)
-                        res = await feedService.getMyPosts(sessionStorage.getItem('userId'), page, keyword);
-                        break;
-                    case 'findFriends': // 친구가 작성한 게시글 (이쪽으로 올 수 없음)
-                        res = await feedService.getFriendPosts(userId, page, keyword);
-                        break;
-                    case 'findNonFriends': // 다른 유저가 작성한 게시글 (이쪽으로 올 수 없음)
-                        res = await feedService.getNonFriendPosts(userId, page, keyword);
-                        break;
                     default: // 해당 사항이 없음..
                         console.log('feedComponent.jsx not find state');
-                        res = await feedService.getFeedLoggedIn(sessionStorage.getItem('userId'), page)
+                        res = await feedService.getFeed(page)
                         break;
 
                 }

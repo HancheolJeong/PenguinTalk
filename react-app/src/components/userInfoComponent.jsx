@@ -1,13 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
 import userService from '../services/userService';
 import { useNavigate } from 'react-router-dom';
-import {handleError} from './libs/handleError';
+import { handleError } from './libs/handleError';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../slices/loginSlice';
+import { selectId, selectIsLoggedIn, selectToken } from '../slices/loginSlice';
 
 function UserInfoComponent() {
     const [user, setUser] = useState(null);
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const wrapperRef = useRef(null);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const isLoggedIn = useSelector(selectIsLoggedIn);
+    const token = useSelector(selectToken);
+    const userId = useSelector(selectId);
+    // const isLoggedIn = useSelector(state => state.loginSlice.isLoggedIn);
+    // const token = useSelector(state => state.loginSlice.token);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -27,13 +37,17 @@ function UserInfoComponent() {
 
     const fetchUserInformation = async () => {
         try {
-            const userId = sessionStorage.getItem('userId');
-            const response = await userService.getUserInformation(userId);
+
+            // console.log("Stored token from Redux:", token);
+
+
+
+            const response = await userService.getUserInformation(userId, token);
             if (response.data.result === 'success' && response.data.items.length > 0) {
                 const user = response.data.items[0];
 
                 try {
-                    const pictureRes = await userService.getPicture(user.id);
+                    const pictureRes = await userService.getPicture(user.id, token);
                     const pictureUrl = URL.createObjectURL(pictureRes.data);
                     user.pictureUrl = pictureUrl;
                 } catch (error) {
@@ -55,14 +69,12 @@ function UserInfoComponent() {
     * @param {string} id : 사용자 Id 
     */
     const handleNavigateMyposts = async () => {
-        navigate('/', { state: { state: 'findMine', userId: sessionStorage.getItem('userId') } });
+        navigate('/', { state: { state: 'findMine', userId: userId } });
     };
 
 
     const handleLogout = () => {
-        sessionStorage.setItem('isLoggedIn', false);
-        sessionStorage.removeItem('userId');
-        sessionStorage.removeItem('token');
+        dispatch(logout({ token: '', id: '' }));
         navigate('/');
     };
 
@@ -70,9 +82,9 @@ function UserInfoComponent() {
         const isConfirmed = window.confirm("정말 탈퇴하시겠습니까?");
         if (isConfirmed) {
             try {
-                await userService.deleteUser(sessionStorage.getItem('userId'));
+                await userService.deleteUser(userId, token);
                 alert('회원 탈퇴 처리가 완료되었습니다.');
-    
+
                 handleLogout();
                 navigate('/');
             } catch (error) {

@@ -21,35 +21,34 @@ class userService {
         });
     }
 
-    confirmPassword(id, pw) {
+    confirmPassword(id, pw, token) {
         return axios.post(USER_BASE_URL + '/confirm/pw', {
             id: id,
             pw: pw
         },
-        {
-            headers:
-            {
-                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
-            }
-        });
-    }
-
-    deleteUser(id) {
-        return axios.delete(USER_BASE_URL + '/del', {
-            data: {
-
-                id: id
-            }
-        },
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
 
-    updateUserPassword(id, pw) {
+    deleteUser(id, token) {
+        return axios.delete(USER_BASE_URL + '/del', {
+            data: {
+
+                id: id
+            },
+            headers:
+            {
+                'Authorization': `Bearer ${token}`
+            }
+        },
+        );
+    }
+
+    updateUserPassword(id, pw, token) {
         return axios.patch(USER_BASE_URL + '/mod/pw', {
             id: id,
             pw: pw
@@ -57,12 +56,12 @@ class userService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
 
-    updateUserPicture(formData) {
+    updateUserPicture(formData, token) {
         for (let [key, value] of formData.entries()) {
             console.log(key, value);
         }
@@ -70,12 +69,12 @@ class userService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
 
-    updateUser(id, name, birthday, gender) {
+    updateUser(id, name, birthday, gender, token) {
         return axios.put(USER_BASE_URL + '/mod/info', {
             id: id,
             name: name,
@@ -85,63 +84,63 @@ class userService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
 
-    getUserInformation(id) {
+    getUserInformation(id, token) {
         return axios.post(USER_BASE_URL + '/get/info', {
             id: id
         },
             {
                 headers:
                 {
-                    'Authorization': `Bearer a ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
 
-    getUserName(id) {
+    getUserName(id, token) { //미사용
         return axios.post(USER_BASE_URL + '/get/name', {
             id: id
         },
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
 
-    getUserPictureURL(id) {
+    getUserPictureURL(id, token) {//미사용
         return axios.post(USER_BASE_URL + '/get/url', {
             id: id
         },
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
 
-    getUserList(id) {
+    getUserList(id, token) { //미사용
         return axios.post(USER_BASE_URL + '/get/list', {
             id: id
         },
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
 
-    getPicture(id) {
+    getPicture(id, token) {
         return axios.post(USER_BASE_URL + '/get/img', { id: id }, {
             headers: {
-                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                'Authorization': `Bearer ${token}`
             },
             responseType: 'blob'
         });

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import userService from '../services/userService'; // Ensure this is correctly set up
 import { useNavigate } from 'react-router-dom';
 import { handleError } from './libs/handleError';
+import { useSelector } from 'react-redux';
+import { selectId, selectIsLoggedIn, selectToken } from '../slices/loginSlice';
 
 function UserEditComponent() {
     const [user, setUser] = useState({});
@@ -10,6 +12,9 @@ function UserEditComponent() {
     const [birthday, setBirthday] = useState('');
     const [profilePicture, setProfilePicture] = useState(null);
     const defaultImageUrl = process.env.PUBLIC_URL + '/defaultProfileImageUrl.png';
+    const isLoggedIn = useSelector(selectIsLoggedIn);
+    const token = useSelector(selectToken);
+    const userId = useSelector(selectId);
     const navigate = useNavigate();
     const formatDateToYYYYMMDD = (date) => {
         return date ? new Date(date).toISOString().slice(0, 10) : '';
@@ -20,8 +25,7 @@ function UserEditComponent() {
 
     const fetchUserInformation = async () => {
         try {
-            const userId = sessionStorage.getItem('userId');
-            const response = await userService.getUserInformation(userId);
+            const response = await userService.getUserInformation(userId, token);
             if (response.data.result === 'success' && response.data.items.length > 0) {
                 const user = response.data.items[0];
 
@@ -31,7 +35,7 @@ function UserEditComponent() {
                 setUser(user); // Store the user data in state
 
                 try {
-                    const pictureRes = await userService.getPicture(user.id);
+                    const pictureRes = await userService.getPicture(user.id, token);
                     const pictureUrl = URL.createObjectURL(pictureRes.data);
                     user.pictureUrl = pictureUrl;
                 } catch (error) {
@@ -39,7 +43,7 @@ function UserEditComponent() {
                     handleError(error, navigate);
                 }
             } else {
-                console.error("User information fetch failed or no data returned");
+
             }
         } catch (error) {
             handleError(error, navigate);
@@ -52,7 +56,6 @@ function UserEditComponent() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const userId = sessionStorage.getItem('userId');
 
         if (profilePicture) {
             const pictureFormData = new FormData();
@@ -60,7 +63,7 @@ function UserEditComponent() {
             pictureFormData.append('picture', profilePicture);
             try {
 
-                const pictureRes = await userService.updateUserPicture(pictureFormData);
+                const pictureRes = await userService.updateUserPicture(pictureFormData, token);
                 if (pictureRes.data.result !== "success") {
                     alert('이미지 업로드 중 에러가 발생했습니다.');
                 }
@@ -69,7 +72,7 @@ function UserEditComponent() {
             }
         }
         try {
-            const modRes = await userService.updateUser(userId, name, birthday, gender === 'Male' ? 0 : 1);
+            const modRes = await userService.updateUser(userId, name, birthday, gender === 'Male' ? 0 : 1, token);
             if (modRes.data.result === "success") {
                 alert('업데이트 완료했습니다.');
                 navigate('/userinfo')
@@ -103,7 +106,6 @@ function UserEditComponent() {
                     <select className="form-select" value={gender} onChange={(e) => setGender(e.target.value)}>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
-                        <option value="Other">Other</option>
                     </select>
                 </div>
                 <div className="mb-3">

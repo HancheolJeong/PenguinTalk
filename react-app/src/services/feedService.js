@@ -17,7 +17,7 @@ class feedService {
         });
     }
 
-    getFeedLoggedIn(id, page) {
+    getFeedLoggedIn(id, page, token) {
         return axios.post(FEED_BASE_URL + '/',
             {
                 id: id,
@@ -26,11 +26,11 @@ class feedService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
-    getSearchedFeedLoggedIn(id, page, keyword) {
+    getSearchedFeedLoggedIn(id, page, keyword, token) {
         return axios.post(FEED_BASE_URL + '/search',
             {
                 id: id,
@@ -40,7 +40,7 @@ class feedService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
@@ -51,7 +51,7 @@ class feedService {
      * @param {string} page : 페이지 번호
      * @returns json
      */
-    getMyPosts(id, page) {
+    getMyPosts(id, page, token) {
         return axios.post(FEED_BASE_URL + '/my',
             {
                 id: id,
@@ -60,7 +60,7 @@ class feedService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
@@ -71,7 +71,7 @@ class feedService {
      * @param {string} page : 페이지 번호
      * @returns json
      */
-    getFriendPosts(id, page) {
+    getFriendPosts(id, page, token) {
         return axios.post(FEED_BASE_URL + '/friend',
             {
                 id: id,
@@ -80,7 +80,7 @@ class feedService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
@@ -91,7 +91,7 @@ class feedService {
      * @param {string} page : 페이지 번호
      * @returns json
      */
-    getNonFriendPosts(id, page) {
+    getNonFriendPosts(id, page, token) {
         return axios.post(FEED_BASE_URL + '/nonfriend',
             {
                 id: id,
@@ -100,7 +100,7 @@ class feedService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
@@ -110,7 +110,7 @@ class feedService {
      * @param {string} id 
      * @returns 
      */
-    getPostWithTags(id) {
+    getPostWithTags(id, token) {
         return axios.post(FEED_BASE_URL + '/postId',
             {
                 id: id
@@ -118,40 +118,37 @@ class feedService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
 
     getPicture(id) {
         return axios.post(FEED_BASE_URL + '/get/img', { id: id }, {
-            headers:
-            {
-                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
-            },
+
             responseType: 'blob'
         });
     }
 
 
-    addFeed(id, title, content_url, scope) {
+    addFeed(id, title, content_url, scope, token) {
         return axios.post(FEED_BASE_URL + '/add', {
             id: id,
             title: title,
             content_url: content_url,
             scope: scope
         },
-        {
-            headers:
             {
-                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                headers:
+                {
+                    'Authorization': `Bearer ${token}`
+                }
             }
-        }
         );
     }
 
 
-    updateFeed(id, title, content_url, scope) {
+    updateFeed(id, title, content_url, scope, token) { //미사용
         return axios.put(FEED_BASE_URL + '/mod', {
             id: id,
             title: title,
@@ -161,28 +158,27 @@ class feedService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
 
-    deleteFeed(id) {
+    deleteFeed(id, token) {
         return axios.delete(FEED_BASE_URL + '/del',
             {
                 data: {
 
                     id: id
-                }
-            },
-            {
+                },
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
-            });
+            },
+        );
     }
 
-    getComment(post_id, page) {
+    getComment(post_id, page, token) {
         return axios.post(FEED_BASE_URL + '/comment/', {
             post_id: post_id,
             page: page
@@ -190,12 +186,12 @@ class feedService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
 
-    addComment(post_id, user_id, content, users) {
+    addComment(post_id, user_id, content, users, token) {
         return axios.post(FEED_BASE_URL + '/comment/add', {
             post_id: post_id,
             user_id: user_id,
@@ -205,12 +201,12 @@ class feedService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
 
-    updateFeed(id, content) {
+    updateComment(id, content, token) { //미사용
         return axios.put(FEED_BASE_URL + '/comment/mod', {
             id: id,
             content: content
@@ -218,36 +214,35 @@ class feedService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
 
-    deleteComment(id) {
+    deleteComment(id, token) { //미사용
         return axios.delete(FEED_BASE_URL + '/comment/del', {
             data: {
 
                 id: id
+            },
+            headers:
+            {
+                'Authorization': `Bearer ${token}`
             }
         },
-            {
-                headers:
-                {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
-                }
-            });
+        );
     }
 
 
 
-    getTag(user_id) {
+    getTag(user_id, token) {
         return axios.post(FEED_BASE_URL + '/tag', {
             user_id: user_id
         },
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }

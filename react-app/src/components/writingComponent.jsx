@@ -4,12 +4,19 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import feedService from '../services/feedService';
 import { useNavigate } from 'react-router-dom'; 
 import {handleError} from './libs/handleError';
+import { selectId, selectIsLoggedIn, selectToken } from '../slices/loginSlice';
+import { useSelector } from 'react-redux';
 
 function WritingComponent() {
     const [title, setTitle] = useState('');
     const [body, setBody] = useState('');
     const [scope, setScope] = useState('0'); 
     const navigate = useNavigate(); 
+
+    const isLoggedIn = useSelector(selectIsLoggedIn);
+    const token = useSelector(selectToken);
+    const userId = useSelector(selectId);
+
 
     const onTitleChange = (e) => {
         setTitle(e.target.value);
@@ -26,9 +33,8 @@ function WritingComponent() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const userId = sessionStorage.getItem('userId'); 
 
-        feedService.addFeed(userId, title, body, scope)
+        feedService.addFeed(userId, title, body, scope, token)
             .then(response => {
                 navigate('/');
             })

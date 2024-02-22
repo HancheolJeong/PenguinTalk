@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import userService from '../services/userService';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import {login, logout} from '../slices/loginSlice';
+import {login} from '../slices/loginSlice';
 import {handleError} from './libs/handleError';
 
 function SignInComponent() {
@@ -30,10 +30,7 @@ function SignInComponent() {
 
             if (data.result === 'success') {
 
-                dispatch(login(data.token))
-                sessionStorage.setItem('isLoggedIn', true);
-                sessionStorage.setItem('userId', id);
-                sessionStorage.setItem('token', data.token);
+                dispatch(login({ token: data.token, id: id }));
 
 
                 navigate('/'); 

@@ -4,7 +4,7 @@ const FRIEND_BASE_URL = "http://localhost:3000/friend";
 
 class friendService {
 
-    getFriend(user_id, page) {
+    getFriend(user_id, page, token) {
         return axios.post(FRIEND_BASE_URL + '/', {
             user_id: user_id,
             page: page
@@ -12,24 +12,24 @@ class friendService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
 
-    getFriendAll(user_id) {
+    getFriendAll(user_id, token) {
         return axios.post(FRIEND_BASE_URL + '/all', {
             user_id: user_id,
         },
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
 
-    addFriend(user_id, friend_id) {
+    addFriend(user_id, friend_id, token) {
         return axios.post(FRIEND_BASE_URL + '/add', {
             user_id: user_id,
             friend_id: friend_id
@@ -37,28 +37,26 @@ class friendService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
 
-    deleteFriend(user_id, friend_id) {
+    deleteFriend(user_id, friend_id, token) {
         return axios.delete(FRIEND_BASE_URL + '/del', {
             data: {
                 user_id: user_id,
                 friend_id: friend_id
 
-            }
-        },
+            },
+            headers:
             {
-                headers:
-                {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
-                }
-            });
+                'Authorization': `Bearer ${token}`
+            }
+        },);
     }
 
-    getRequestFromMe(sender_id, page) {
+    getRequestFromMe(sender_id, page, token) {
         return axios.post(FRIEND_BASE_URL + '/request/fm', {
             sender_id: sender_id,
             page: page
@@ -66,12 +64,12 @@ class friendService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
 
-    getRequestToMe(receiver_id, page) {
+    getRequestToMe(receiver_id, page, token) {
         return axios.post(FRIEND_BASE_URL + '/request/tm', {
             receiver_id: receiver_id,
             page: page
@@ -79,12 +77,12 @@ class friendService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
 
-    getRequestPossible(user_id, page) {
+    getRequestPossible(user_id, page, token) {
         return axios.post(FRIEND_BASE_URL + '/request/pos', {
             user_id: user_id,
             page: page
@@ -92,12 +90,12 @@ class friendService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
 
-    addRequest(sender_id, receiver_id) {
+    addRequest(sender_id, receiver_id, token) {
         return axios.post(FRIEND_BASE_URL + '/request/add', {
             sender_id: sender_id,
             receiver_id: receiver_id
@@ -105,29 +103,28 @@ class friendService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
 
-    deleteRequest(sender_id, receiver_id) {
+    deleteRequest(sender_id, receiver_id, token) {
         console.log(sender_id, receiver_id);
         return axios.delete(FRIEND_BASE_URL + '/request/del', {
             data: {
 
                 sender_id: sender_id,
                 receiver_id: receiver_id
+            },
+            headers:
+            {
+                'Authorization': `Bearer ${token}`
             }
         },
-            {
-                headers:
-                {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
-                }
-            });
+        );
     }
 
-    getBlock(user_id, page) {
+    getBlock(user_id, page, token) {
         return axios.post(FRIEND_BASE_URL + '/block', {
             user_id: user_id,
             page: page
@@ -135,24 +132,24 @@ class friendService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
 
-    getBlockPossible(user_id) {
+    getBlockPossible(user_id, token) { // 미사용
         return axios.post(FRIEND_BASE_URL + '/block/pos', {
             user_id: user_id
         },
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
 
-    addBlock(user_id, blocked_id) {
+    addBlock(user_id, blocked_id, token) {
         return axios.post(FRIEND_BASE_URL + '/block/add', {
             user_id: user_id,
             blocked_id: blocked_id
@@ -160,31 +157,31 @@ class friendService {
             {
                 headers:
                 {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
     }
 
-    deleteBlock(user_id, blocked_id) {
+
+    deleteBlock(user_id, blocked_id, token) {
         return axios.delete(FRIEND_BASE_URL + '/block/del', {
             data: {
 
                 user_id: user_id,
                 blocked_id: blocked_id
+            },
+            headers:
+            {
+                'Authorization': `Bearer ${token}`
             }
         },
-            {
-                headers:
-                {
-                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
-                }
-            });
+        );
     }
 
-    getPicture(id) {
+    getPicture(id, token) {
         return axios.post(FRIEND_BASE_URL + '/get/img', { id: id }, {
             headers: {
-                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                'Authorization': `Bearer ${token}`
             },
             responseType: 'blob'
         });

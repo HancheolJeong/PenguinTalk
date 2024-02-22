@@ -4,6 +4,8 @@ import friendService from '../services/friendService';
 import chatService from '../services/chatService';
 import {handleError} from './libs/handleError';
 import { useNavigate } from 'react-router-dom';
+import { selectId, selectIsLoggedIn, selectToken } from '../slices/loginSlice';
+import { useSelector } from 'react-redux';
 
 function ChatComponent() {
     const [message, setMessage] = useState('');
@@ -12,7 +14,9 @@ function ChatComponent() {
     const [selectedFriendId, setSelectedFriendId] = useState(null);
     const [chatHistory, setChatHistory] = useState([]);
     const [page, setPage] = useState(1);
-    const userId = sessionStorage.getItem('userId');
+    const isLoggedIn = useSelector(selectIsLoggedIn);
+    const token = useSelector(selectToken);
+    const userId = useSelector(selectId);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -46,12 +50,12 @@ function ChatComponent() {
         const loadFriends = async () => {
             try
             {
-                const res = await friendService.getFriend(userId, page);
+                const res = await friendService.getFriend(userId, page, token);
                 const feedItems = res.data.items;
                 for(let item of feedItems)
                 {
                     try{
-                        const PictureRes = await friendService.getPicture(item.id);
+                        const PictureRes = await friendService.getPicture(item.id, token);
                         const picture = URL.createObjectURL(PictureRes.data);
                         item.picture = picture;
                     }catch (error)
@@ -78,7 +82,7 @@ function ChatComponent() {
         const loadChatHistory = async () => {
             if (!selectedFriendId) return;
             try {
-                const res = await chatService.getChat(userId, selectedFriendId);
+                const res = await chatService.getChat(userId, selectedFriendId, token);
                 const reversedData = [...res.data.items].reverse();
                 setChatHistory(reversedData);
             } catch (error) {

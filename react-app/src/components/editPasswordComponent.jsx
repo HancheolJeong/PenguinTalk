@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import userService from '../services/userService';
 import {handleError} from './libs/handleError';
+import { selectId, selectIsLoggedIn, selectToken } from '../slices/loginSlice';
+import { useSelector } from 'react-redux';
 
 function EditPasswordComponent() {
     const [currentPassword, setCurrentPassword] = useState('');
@@ -10,11 +12,13 @@ function EditPasswordComponent() {
     const [step, setStep] = useState(1);
     const navigate = useNavigate();
 
-    const userId = sessionStorage.getItem('userId');
+    const isLoggedIn = useSelector(selectIsLoggedIn);
+    const token = useSelector(selectToken);
+    const userId = useSelector(selectId);
 
     const verifyCurrentPassword = async () => {
         try {
-            const response = await userService.confirmPassword(userId, currentPassword);
+            const response = await userService.confirmPassword(userId, currentPassword, token);
             const { data } = response;
             if (data.result === 'success') {
                 // Move to next step
@@ -34,8 +38,12 @@ function EditPasswordComponent() {
             return;
         }
         try {
-            const res = await userService.updateUserPassword(userId, newPassword);
-            if (res.data.result === 'success') {
+            const res = await userService.updateUserPassword(userId, newPassword, token);
+
+            if(res.data.result === 'a breach of rules')
+            {
+                alert('패스워드는 영문자,숫자,특수기호를 포함해서 8자리 이상이어야 합니다.');
+            }else if (res.data.result === 'success') {
                 alert('패스워드 변경 성공했습니다.');
                 navigate('/userinfo');
             } else {

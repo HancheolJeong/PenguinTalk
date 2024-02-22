@@ -44,7 +44,10 @@ function SignUpComponent() {
             const response = await userService.addUser(id, pw, name, birthday, parseInt(gender, 10));
             const { data } = response;
 
-            if (data.result === 'success') {
+            if(data.result === 'a breach of rules')
+            {
+                alert('패스워드는 영문자,숫자,특수기호를 포함해서 8자리 이상이어야 합니다.');
+            }else if (data.result === 'success') {
                 alert('회원가입 완료했습니다.');
                 navigate('/signin'); 
             } else {

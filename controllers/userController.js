@@ -10,6 +10,13 @@ exports.registerUser = async (req, res) => {
         });
     }
     let { id, pw, name, birthday, gender } = req.body;
+
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+    if (!passwordRegex.test(pw)) {
+        return res.json({ result: "a breach of rules" });
+    }
+
+
     let encryptedPassword = crypto.pbkdf2Sync(pw, process.env.SECRET_KEY, 1, 32, 'sha512');
 
     try {
@@ -38,6 +45,8 @@ exports.loginUser = async (req, res) => {
         });
     }
     let { id, pw } = req.body;
+
+
     let encryptedPassword = crypto.pbkdf2Sync(pw, process.env.SECRET_KEY, 1, 32, 'sha512');
 
     try {
@@ -127,6 +136,11 @@ exports.updatePassword = async (req, res) => {
         });
     }
     let { id, pw } = req.body;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+    if (!passwordRegex.test(pw)) {
+        return res.json({ result: "a breach of rules" });
+    }
+
     let encryptedPassword = crypto.pbkdf2Sync(pw, process.env.SECRET_KEY, 1, 32, 'sha512');
     try {
         let is_success = await user.updatePassword(encryptedPassword.toString('base64'), id);

@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import feedService from '../services/feedService';
-import {handleError} from './libs/handleError';
+import { handleError } from './libs/handleError';
+import { selectId, selectIsLoggedIn, selectToken } from '../slices/loginSlice';
 
 function HeaderComponent() {
     const [dropdownVisible, setDropdownVisible] = useState(false);
@@ -10,33 +11,30 @@ function HeaderComponent() {
     const [tags, setTags] = useState([]);
     const navigate = useNavigate();
     const wrapperRef = useRef(null);
-    const dispatch = useDispatch();
-    const isLoggedIn = useSelector(state => state.loginSlice.isLoggedIn);
+    const isLoggedIn = useSelector(selectIsLoggedIn);
+    const token = useSelector(selectToken);
+    const userId = useSelector(selectId);
+
     const location = useLocation();
 
 
-    // useEffect(() => {
-
-    // },[location])
 
     useEffect(() => {
+
         if (isLoggedIn) {
-            console.log('welcome');
-        } else {
-            console.log('oops');
+
+            const fetchTags = async () => {
+                try {
+                    const res = await feedService.getTag(userId, token);
+                    setTags(res.data.items); // API 응답 형식에 따라 조정이 필요할 수 있습니다.
+                } catch (error) {
+                    handleError(error, navigate);
+                }
+            };
+            fetchTags();
         }
 
-        const fetchTags = async () => {
-            try {
-                const res = await feedService.getTag(sessionStorage.getItem('userId'));
-                setTags(res.data.items); // API 응답 형식에 따라 조정이 필요할 수 있습니다.
-            } catch (error) {
-                handleError(error, navigate);
-            }
-        };
 
-        fetchTags();
-        
         const handleClickOutside = (event) => {
             if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
                 setDropdownVisible(false);
@@ -72,7 +70,7 @@ function HeaderComponent() {
      * @param {string} keyword : feedComponent의 검색 키워드
      */
     const triggerNavigate = (path, param = null, keyword = null) => {
-        if (sessionStorage.getItem('isLoggedIn') === 'true') { // 로그인일때
+        if (isLoggedIn) { // 로그인일때
             if (param) { // param 주어졌을때,
 
                 if (keyword)  // keyword 주어졌을때,
