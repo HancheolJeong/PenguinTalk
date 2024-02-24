@@ -346,7 +346,59 @@ CREATE TABLE chat_history (
 
 <br>
 
-<details><summary>REST API</summary>
+<details>
+<summary>REST API</summary>
+
+| uri                     | method | request                                      | response                                                |
+|-------------------------|--------|----------------------------------------------|---------------------------------------------------------|
+| /user/add               | POST   | id, pw, name, birthday, gender               | result                                                  |
+| /user/login             | POST   | id, pw                                       | result                                                  |
+| /user/del               | DELETE | id                                           | result                                                  |
+| /user/mod/pw            | PATCH  | id, pw                                       | result                                                  |
+| /user/mod/url           | PATCH  | id, url                                      | result                                                  |
+| /user/mod/info          | PUT    | id, name, birthday, gender                   | result                                                  |
+| /user/get/img           | GET    | id                                           | image                                                   |
+| /user/get/info          | GET    | id                                           | result, items\[id, name, birthday, gender, create_dt, login_dt, picture_url\] |
+| /user/get/name          | GET    | id                                           | result, items\[name\]                                   |
+| /user/get/url           | GET    | id                                           | result, items\[picture_url\]                            |
+| /user/get/list          | GET    | id                                           | result, items\[id, name, birthday, gender, create_dt, login_dt, picture_url\] |
+| /friend                 | GET    | user_id, page                                | result, items\[id, name, birthday, gender, create_dt, login_dt, picture_url\] |
+| /friend/get/img         | GET    | id                                           | image                                                   |
+| /friend/add             | POST   | user_id, friend_id                           | result                                                  |
+| /friend/del             | DELETE | user_id, friend_id                           | result                                                  |
+| /friend/request/fm      | GET    | sender_id, page                              | result, items\[receiver_id, create_dt\]                 |
+| /friend/request/tm      | GET    | receiver_id, page                            | result, items\[sender_id, create_dt\]                   |
+| /friend/request/pos     | GET    | user_id, page                                | result, items\[id, name, birthday, gender, picture_url\]|
+| /friend/request/add     | POST   | sender_id, receiver_id                       | result                                                  |
+| /friend/request/del     | DELETE | sender_id, receiver_id                       | result                                                  |
+| /friend/block           | POST   | user_id, page                                | result, items\[blocked_user_id\]                        |
+| /friend/block/pos       | POST   | user_id                                      | result, items\[id, name, birthday, gender, picture_url\]|
+| /friend/block/add       | POST   | user_id, blocked_id                          | result                                                  |
+| /friend/block/del       | DELETE | user_id, blocked_id                          | result                                                  |
+| /feed:page              | GET    | page                                         | result, items\[id, user_id, title, content_url, scope, create_dt, name, count_comment\]|
+| /feed                   | GET    | page, keyword                                | result, items\[id, user_id, title, content_url, scope, create_dt, name, count_comment\]|
+| /feed/home              | GET    | id, page                                     | result, items\[id, user_id, title, content_url, scope, create_dt, name, count_comment\]|
+| /feed/search            | GET    | id, page, keyword                            | result items\[id, user_id, title, content_url, scope, create_dt, name, count_comment\]|
+| /feed/my                | GET    | id, page                                     | result items\[id, user_id, title, content_url, scope, create_dt, name, count_comment\]|
+| /feed/friend            | GET    | id, page                                     | result items\[id, user_id, title, content_url, scope, create_dt, name, count_comment\]|
+| /feed/nonfriend         | GET    | id, page                                     | result items\[id, user_id, title, content_url, scope, create_dt, name, count_comment\]|
+| /feed/postId            | GET    | id                                           | result items\[id, user_id, title, content_url, scope, create_dt, name, count_comment\]|
+| /feed/get/img           | GET    | id                                           | image                                                   |
+| /feed/add               | POST   | id, title, content_url, scope                | result                                                  |
+| /feed/mod               | PUT    | id, title, content_url, scope                | result                                                  |
+| /feed/del               | DELETE | id                                           | result                                                  |
+| /feed/comment           | GET    | post_id, page                                | result, items\[id, post_id, user_id, create_dt, tagged_count\]|
+| /feed/comment/add       | POST   | post_id, user_id, content, users             | result                                                  |
+| /feed/comment/mod       | PUT    | id, content                                  | result                                                  |
+| /feed/comment/del       | DELETE | id                                           | result                                                  |
+| /feed/tag               | GET    | user_id, page                                | result, items\[comment_id, post_id, sender_id, receiver_id, content, create_dt, checking\]|
+| /chat                   | GET    | sender_id, receiver_id, message_content      | result, items\[id, sender_id, receiver_id, message_content, create_dt\]|
+| /chat/add               | POST   | sender_id, receiver_id, page                 | result                                                  |
+
+</details>
+
+
+<!-- REST API
 |uri|method|requset|response|<br>
 |------|---|---|---|<br>
 |/user/add|post|id, pw, name, birthday, gender|result|<br>
@@ -395,4 +447,4 @@ CREATE TABLE chat_history (
 |------|---|---|---|<br>
 |/chat|get|sender_id, receiver_id, message_content|result, items[id, sender_id, receiver_id, message_content, create_dt]|<br>
 |/chat/add|post|sender_id, receiver_id, page|result|<br>
-</details>
+-->
