@@ -7,7 +7,6 @@ class feedService {
     getFeed(page) {
         return axios.get(FEED_BASE_URL, {
             params: { page: page }
-
         });
     }
     getSearchedFeed(page, keyword) {
@@ -18,28 +17,32 @@ class feedService {
     }
 
     getFeedLoggedIn(id, page, token) {
-        return axios.post(FEED_BASE_URL + '/',
+        return axios.get(FEED_BASE_URL + '/home',
             {
-                id: id,
-                page: page
-            },
-            {
+                params:
+                {
+                    user_id: id,
+                    page: page
+                },
                 headers:
                 {
                     'Authorization': `Bearer ${token}`
                 }
+
             });
     }
     getSearchedFeedLoggedIn(id, page, keyword, token) {
-        return axios.post(FEED_BASE_URL + '/search',
+        return axios.get(FEED_BASE_URL + '/search',
             {
-                id: id,
-                page: page,
-                keyword: keyword,
-            },
-            {
+                params:
+                {
+                    user_id: id,
+                    page: page,
+                    keyword: keyword
+                },
                 headers:
                 {
+
                     'Authorization': `Bearer ${token}`
                 }
             });
@@ -52,12 +55,13 @@ class feedService {
      * @returns json
      */
     getMyPosts(id, page, token) {
-        return axios.post(FEED_BASE_URL + '/my',
+        return axios.get(FEED_BASE_URL + '/my',
             {
-                id: id,
-                page: page
-            },
-            {
+                params:
+                {
+                    user_id: id,
+                    page: page
+                },
                 headers:
                 {
                     'Authorization': `Bearer ${token}`
@@ -71,13 +75,15 @@ class feedService {
      * @param {string} page : 페이지 번호
      * @returns json
      */
-    getFriendPosts(id, page, token) {
-        return axios.post(FEED_BASE_URL + '/friend',
+    getFriendPosts(id, page, token, user_id) {
+        return axios.get(FEED_BASE_URL + '/friend',
             {
-                id: id,
-                page: page
-            },
-            {
+                params:
+                {
+                    id: id,
+                    page: page,
+                    user_id : user_id
+                },
                 headers:
                 {
                     'Authorization': `Bearer ${token}`
@@ -86,18 +92,20 @@ class feedService {
     }
 
     /**
-     * 서버에게 친구의 게시물을 요청합니다.
+     * 서버에게 친구가 아닌 유저의 게시물을 요청합니다.
      * @param {string} id : 사용자 ID
      * @param {string} page : 페이지 번호
      * @returns json
      */
-    getNonFriendPosts(id, page, token) {
-        return axios.post(FEED_BASE_URL + '/nonfriend',
+    getNonFriendPosts(id, page, token, user_id) {
+        return axios.get(FEED_BASE_URL + '/nonfriend',
             {
-                id: id,
-                page: page
-            },
-            {
+                params:
+                {
+                    id: id,
+                    page: page,
+                    user_id : user_id
+                },
                 headers:
                 {
                     'Authorization': `Bearer ${token}`
@@ -110,12 +118,14 @@ class feedService {
      * @param {string} id 
      * @returns 
      */
-    getPostWithTags(id, token) {
-        return axios.post(FEED_BASE_URL + '/postId',
+    getPostWithTags(id, token, user_id) { // 이거는 
+        return axios.get(FEED_BASE_URL + '/postId',
             {
-                id: id
-            },
-            {
+                params:
+                {
+                    id: id,
+                    user_id: user_id
+                },
                 headers:
                 {
                     'Authorization': `Bearer ${token}`
@@ -124,8 +134,9 @@ class feedService {
     }
 
     getPicture(id) {
-        return axios.post(FEED_BASE_URL + '/get/img', { id: id }, {
-
+        return axios.get(FEED_BASE_URL + '/get/img', {
+            params:
+                { id: id },
             responseType: 'blob'
         });
     }
@@ -178,17 +189,20 @@ class feedService {
         );
     }
 
-    getComment(post_id, page, token) {
-        return axios.post(FEED_BASE_URL + '/comment/', {
-            post_id: post_id,
-            page: page
-        },
+    getComment(post_id, page, token, user_id) { 
+        return axios.get(FEED_BASE_URL + '/comment/', {
+            params:
             {
-                headers:
-                {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+                post_id: post_id,
+                page: page,
+                user_id: user_id
+
+            },
+            headers:
+            {
+                'Authorization': `Bearer ${token}`
+            }
+        });
     }
 
     addComment(post_id, user_id, content, users, token) {
@@ -236,20 +250,17 @@ class feedService {
 
 
     getTag(user_id, token) {
-        return axios.post(FEED_BASE_URL + '/tag', {
-            user_id: user_id
-        },
+        return axios.get(FEED_BASE_URL + '/tag', {
+            params:
             {
-                headers:
-                {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+                user_id: user_id
+            },
+            headers:
+            {
+                'Authorization': `Bearer ${token}`
+            }
+        });
     }
-
-
-
-
 }
 
 

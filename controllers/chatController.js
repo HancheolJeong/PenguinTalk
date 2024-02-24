@@ -36,7 +36,8 @@ exports.getChat = async(req, res) => {
         message: "There is no content."
       });
     }
-    let {sender_id, receiver_id} = req.body;
+    let sender_id = req.query.user_id;
+    let receiver_id = req.query.receiver_id;
     try
     {
         let rows = await chat.getChat(sender_id, receiver_id);

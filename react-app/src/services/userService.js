@@ -4,6 +4,7 @@ const USER_BASE_URL = "http://localhost:3000/user";
 
 class userService {
 
+
     addUser(id, pw, name, birthday, gender) {
         return axios.post(USER_BASE_URL + '/add', {
             id: id,
@@ -62,9 +63,9 @@ class userService {
     }
 
     updateUserPicture(formData, token) {
-        for (let [key, value] of formData.entries()) {
-            console.log(key, value);
-        }
+        // for (let [key, value] of formData.entries()) {
+        //     console.log(key, value);
+        // }
         return axios.patch(USER_BASE_URL + '/mod/picture', formData,
             {
                 headers:
@@ -89,57 +90,73 @@ class userService {
             });
     }
 
+    /**
+     * 사용자 정보를 서버에게 요청한다.
+     * @param {string} id : 사용자ID
+     * @param {string} token : jwt
+     * @returns 
+     */
     getUserInformation(id, token) {
-        return axios.post(USER_BASE_URL + '/get/info', {
-            id: id
-        },
+        return axios.get(USER_BASE_URL + '/get/info', {
+            params:
             {
-                headers:
-                {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+                user_id: id
+            },
+            headers:
+            {
+                'Authorization': `Bearer ${token}`
+            }
+        });
     }
 
     getUserName(id, token) { //미사용
-        return axios.post(USER_BASE_URL + '/get/name', {
-            id: id
-        },
+        return axios.get(USER_BASE_URL + '/get/name', {
+            params:
             {
-                headers:
-                {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+                user_id: id
+            },
+            headers:
+            {
+                'Authorization': `Bearer ${token}`
+            }
+        });
     }
 
     getUserPictureURL(id, token) {//미사용
-        return axios.post(USER_BASE_URL + '/get/url', {
-            id: id
-        },
+        return axios.get(USER_BASE_URL + '/get/url', {
+            params:
             {
-                headers:
-                {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+                user_id: id
+            },
+            headers:
+            {
+                'Authorization': `Bearer ${token}`
+            }
+        });
     }
 
     getUserList(id, token) { //미사용
-        return axios.post(USER_BASE_URL + '/get/list', {
-            id: id
-        },
+        return axios.get(USER_BASE_URL + '/get/list', {
+            params:
             {
-                headers:
-                {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+                user_id: id
+            },
+            headers:
+            {
+                'Authorization': `Bearer ${token}`
+            }
+        });
     }
 
-    getPicture(id, token) {
-        return axios.post(USER_BASE_URL + '/get/img', { id: id }, {
-            headers: {
+    getPicture(id, token, user_id) {
+        return axios.get(USER_BASE_URL + '/get/img', {
+            params: 
+            { 
+                id: id,
+                user_id : user_id
+            },
+            headers: 
+            {
                 'Authorization': `Bearer ${token}`
             },
             responseType: 'blob'

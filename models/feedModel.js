@@ -118,7 +118,7 @@ exports.getPostWhileLogin = async (user_id, page) => {
     return (result.length < 0) ? null : result;
   }
   catch (error) {
-    console.error('feedModel.getPost error:', error);
+    console.error('feedModel.getPostWhileLogin error:', error);
     throw { message: "Server error", status: 500 };
   }
 
@@ -204,7 +204,7 @@ exports.getPostWhileLogout = async (page) => {
     return (result.length < 0) ? null : result;
   }
   catch (error) {
-    console.error('feedModel.getPost error:', error);
+    console.error('feedModel.getPostWhileLogout error:', error);
     throw { message: "Server error", status: 500 };
   }
 
@@ -234,7 +234,7 @@ exports.getSearchedPostWhileLogout = async (keyword, page) => {
     return (result.length < 0) ? null : result;
   }
   catch (error) {
-    console.error('feedModel.getPost error:', error);
+    console.error('feedModel.getSearchedPostWhileLogout error:', error);
     throw { message: "Server error", status: 500 };
   }
 

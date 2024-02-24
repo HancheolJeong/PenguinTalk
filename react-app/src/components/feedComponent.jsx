@@ -41,7 +41,7 @@ function FeedComponent() {
     const fetchComments = async (itemId, page = 1) => {
         setIsLoading(true);
         try {
-            const commentsRes = await feedService.getComment(itemId, page, token);
+            const commentsRes = await feedService.getComment(itemId, page, token, myId);
             setComments(commentsRes.data.items);
             setCommentsPage(page);
         } catch (error) {
@@ -143,7 +143,7 @@ function FeedComponent() {
     const fetchFeed = async () => {
         window.scrollTo(0, 0); //최상단 스크롤 위치로 이동
         setIsLoading(true);
-        if (isLoggedIn) {
+        if (isLoggedIn) { // 로그인한 경우에만 친구목록을 가져올수있다.
             try {
                 const friendsRes = await friendService.getFriendAll(myId, token);
                 if (friendsRes.data.result === "success") {
@@ -173,16 +173,16 @@ function FeedComponent() {
                         res = await feedService.getMyPosts(myId, page, token);
                         break;
                     case 'findFriends': // 친구가 작성한 게시글
-                        res = await feedService.getFriendPosts(userId, page, token);
+                        res = await feedService.getFriendPosts(userId, page, token, myId);
                         break;
                     case 'findNonFriends': // 다른 유저가 작성한 게시글
-                        res = await feedService.getNonFriendPosts(userId, page, token);
+                        res = await feedService.getNonFriendPosts(userId, page, token, myId);
                         break;
                     case 'tag': // 태그된 게시물
-                        res = await feedService.getPostWithTags(keyword, token);
+                        res = await feedService.getPostWithTags(keyword, token, myId);
                         break;
                     default: // 해당 사항이 없음..
-                        console.log('feedComponent.jsx not find state');
+                        console.log('feedComponent.jsx not found state');
                         res = await feedService.getFeedLoggedIn(myId, page, token)
                         break;
 
@@ -194,11 +194,8 @@ function FeedComponent() {
                     case 'common': // 모든 게시글
                         res = await feedService.getFeed(page)
                         break;
-                    case 'search': // 게시글 검색
-                        res = await feedService.getSearchedFeed(page, keyword);
-                        break;
                     default: // 해당 사항이 없음..
-                        console.log('feedComponent.jsx not find state');
+                        console.log('feedComponent.jsx not found state');
                         res = await feedService.getFeed(page)
                         break;
 

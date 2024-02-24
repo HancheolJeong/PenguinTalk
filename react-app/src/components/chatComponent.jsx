@@ -26,7 +26,6 @@ function ChatComponent() {
         newSocket.on("connect", () => console.log("Socket connected: ", newSocket.id));
         newSocket.on('receive_message', (data) => {
             const { senderId, message } = data;
-            console.log(senderId, selectedFriendId);
             if(selectedFriendId === senderId)
             {
                 setChatHistory(prevChatHistory => {
@@ -55,7 +54,7 @@ function ChatComponent() {
                 for(let item of feedItems)
                 {
                     try{
-                        const PictureRes = await friendService.getPicture(item.id, token);
+                        const PictureRes = await friendService.getPicture(item.id, token, userId);
                         const picture = URL.createObjectURL(PictureRes.data);
                         item.picture = picture;
                     }catch (error)
@@ -118,7 +117,6 @@ function ChatComponent() {
     };
 
     const handleFriendSelect = (id) => {
-        console.log(id);
         setSelectedFriendId(id);
     };
 

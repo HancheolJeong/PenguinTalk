@@ -116,7 +116,8 @@ exports.getPostWhileLogin = async (req, res) => {
     });
   }
 
-  let { id, page } = req.body;
+  let id = req.query.user_id;
+  let page = req.query.page;
   page = (page - 1) * 10; // LIMIT에 적용하기 위해 페이지를 연산을 미리해둔다.
 
   try {
@@ -163,7 +164,12 @@ exports.getSearchedPostWhileLogin = async (req, res) => {
       message: "There is no content."
     });
   }
-  let { id, page, keyword } = req.body;
+  let id = req.query.user_id;
+  let page = req.query.page;
+  let keyword = req.query.keyword;
+  console.log(id);
+  console.log(page);
+  console.log(keyword);
   page = (page - 1) * 10
   try {
     let rows = await feed.getSearchedPostWhileLogin(id, page, keyword);
@@ -254,55 +260,6 @@ exports.getPostWhileLogout = async (req, res) => {
 };
 
 /**
- * 비동기식으로 로그아웃 상태에서 키워드 검색을 통해 피드를 데이터베이스로부터 불러오기
- */
-exports.getSearchedPostWhileLogout = async (req, res) => {
-  if (!req.body) {
-    res.status(400).send({
-      message: "There is no content."
-    });
-  }
-  let page = req.query.page;
-  let keyword = req.query.keyword;
-  page = (page - 1) * 10
-  try {
-    let rows = await feed.getPostWhileLogout(keyword, page);
-    if (rows !== null) {
-      // Process each row to read the file content
-      const items = await Promise.all(rows.map(async (row) => {
-        try {
-          // Read the content of the file specified by content_url
-          const filePath = path.resolve(__dirname, '../resources/contents', row.content_url); // Adjust based on actual path
-          console.log('Reading file:', filePath)
-          const content = await fs.readFile(row.content_url, 'utf8');
-          return {
-            ...row,
-            content_url: content, // Replace the file path with the file content
-          };
-        } catch (err) {
-          console.error('Error reading file:', row.content_url, err);
-          return {
-            ...row,
-            content_url: 'Error reading content', // Handle file read error
-          };
-        }
-      }));
-
-      res.json({ result: "success", items });
-    } else {
-      res.json({ result: "fail" });
-    }
-  }
-  catch (err) {
-    console.error('feedController.getPostWhileLogout error:', err);
-    res.status(err.status || 500).json({
-      result: "fail",
-      message: err.message || "Server error"
-    });
-  }
-}
-
-/**
  * 비동기식으로 자신이 작성한 피드를 데이터베이스로부터 불러오기
  */
 exports.getMyPosts = async (req, res) => {
@@ -311,8 +268,11 @@ exports.getMyPosts = async (req, res) => {
       message: "There is no content."
     });
   }
-  let { id, page } = req.body;
+  let id = req.query.user_id;
+  let page = req.query.page;
+  
   page = (page - 1) * 10
+
   try {
     let rows = await feed.getMyPosts(id, page);
     if (rows !== null) {
@@ -360,7 +320,8 @@ exports.getFriendPosts = async (req, res) => {
       message: "There is no content."
     });
   }
-  let { id, page } = req.body;
+  let id = req.query.id;
+  let page = req.query.page;
   page = (page - 1) * 10
   try {
     let rows = await feed.getFriendPosts(id, page);
@@ -409,7 +370,8 @@ exports.getNonFriendPosts = async (req, res) => {
       message: "There is no content."
     });
   }
-  let { id, page } = req.body;
+  let id = req.query.id;
+  let page = req.query.page;
   page = (page - 1) * 10
   try {
     let rows = await feed.getNonFriendPosts(id, page);
@@ -457,7 +419,7 @@ exports.getPostwithTags = async (req, res) => {
       message: "There is no content."
     });
   }
-  let { id } = req.body;
+  let id = req.query.id;
   try {
     let rows = await feed.getPostwithTags(id);
     if (rows !== null) {
@@ -593,7 +555,9 @@ exports.getComment = async (req, res) => {
       message: "There is no content."
     });
   }
-  let { post_id, page } = req.body;
+  let post_id = req.query.post_id;
+  let page = req.query.page;
+
   page = (page - 1) * 10
   try {
     let rows = await feed.getComment(post_id, page);
@@ -624,7 +588,7 @@ exports.getTag = async (req, res) => {
       message: "There is no content."
     });
   }
-  let { user_id } = req.body;
+  let user_id = req.query.user_id;
   try {
     let rows = await feed.getTag(user_id);
     if (rows !== null) {

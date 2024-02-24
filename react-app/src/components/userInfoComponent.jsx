@@ -47,7 +47,7 @@ function UserInfoComponent() {
                 const user = response.data.items[0];
 
                 try {
-                    const pictureRes = await userService.getPicture(user.id, token);
+                    const pictureRes = await userService.getPicture(user.id, token, userId);
                     const pictureUrl = URL.createObjectURL(pictureRes.data);
                     user.pictureUrl = pictureUrl;
                 } catch (error) {

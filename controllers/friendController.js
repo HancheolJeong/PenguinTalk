@@ -75,7 +75,8 @@ exports.getFriendList = async(req, res) => {
         message: "There is no content."
       });
     }
-    let {user_id, page} = req.body;
+    let user_id = req.query.user_id;
+    let page = req.query.page;
     page = (page - 1) * 10
     try
     {
@@ -108,7 +109,7 @@ exports.getFriendListAll = async(req, res) => {
           message: "There is no content."
         });
       }
-      let {user_id} = req.body;
+      let user_id = req.query.user_id;
       try
       {
           let rows = await friend.getFriendListAll(user_id);
@@ -206,7 +207,8 @@ exports.getFriendRequestFromMe = async(req, res) => {
         message: "There is no content."
       });
     }
-    let {sender_id, page} = req.body;
+    let sender_id = req.query.user_id;
+    let page = req.query.page;
     page = (page - 1) * 10
     try
     {
@@ -239,7 +241,8 @@ exports.getFriendRequestToMe = async(req, res) => {
         message: "There is no content."
       });
     }
-    let {receiver_id, page} = req.body;
+    let receiver_id = req.query.user_id;
+    let page = req.query.page;
     page = (page - 1) * 10
     try
     {
@@ -338,7 +341,8 @@ exports.getBlockedFriend = async(req, res) => {
         message: "There is no content."
       });
     }
-    let {user_id, page} = req.body;
+    let user_id = req.query.user_id;
+    let page = req.query.page;
     page = (page - 1) * 10
     try
     {
@@ -372,7 +376,8 @@ exports.getFriendToRequestPossible = async(req, res) => {
         message: "There is no content."
       });
     }
-    let {user_id, page} = req.body;
+    let user_id = req.query.user_id;
+    let page = req.query.page;
     page = (page - 1) * 10
     try
     {
@@ -406,7 +411,7 @@ exports.getFriendToBlockPossible = async(req, res) => {
         message: "There is no content."
       });
     }
-    let {user_id} = req.body;
+    let user_id = req.query.user_id;
     try
     {
         let rows = await friend.getFriendToBlockPossible(user_id);

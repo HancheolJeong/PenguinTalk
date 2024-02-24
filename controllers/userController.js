@@ -251,7 +251,7 @@ exports.getUser = async (req, res) => {
             message: "There is no content."
         });
     }
-    let { id } = req.body;
+    let id  = req.query.user_id;
     try {
         let rows = await user.getUser(id);
         if (rows !== null) {
@@ -280,7 +280,7 @@ exports.getPicture = async (req, res) => {
             message: "There is no content."
         });
     }
-    let { id } = req.body;
+    let id  = req.query.id;
     try {
         let rows = await user.getUserPictureUrl(id);
         if (rows !== null) {
@@ -311,7 +311,7 @@ exports.getUserPictureUrl = async (req, res) => {
             message: "There is no content."
         });
     }
-    let { id } = req.body;
+    let id = req.query.user_id;
     try {
         let rows = await user.getUserPictureUrl(id);
         if (rows !== null) {
@@ -340,7 +340,7 @@ exports.getUserName = async (req, res) => {
             message: "There is no content."
         });
     }
-    let { id } = req.body;
+    let id = req.query.user_id;
     try {
         let rows = await user.getUserName(id);
         if (rows !== null) {
@@ -369,7 +369,7 @@ exports.getUserList = async (req, res) => {
             message: "There is no content."
         });
     }
-    let { id } = req.body;
+    let { id } = req.query.user_id;
     try {
         let rows = await user.getUserList(id);
         if (rows !== null) {

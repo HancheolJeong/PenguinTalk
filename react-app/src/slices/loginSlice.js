@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+//초기화
 const initState = {
     token: '',
     isLoggedIn : false,

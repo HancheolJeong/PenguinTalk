@@ -45,7 +45,7 @@ function UserListComponent() {
 
             const feedItems = await Promise.all(res.data.items.map(async (item) => {
                 try {
-                    const pictureRes = await friendService.getPicture(item.id, token);
+                    const pictureRes = await friendService.getPicture(item.id, token, userId);
                     const pictureUrl = URL.createObjectURL(pictureRes.data);
                     return { ...item, pictureUrl };
                 } catch (error) {
