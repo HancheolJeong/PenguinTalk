@@ -12,39 +12,21 @@
 
 2024.02.05 ~ 2024.02.24
 
-### 개발 인원
-
-> |                    Name                    |  Position   |
-> | :----------------------------------------: | :---------: |
-> | [정한철](https://github.com/HancheolJeong) | Back, Front |
-
 <br />
 
 # 👩‍🔧기술
 
-### Language
+### Front
 
-JS
+HTML, CSS, JavaScript, React, Redux
 
-### Framework
-Express 4.18.2
-React/Redux
+### Back
 
-### DB
-MySQL 8.0.3
-
-### Server
-node.js
-
-### API
-JWT
-Socket.io
-multer
-cors
+node.js 20.11.0, Express 4.18.2, MySQL 8.0.3
 
 <br />
 
-# 설계
+# 📝설계
 
 <details>
 <summary>ERD</summary>
@@ -52,6 +34,123 @@ cors
 <img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/35002d57-a6ea-42c3-a3ba-86495963c7ed.png" width="800px"/>
 </div>
 </details>
+
+<br/>
+
+# 🔑주요기능
+
+- 게시판 댓글 회원 CRUD 기능 제공
+- 사용자 댓글 태그 기능 적용
+- Redux-Persist SessionStorage 상태값 유지
+- KISA 패스워드 가이드에 따른 암호 정책, 패스워드 암호화
+- JWT 사용자 인증, 파라미터 변조 방지
+- 웹소켓을 이용한 실시간 통신
+
+<br/>
+
+# 💻실행화면
+
+<details><summary>회원가입 및 로그인</summary>
+<div markdown="1" style="padding-left: 15px;">
+<img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/dd1a9f03-7fa8-4a89-ba1f-c5e6451fe4a7.png" width="800px"/>
+<p style="text-align: center;">회원가입</p>
+</div>
+
+<br>
+
+<div markdown="1" style="padding-left: 15px;">
+<img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/ce0eedfa-ef2c-4dee-bf8b-6ce8ee5d15ec.png" width="800px"/>
+<p style="text-align: center;">로그인</p>
+</div>
+</details>
+
+<br>
+
+<details><summary>회원정보수정</summary>
+<div markdown="1" style="padding-left: 15px;">
+<img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/de230f32-e4bc-4a65-ac04-29145d82bc22.png" width="800px"/>
+<p style="text-align: center;">회원정보 수정</p>
+</div>
+
+<br>
+
+<div markdown="1" style="padding-left: 15px;">
+<img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/79db91a5-d659-4750-8014-5cc09f7458cb.png" width="800px"/>
+<p style="text-align: center;">패스워드 확인</p>
+</div>
+
+<br>
+
+<div markdown="1" style="padding-left: 15px;">
+<img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/8cbdaae3-c700-4e12-bdcc-5f68b94d45d0.png" width="800px"/>
+<p style="text-align: center;">새로운 비밀번호 입력</p>
+</div>
+</details>
+
+<br>
+
+<details><summary>피드</summary>
+<div markdown="1" style="padding-left: 15px;">
+<img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/f032f4ac-9b47-4175-8277-6bd3d5f65410.png" width="800px"/>
+<p style="text-align: center;">피드작성</p>
+</div>
+
+<br>
+
+<div markdown="1" style="padding-left: 15px;">
+<img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/b28cc802-00ac-4d27-ae67-e4b21e3195ce.png" width="800px"/>
+<p style="text-align: center;">피드</p>
+</div>
+</details>
+
+<br>
+
+<details><summary>댓글,태그</summary>
+<div markdown="1" style="padding-left: 15px;">
+<img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/c74fec5a-fee2-46b3-b70d-d37788945228.png" width="800px"/>
+<p style="text-align: center;">댓글작성</p>
+</div>
+
+<br>
+
+<div markdown="1" style="padding-left: 15px;">
+<img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/8526c5bf-83f7-4778-b58f-2069174f09d8.png" width="800px"/>
+<p style="text-align: center;">친구태그</p>
+</div>
+
+<br>
+
+<div markdown="1" style="padding-left: 15px;">
+<img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/b6a53641-070c-4d62-b5ff-25cf484ab397.png" width="800px"/>
+<p style="text-align: center;">태그알림</p>
+</div>
+</details>
+
+<details><summary>친구관리</summary>
+<div markdown="1" style="padding-left: 15px;">
+<img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/81b00f6b-8818-4eb5-9210-90e08b985630.png" width="800px"/>
+<p style="text-align: center;">드롭다운메뉴</p>
+</div>
+
+<br>
+
+<div markdown="1" style="padding-left: 15px;">
+<img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/e37262b6-7c50-4994-afb1-df0f55d0abb3.png" width="800px"/>
+<p style="text-align: center;">회원목록</p>
+</div>
+
+<br>
+
+<div markdown="1" style="padding-left: 15px;">
+<img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/5c2f4498-374f-4633-a911-b6a3e6eeea31.png" width="800px"/>
+<p style="text-align: center;">친구목록</p>
+</div>
+</details>
+
+
+
+# 📎 기타
+
 
 ## FRONT-END
 
