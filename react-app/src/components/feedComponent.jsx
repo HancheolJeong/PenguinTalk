@@ -19,26 +19,39 @@ function FeedComponent() {
     const [inputComment, setInputComment] = useState(''); // insert될 댓글
     const [friends, setFriends] = useState([]); // 나의 친구 목록
 
+
+    // redux store에서 로그인 상태, 토큰, 사용자 ID를 가져온다.
     const isLoggedIn = useSelector(selectIsLoggedIn);
     const token = useSelector(selectToken);
     const myId = useSelector(selectId);
 
-    const navigate = useNavigate();
-    const location = useLocation();
-    let state = location.state?.state || 'common';
-    let keyword = location.state?.keyword || '';
-    let userId = location.state?.userId || '';
+    const navigate = useNavigate();  // 페이지 이동 훅
+    const location = useLocation(); // 페이지의 위치와 상태를 관리하는 훅
+    let state = location.state?.state || 'common'; // 페이지 상태 (로그인, 로그아웃, 검색, 나, 친구, 모르는 유저)
+    let keyword = location.state?.keyword || ''; // 검색어 키워드
+    let userId = location.state?.userId || ''; // post_id
 
+    /**
+     * 피드 정보 불러오는 useEffect 훅
+     */
     useEffect(() => {
         fetchFeed();
     }, [page, state]);
 
+    /**
+     * 상태나 위치가 변경할때 피드를 새로 불러오고 페이지를 첫번째로 설정
+     */
     useEffect(() => {
         fetchFeed();
         setPage(1);
     }, [state, location]);
 
-    const fetchComments = async (itemId, page = 1) => {
+    /**
+     * 특정 피드의 댓글을 불러오는 함수
+     * @param {int} itemId : 피드 ID
+     * @param {int} page : 페이지 번호
+     */
+    const fetchComments = async (itemId, page = 1) => { 
         setIsLoading(true);
         try {
             const commentsRes = await feedService.getComment(itemId, page, token, myId);
@@ -52,6 +65,11 @@ function FeedComponent() {
         }
     };
 
+    /**
+     * 팝업창 띄우고 댓글을 로드하는 함수
+     * @param {*} item 
+     * @returns 
+     */
     const openPopup = async (item) => {
         if (!isLoggedIn) {
             alert('로그인을 해주세요.');
@@ -59,27 +77,42 @@ function FeedComponent() {
             return;
         }
 
-        setCommentsPage(1);
-        fetchComments(item.id, 1);
-        setIsPopupVisible(true);
-        setSelectedItem(item);
+        setCommentsPage(1); // 댓글 페이지 상태 1로 저장
+        fetchComments(item.id, 1); // 피드 ID와 첫번째 페이지 값을 주고 댓글 불러오기
+        setIsPopupVisible(true); // 팝업 보이기
+        setSelectedItem(item); // 선택된 item 업데이트
     };
 
+    /**
+     * 팝업을 닫고 피드 로드하는 함수
+     */
     const closePopup = () => {
         setIsPopupVisible(false);
         fetchFeed();
     };
 
+    /**
+     * 다음 페이지로 이동하고 피드 로드하는 함수
+     */
     const handleNextCommentsPage = () => {
         const nextPage = commentsPage + 1;
         fetchComments(selectedItem.id, nextPage);
     };
 
+    /**
+     * 이전 페이지로 이동하고 피드 로드하는 함수
+     */
     const handlePrevCommentsPage = () => {
         const prevPage = Math.max(1, commentsPage - 1);
         fetchComments(selectedItem.id, prevPage);
     };
 
+    /**
+     * 특정 피드 삭제를 요청하는 함수
+     * @param {int} post_id : 피드 ID
+     * @param {string} user_id : 게시글 작성한 사용자 ID
+     * @returns 
+     */
     const handleDeleteItem = async (post_id, user_id) => {
 
         if (!isLoggedIn) {
@@ -210,7 +243,7 @@ function FeedComponent() {
                     item.pictureUrl = pictureUrl;
                 } catch (error) {
                     console.error("Error loading picture for item", item.user_id, error);
-                    item.pictureUrl = 'defaultProfileImageURL';
+                    item.pictureUrl = `${process.env.PUBLIC_URL + './background2.png'}`;;
                 }
             }
             setFeed(feedItems);
@@ -222,7 +255,7 @@ function FeedComponent() {
     };
 
     const renderFeedItem = (item) => {
-        const defaultImageUrl = process.env.PUBLIC_URL + './user.png';
+        const defaultImageUrl = `${process.env.PUBLIC_URL + './background2.png'}`;
         return (
             <div key={item.id} className="card mb-3" style={{ maxWidth: '50%', margin: '0 auto' }}>
                 <div className="card-header bg-primary text-light">

@@ -8,27 +8,29 @@ import { selectId, selectIsLoggedIn, selectToken } from '../slices/loginSlice';
 import { useSelector } from 'react-redux';
 
 function ChatComponent() {
-    const [message, setMessage] = useState('');
-    const [socket, setSocket] = useState(null);
-    const [friends, setFriends] = useState([]);
-    const [selectedFriendId, setSelectedFriendId] = useState(null);
-    const [chatHistory, setChatHistory] = useState([]);
-    const [page, setPage] = useState(1);
+    const [message, setMessage] = useState(''); // 입력된 메시지
+    const [socket, setSocket] = useState(null); // socket 인스턴스
+    const [friends, setFriends] = useState([]); //친구 목록
+    const [selectedFriendId, setSelectedFriendId] = useState(null); //선택된 친구의 ID
+    const [chatHistory, setChatHistory] = useState([]); // 채팅 기록
+    const [page, setPage] = useState(1); // 페이지 상태
+    const navigate = useNavigate(); // 페이지 이동 훅
+
+    // redux store에서 로그인 상태, 토큰, 사용자 ID를 가져온다.
     const isLoggedIn = useSelector(selectIsLoggedIn);
     const token = useSelector(selectToken);
     const userId = useSelector(selectId);
-    const navigate = useNavigate();
 
     useEffect(() => {
-        const newSocket = io("http://localhost:3000");
-        setSocket(newSocket);
-        newSocket.emit('register', userId);
-        newSocket.on("connect", () => console.log("Socket connected: ", newSocket.id));
-        newSocket.on('receive_message', (data) => {
+        const newSocket = io("http://localhost:3000"); // 소켓서버 연결
+        setSocket(newSocket); // 인스턴스 업데이트
+        newSocket.emit('register', userId); // 서버에 등록
+        newSocket.on("connect", () => console.log("Socket connected: ", newSocket.id)); // 연결 성공 로그
+        newSocket.on('receive_message', (data) => { // 서버로 부터 메시지 수신할 때
             const { senderId, message } = data;
             if(selectedFriendId === senderId)
             {
-                setChatHistory(prevChatHistory => {
+                setChatHistory(prevChatHistory => { // 채팅기록에 저장
                     const newMessage = {
                         sender_id: selectedFriendId,
                         receiver_id: senderId,
@@ -45,22 +47,23 @@ function ChatComponent() {
         return () => newSocket.disconnect();
     }, [selectedFriendId]);
 
+
     useEffect(() => {
-        const loadFriends = async () => {
+        const loadFriends = async () => { // 친구목록 불러오는 함수
             try
             {
-                const res = await friendService.getFriend(userId, page, token);
+                const res = await friendService.getFriend(userId, page, token); // 친구 정보
                 const feedItems = res.data.items;
                 for(let item of feedItems)
                 {
                     try{
-                        const PictureRes = await friendService.getPicture(item.id, token, userId);
+                        const PictureRes = await friendService.getPicture(item.id, token, userId); // 이미지
                         const picture = URL.createObjectURL(PictureRes.data);
                         item.picture = picture;
                     }catch (error)
                     {
                         console.error("Error loading picture", error);
-                        item.picture = 'default';
+                        item.picture = `${process.env.PUBLIC_URL + './background2.png'}`;
                     }
     
                 }
@@ -146,14 +149,6 @@ function ChatComponent() {
             <div className="row">
                 <div className="col-4">
                     <h2>친구 목록</h2>
-                    {/* <ul className="list-group">
-                        {friends.map((friend) => (
-                            <li key={friend.id} className="list-group-item" onClick={() => handleFriendSelect(friend.id)}>
-                                아이디 : {friend.id}
-                                이름 : {friend.name}
-                            </li>
-                        ))}
-                    </ul> */}
                     <ul className="list-group">
                         {friends.map((friend) => (
                             <li key={friend.id} className="list-group-item d-flex align-items-center" onClick={() => handleFriendSelect(friend.id)}>

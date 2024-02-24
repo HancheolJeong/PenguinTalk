@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import userService from '../services/userService';
 import { useNavigate } from 'react-router-dom';
 import { handleError } from './libs/handleError';
@@ -7,41 +7,25 @@ import { logout } from '../slices/loginSlice';
 import { selectId, selectIsLoggedIn, selectToken } from '../slices/loginSlice';
 
 function UserInfoComponent() {
-    const [user, setUser] = useState(null);
-    const [dropdownVisible, setDropdownVisible] = useState(false);
-    const wrapperRef = useRef(null);
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const [user, setUser] = useState(null); // 사용자 정보
+    const navigate = useNavigate(); // 페이지 이동 훅
+    const dispatch = useDispatch(); //Redux dispatch 함수 사용
 
+    // redux store에서 로그인 상태, 토큰, 사용자 ID를 가져온다.
     const isLoggedIn = useSelector(selectIsLoggedIn);
     const token = useSelector(selectToken);
     const userId = useSelector(selectId);
-    // const isLoggedIn = useSelector(state => state.loginSlice.isLoggedIn);
-    // const token = useSelector(state => state.loginSlice.token);
 
+    // 컴포넌트가 마운트될 때 fetchUserInformation 함수 호출
     useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-                setDropdownVisible(false);
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-
         fetchUserInformation();
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
     }, []);
 
+    /**
+     * 사용자 정보를 불러오는 비동기 함수
+     */
     const fetchUserInformation = async () => {
         try {
-
-            // console.log("Stored token from Redux:", token);
-
-
-
             const response = await userService.getUserInformation(userId, token);
             if (response.data.result === 'success' && response.data.items.length > 0) {
                 const user = response.data.items[0];
@@ -51,7 +35,7 @@ function UserInfoComponent() {
                     const pictureUrl = URL.createObjectURL(pictureRes.data);
                     user.pictureUrl = pictureUrl;
                 } catch (error) {
-                    user.pictureUrl = 'defaultProfileImageUrl';
+                    user.pictureUrl = `${process.env.PUBLIC_URL + './background2.png'}`; // 에러 발생할때는 기본이미지를 사용
                     handleError(error, navigate);
                 }
 
@@ -66,18 +50,25 @@ function UserInfoComponent() {
 
     /**
     * 서버에게 친구추가 요청하는 함수
-    * @param {string} id : 사용자 Id 
+    * @param {string} userId : 사용자 Id 
     */
     const handleNavigateMyposts = async () => {
         navigate('/', { state: { state: 'findMine', userId: userId } });
     };
 
 
+    /**
+     * 로그아웃 처리하는 함수, 로그인 슬라이스에서 로그아웃으로 만들고 token과 id값을 빈문자열을 넣는다.
+     * 그 다음에 / 으로 이동
+     */
     const handleLogout = () => {
         dispatch(logout({ token: '', id: '' }));
         navigate('/');
     };
 
+    /**
+     * 회원 탈퇴하는 함수 탈퇴하고나서 /으로 이동한다.
+     */
     const handleDeleteAccount = async () => {
         const isConfirmed = window.confirm("정말 탈퇴하시겠습니까?");
         if (isConfirmed) {
@@ -102,7 +93,7 @@ function UserInfoComponent() {
 
     const gender = user.gender === 0 ? '남자' : '여자';
     const formattedCreateDate = new Date(user.create_dt).toLocaleDateString();
-    const defaultImageUrl = process.env.PUBLIC_URL + '/defaultProfileImageUrl.png';
+    const defaultImageUrl = `${process.env.PUBLIC_URL + './background2.png'}`;;
 
     return (
         <div className="container py-5">

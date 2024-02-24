@@ -5,24 +5,31 @@ import { handleError } from './libs/handleError';
 import { useSelector } from 'react-redux';
 import { selectId, selectIsLoggedIn, selectToken } from '../slices/loginSlice';
 
+/**
+ * 사용자 정보를 편집하고 업데이트하는 컴포넌트
+ */
 function UserEditComponent() {
-    const [user, setUser] = useState({});
-    const [name, setName] = useState('');
-    const [gender, setGender] = useState('');
-    const [birthday, setBirthday] = useState('');
-    const [profilePicture, setProfilePicture] = useState(null);
-    const defaultImageUrl = process.env.PUBLIC_URL + '/defaultProfileImageUrl.png';
+    const [name, setName] = useState(''); // 사용자 이름
+    const [gender, setGender] = useState(''); // 사용자 성별
+    const [birthday, setBirthday] = useState(''); // 사용자 생일
+    const [profilePicture, setProfilePicture] = useState(null); // 사용자 
+    const navigate = useNavigate(); // 페이지 이동 훅
+
+    // redux store에서 로그인 상태, 토큰, 사용자 ID를 가져온다.
     const isLoggedIn = useSelector(selectIsLoggedIn);
     const token = useSelector(selectToken);
     const userId = useSelector(selectId);
-    const navigate = useNavigate();
-    const formatDateToYYYYMMDD = (date) => {
+    const formatDateToYYYYMMDD = (date) => { // 날짜를 YYYY-MM-DD로 포맷팅하는 함수
         return date ? new Date(date).toISOString().slice(0, 10) : '';
     };
+
     useEffect(() => {
         fetchUserInformation();
     }, []);
 
+    /**
+     * 사용자 정보를 서버에서 불러오는 함수
+     */
     const fetchUserInformation = async () => {
         try {
             const response = await userService.getUserInformation(userId, token);
@@ -32,14 +39,12 @@ function UserEditComponent() {
                 setName(user.name);
                 setGender(user.gender === 0 ? 'Male' : 'Female');
                 setBirthday(formatDateToYYYYMMDD(user.birthday));
-                setUser(user); // Store the user data in state
-
                 try {
                     const pictureRes = await userService.getPicture(user.id, token, userId);
                     const pictureUrl = URL.createObjectURL(pictureRes.data);
                     user.pictureUrl = pictureUrl;
                 } catch (error) {
-                    user.pictureUrl = defaultImageUrl;
+                    user.pictureUrl = `${process.env.PUBLIC_URL + './background2.png'}`;;
                     handleError(error, navigate);
                 }
             } else {
@@ -50,17 +55,24 @@ function UserEditComponent() {
         }
     };
 
+    /**
+     * 프로필 사진 변경 핸들러
+     * @param {React.ChangeEvent<HTMLInputElement>} event 
+     */
     const handleProfilePictureChange = (event) => {
         setProfilePicture(event.target.files[0]);
     };
 
+    /**
+     * 전송 버튼시 발생하는 이벤트 핸들러 
+     */
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        if (profilePicture) {
+        if (profilePicture) { // 사진이 있을때만 사진 업로드
             const pictureFormData = new FormData();
-            pictureFormData.append('id', userId);
-            pictureFormData.append('picture', profilePicture);
+            pictureFormData.append('id', userId); // 사용자 ID
+            pictureFormData.append('picture', profilePicture); // 프로필 사진
             try {
 
                 const pictureRes = await userService.updateUserPicture(pictureFormData, token);
@@ -72,7 +84,7 @@ function UserEditComponent() {
             }
         }
         try {
-            const modRes = await userService.updateUser(userId, name, birthday, gender === 'Male' ? 0 : 1, token);
+            const modRes = await userService.updateUser(userId, name, birthday, gender === 'Male' ? 0 : 1, token); // 나머지 다른 정보도 업데이트
             if (modRes.data.result === "success") {
                 alert('업데이트 완료했습니다.');
                 navigate('/userinfo')

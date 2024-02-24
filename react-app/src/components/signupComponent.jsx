@@ -5,15 +5,16 @@ import {handleError} from './libs/handleError';
 
 function SignUpComponent() {
     const today = new Date().toISOString().split('T')[0]; 
-    const [id, setId] = useState('');
-    const [pw, setPw] = useState('');
-    const [name, setName] = useState('');
-    const [birthday, setBirthday] = useState(today); 
-    const [gender, setGender] = useState('0'); 
-    const [errorMessage, setErrorMessage] = useState('');
+    const [id, setId] = useState(''); //사용자 ID
+    const [pw, setPw] = useState(''); // 사용자 패스워드
+    const [name, setName] = useState(''); // 사용자 이름
+    const [birthday, setBirthday] = useState(today);  //사용자 생일
+    const [gender, setGender] = useState('0'); //사용자 성별
+    const [errorMessage, setErrorMessage] = useState(''); // 에러메시지상태
 
-    const navigate = useNavigate();
+    const navigate = useNavigate(); // 페이지 이동 훅
 
+    // 입력값 변경할때 동작하는 이벤트 핸들러 값을 저장한다.
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         switch (name) {
@@ -37,17 +38,18 @@ function SignUpComponent() {
         }
     };
 
+    // 전송 버튼 이벤트 핸들러
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         try {
-            const response = await userService.addUser(id, pw, name, birthday, parseInt(gender, 10));
+            const response = await userService.addUser(id, pw, name, birthday, parseInt(gender, 10)); // 회원가입 요청
             const { data } = response;
 
-            if(data.result === 'a breach of rules')
+            if(data.result === 'a breach of rules') // KISA 패스워드 가이드 규칙을 준수했는지?
             {
                 alert('패스워드는 영문자,숫자,특수기호를 포함해서 8자리 이상이어야 합니다.');
-            }else if (data.result === 'success') {
+            }else if (data.result === 'success') { // 성공
                 alert('회원가입 완료했습니다.');
                 navigate('/signin'); 
             } else {

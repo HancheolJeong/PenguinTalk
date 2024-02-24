@@ -7,29 +7,34 @@ import {handleError} from './libs/handleError';
 import { selectId, selectIsLoggedIn, selectToken } from '../slices/loginSlice';
 
 function UserListComponent() {
-    const [users, setUsers] = useState([]);
-    const [page, setPage] = useState(1);
-    const navigate = useNavigate();
-    const location = useLocation();
-    const type = location.state.state;
+    const [users, setUsers] = useState([]); // 사용자들의 정보
+    const [page, setPage] = useState(1); // 페이지 번호
+    const navigate = useNavigate(); // 페이지 이동 훅
+    const location = useLocation(); // 위치 상태 관리 훅
+    const type = location.state.state; // 사용자 출력 유형
 
+    // redux store에서 로그인 상태, 토큰, 사용자 ID를 가져온다.
     const isLoggedIn = useSelector(selectIsLoggedIn);
     const token = useSelector(selectToken);
     const userId = useSelector(selectId);
 
 
-    const fetchUsers = useCallback(async () => {
+    /**
+     * 사용자 목록을 불러오는 함수 type에 따라서 서로 다른 API를 요청한다.
+     * 사용자 이미지도 가져와서 저장한다.
+     */
+    const fetchUsers = useCallback(async () => { // 콜백함수
         let res = null;
         try {
             switch (type) {
                 case 'user':
-                    res = await friendService.getRequestPossible(userId, page, token);
+                    res = await friendService.getRequestPossible(userId, page, token); // 친구와 차단을 제외한 모든 유저
                     break;
                 case 'friend':
-                    res = await friendService.getFriend(userId, page, token);
+                    res = await friendService.getFriend(userId, page, token); // 친구
                     break;
                 case 'block':
-                    res = await friendService.getBlock(userId, page, token);
+                    res = await friendService.getBlock(userId, page, token); // 차단
                     break;
                 case 'toMe':
                     res = await friendService.getRequestToMe(userId, page, token); // 내가 받은 요청
@@ -45,7 +50,7 @@ function UserListComponent() {
 
             const feedItems = await Promise.all(res.data.items.map(async (item) => {
                 try {
-                    const pictureRes = await friendService.getPicture(item.id, token, userId);
+                    const pictureRes = await friendService.getPicture(item.id, token, userId); // 사용자 이미지를 불러오기
                     const pictureUrl = URL.createObjectURL(pictureRes.data);
                     return { ...item, pictureUrl };
                 } catch (error) {
@@ -57,22 +62,29 @@ function UserListComponent() {
         } catch (error) {
             console.error("Feed loading failed: ", error);
         }
-    }, [page, type]);
+    }, [page, type]); // 페이지와 타입이이 변경될때 리로드된다.
 
     useEffect(() => {
-
-
         fetchUsers();
     }, [fetchUsers]);
 
+    /**
+     * 이전 페이지로 이동 
+     */
     const handlePrevClick = () => {
         setPage((prevPage) => Math.max(1, prevPage - 1));
     };
 
+    /**
+     * 다음 페이지로 이동
+     */
     const handleNextClick = () => {
         setPage((prevPage) => prevPage + 1);
     };
 
+    /**
+     * 페이지 이동 버튼을 설정을 하고 반환합니다.
+     */
     const renderPagination = () => (
         <nav>
             <ul className="pagination justify-content-center">
@@ -89,7 +101,7 @@ function UserListComponent() {
 
     const getMenuItems = (type, id) => {
         switch (type) {
-            case 'user':
+            case 'user': //친구,차단을 제외한 모든 유저 목록
                 return (
                     <ul className="dropdown-menu">
                         <li><button className="dropdown-item" onClick={() => handleNavigatePosts(id, 'findNonFriends')}>작성한 글 보기</button></li>
@@ -97,7 +109,7 @@ function UserListComponent() {
                         <li><button className="dropdown-item" onClick={() => handleUserBlock(id)}>차단</button></li>
                     </ul>
                 );
-            case 'friend':
+            case 'friend': //친구목록
                 return (
                     <ul className="dropdown-menu">
                         <li><button className="dropdown-item" onClick={() => handleNavigatePosts(id, 'findFriends')}>작성한 글 보기</button></li>
@@ -118,7 +130,7 @@ function UserListComponent() {
                         <li><button className="dropdown-item" onClick={() => handleDeleteRequestToMe(id)}>취소</button></li>
                     </ul>
                 );
-            case 'block':
+            case 'block': //차단 목록
                 return (
                     <ul className="dropdown-menu">
                         <li><button className="dropdown-item" onClick={() => handleCancelBlock(id)}>차단 해제</button></li>
@@ -246,7 +258,7 @@ function UserListComponent() {
 
 
     const renderUserList = () => {
-        const defaultImageUrl = process.env.PUBLIC_URL + './user.png';
+        const defaultImageUrl = `${process.env.PUBLIC_URL + './background2.png'}`;
         return (
             <div className="container py-4" style={{ maxWidth: '50%', margin: '0 auto' }}>
                 <div className="list-group">

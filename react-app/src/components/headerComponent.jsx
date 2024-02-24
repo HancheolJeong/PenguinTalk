@@ -1,32 +1,30 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import feedService from '../services/feedService';
 import { handleError } from './libs/handleError';
 import { selectId, selectIsLoggedIn, selectToken } from '../slices/loginSlice';
 
 function HeaderComponent() {
-    const [dropdownVisible, setDropdownVisible] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [tags, setTags] = useState([]);
-    const navigate = useNavigate();
-    const wrapperRef = useRef(null);
+    const [searchQuery, setSearchQuery] = useState(''); // 검색어 상태
+    const [tags, setTags] = useState([]); // 태그 목록
+    const navigate = useNavigate(); // 페이지 이동 훅
+
+    // redux store에서 로그인 상태, 토큰, 사용자 ID를 가져온다.
     const isLoggedIn = useSelector(selectIsLoggedIn);
     const token = useSelector(selectToken);
     const userId = useSelector(selectId);
-
-    const location = useLocation();
 
 
 
     useEffect(() => {
 
-        if (isLoggedIn) {
+        if (isLoggedIn) { // 로그인일때, 태그를 불러온다.
 
             const fetchTags = async () => {
                 try {
                     const res = await feedService.getTag(userId, token);
-                    setTags(res.data.items); // API 응답 형식에 따라 조정이 필요할 수 있습니다.
+                    setTags(res.data.items); 
                 } catch (error) {
                     handleError(error, navigate);
                 }
@@ -34,32 +32,26 @@ function HeaderComponent() {
             fetchTags();
         }
 
-
-        const handleClickOutside = (event) => {
-            if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-                setDropdownVisible(false);
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-
-
     }, [isLoggedIn]);
 
+    /**
+     * search 필드에 값이 변경될 때마다 동작하는 이벤트 핸들러
+     * @param {*} event  // 이벤트 객체
+     */
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
 
     };
 
+    /**
+     * search버튼 클릭시 동작하는 이벤트 핸들러
+     * @param {*} event  //이벤트 객체
+     */
     const handleSearchSubmit = (event) => {
         event.preventDefault();
         if (searchQuery) {
             triggerNavigate('/', 'search', searchQuery);
         }
-        // setSearchQuery('');
     };
 
 
@@ -97,10 +89,6 @@ function HeaderComponent() {
         <div>
             <nav className="navbar navbar-expand-lg navbar-light bg-primary">
                 <div className="container-fluid">
-                    {/* <a className="navbar-brand text-light" href="/">
-                        <img src={process.env.PUBLIC_URL + './logo.png'} alt="Logo" style={{ width: 50, height: 50, borderRadius: '50%', marginRight: '10px' }} />
-                        PenguinTalk
-                    </a> */}
                     <Link to="/" className="navbar-brand text-light">
                         <img src={process.env.PUBLIC_URL + './logo.png'} alt="Logo" style={{ width: 50, height: 50, borderRadius: '50%', marginRight: '10px' }} />
                         PenguinTalk
@@ -126,8 +114,8 @@ function HeaderComponent() {
                                     <img src={process.env.PUBLIC_URL + './tag.png'} alt="tag" style={{ width: 30, height: 30 }} />
                                 </button>
                                 <ul className="dropdown-menu dropdown-menu-end">
-                                    {tags.map((item) => (
-                                        <li>
+                                    {tags.map((item, index) => (
+                                        <li key = {index}>
                                             <button className="dropdown-item" onClick={() => triggerNavigate('', 'tag', item.p_id)}>
                                                 {`${item.name}(${item.user_id})님께서 ${item.title} 게시글에 회원님을 태그하였습니다.`}
                                                 <br />

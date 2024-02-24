@@ -1,17 +1,21 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import userService from '../services/userService';
 import { useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {login} from '../slices/loginSlice';
 import {handleError} from './libs/handleError';
 
 function SignInComponent() {
-    const [id, setId] = useState('');
-    const [pw, setPw] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const [id, setId] = useState('');//사용자 ID
+    const [pw, setPw] = useState('');//사용자 패스워드
+    const [errorMessage, setErrorMessage] = useState(''); // 에러 메시지 상태
+    const navigate = useNavigate(); // 페이지 이동 훅
+    const dispatch = useDispatch(); //Redux dispatch 함수 사용
 
+    /**
+     * 입력값 변경시 동작하는 이벤트 핸들러 id, pw를 저장한다.
+     * @param {*} event 이벤트 객체 
+     */
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         if (name === 'id') {
@@ -21,19 +25,23 @@ function SignInComponent() {
         }
     };
 
+    /**
+     * 전송 버튼 클릭 이벤트 핸들러
+     * @param {*} event 
+     */
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         try {
-            const response = await userService.loginUser(id, pw);
+            const response = await userService.loginUser(id, pw); // 로그인 시도
             const { data } = response;
 
             if (data.result === 'success') {
 
-                dispatch(login({ token: data.token, id: id }));
+                dispatch(login({ token: data.token, id: id })); // 로그인 성공 시 redux store값 업데이트
 
 
-                navigate('/'); 
+                navigate('/');  // 피드로 이동
             } else {
                 setErrorMessage('로그인실패했습니다. 다시 확인해주세요.');
             }
