@@ -73,23 +73,23 @@ back-end/<br>
 - user table
 
 CREATE TABLE user (
-    id VARCHAR(10) PRIMARY KEY,
+    id VARCHAR(255) PRIMARY KEY,
     passwd VARCHAR(255) NOT NULL,
-    name VARCHAR(50) NOT NULL,
+    name VARCHAR(100) NOT NULL,
     birthday DATE NOT NULL,
     gender TINYINT NOT NULL, #0:Male 1:Female
-    create_dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    login_dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    picture_url VARCHAR(255) NOT NULL DEFAULT ''
+    create_dt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    login_dt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    picture_url VARCHAR(255) NOT NULL DEFAULT 'default.png'
 );
 
 - post table
 
 CREATE TABLE post (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id VARCHAR(10) NOT NULL,
+    user_id VARCHAR(255) NOT NULL,
     title VARCHAR(100) NOT NULL,
-    content_url VARCHAR(255) DEFAULT '',
+    content_url VARCHAR(255) NOT NULL,
     scope TINYINT NOT NULL DEFAULT 0, #0:Public 1:Friends 2:Private
     create_dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
@@ -100,7 +100,7 @@ CREATE TABLE post (
 CREATE TABLE comments (
     id INT PRIMARY KEY AUTO_INCREMENT,
     post_id INT NOT NULL,
-    user_id VARCHAR(10) NOT NULL,
+    user_id VARCHAR(255) NOT NULL,
     content VARCHAR(100) NOT NULL,
     create_dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (post_id) REFERENCES post(id) ON DELETE CASCADE,
@@ -111,7 +111,7 @@ CREATE TABLE comments (
 
 CREATE TABLE tags (
     comment_id INT NOT NULL,
-    user_id VARCHAR(10) NOT NULL,
+    user_id VARCHAR(255) NOT NULL,
     checking TINYINT NOT NULL DEFAULT 0, # 0:미확인, 1:확인
     create_dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (comment_id, user_id),
@@ -122,8 +122,8 @@ CREATE TABLE tags (
 - friend list table
 
 CREATE TABLE friend_list (
-    user_id VARCHAR(10) NOT NULL,
-    friend_id VARCHAR(10) NOT NULL,
+    user_id VARCHAR(255) NOT NULL,
+    friend_id VARCHAR(255) NOT NULL,
     create_dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id, friend_id),
     FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
@@ -133,8 +133,8 @@ CREATE TABLE friend_list (
 - request friend table
 
 CREATE TABLE friend_request (
-    sender_id VARCHAR(10) NOT NULL,
-    receiver_id VARCHAR(10) NOT NULL,
+    sender_id VARCHAR(255) NOT NULL,
+    receiver_id VARCHAR(255) NOT NULL,
     PRIMARY KEY (sender_id, receiver_id),
     create_dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (sender_id) REFERENCES user(id) ON DELETE CASCADE,
@@ -144,8 +144,8 @@ CREATE TABLE friend_request (
 - block user table
 
 CREATE TABLE friend_blocking (
-    user_id VARCHAR(10) NOT NULL,
-    blocked_user_id VARCHAR(10) NOT NULL,
+    user_id VARCHAR(255) NOT NULL,
+    blocked_user_id VARCHAR(255) NOT NULL,
     create_dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id, blocked_user_id),
     FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
@@ -156,8 +156,8 @@ CREATE TABLE friend_blocking (
 
 CREATE TABLE chat_history (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    sender_id VARCHAR(10) NOT NULL,
-    receiver_id VARCHAR(10) NOT NULL,
+    sender_id VARCHAR(255) NOT NULL,
+    receiver_id VARCHAR(255) NOT NULL,
     checking TINYINT NOT NULL DEFAULT 0,
     message_content TEXT NOT NULL,
     create_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),

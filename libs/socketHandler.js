@@ -3,10 +3,10 @@ const chatController = require("../controllers/chatController.js");
 module.exports = (server) => {
     const io = require("socket.io")(server, {
       cors: {
-        origin: "http://localhost:3001",
-        methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-        allowedHeaders: ["my-custom-header"],
-        credentials: true
+        origin: "http://localhost:3001", //3001의 요청 리소스에 엑세스
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE"], // 해당 요청 메서드 허용
+        allowedHeaders: ["my-custom-header"], //사용자 지정 요청 헤더
+        credentials: true // 사용자 자격 증명 포함 여부
       }
     });
   
@@ -14,7 +14,7 @@ module.exports = (server) => {
 
 
   io.on('connection', (socket) => {
-    console.log('New client connected');
+    console.log('새로운 클라이언트가 접속했습니다.');
   
     socket.on('chat message', (msg) => {
       console.log('Message received: ', msg);
@@ -24,14 +24,14 @@ module.exports = (server) => {
   
     socket.on('register', (userId) => {
       userConnections[userId] = socket.id;
-      console.log(`User ${userId} registered with socket ${socket.id}`);
+      console.log(`사용자 ID : ${userId}님의 웹소켓을 등록했습니다. socket : ${socket.id}`);
     });
   
     socket.on('send_to_user', async ({ senderId, recipientId, message }) => {
       const recipientSocketId = userConnections[recipientId];
       if (recipientSocketId) {
         io.to(recipientSocketId).emit('receive_message', { senderId, message });
-        console.log(`Message from ${senderId} to ${recipientId}: ${message}`);
+        console.log(`메시지 전달 from ${senderId} to ${recipientId}: ${message}`);
       } 
 
       const is_success = await chatController.insertChat(senderId, recipientId, message);
@@ -43,7 +43,7 @@ module.exports = (server) => {
     });
     
     socket.on('disconnect', () => {
-      console.log('Client disconnected');
+      console.log('클라이언트 접속을 끊습니다.');
     });
   });
 

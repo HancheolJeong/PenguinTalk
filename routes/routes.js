@@ -4,7 +4,6 @@ const feedController = require("../controllers/feedController.js");
 const friendController = require("../controllers/friendController.js");
 const userController = require("../controllers/userController.js");
 const chatController = require("../controllers/chatController.js");
-const testController = require("../controllers/testController.js");
 const upload = require("../middleware/upload.js");
 const {verify} = require('../middleware/auth');
 
@@ -32,7 +31,7 @@ router.get("/feed/search", feedController.getSearchedPostWhileLogout); //jwt인�
 router.post("/user/add", userController.registerUser); // jwt인증없이 사용가능
 router.post("/user/login", userController.loginUser); // jwt인증없이 사용가능
 
-router.use(verify);
+router.use(verify); // jwt인증
 
 //user
 router.delete("/user/del", userController.deleteUser);

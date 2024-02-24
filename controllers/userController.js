@@ -3,6 +3,9 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 
+/**
+ * 비동기식으로 회원을 데이터베이스에 추가하기, 패스워드 암호화
+ */
 exports.registerUser = async (req, res) => {
     if (!req.body) {
         res.status(400).send({
@@ -38,6 +41,9 @@ exports.registerUser = async (req, res) => {
 
 };
 
+/**
+ * 비동기식으로 ID와 패스워드를 데이터베이스로부터 존재하는지 확인하고 jwt발행
+ */
 exports.loginUser = async (req, res) => {
     if (!req.body) {
         res.status(400).send({
@@ -74,6 +80,9 @@ exports.loginUser = async (req, res) => {
 
 };
 
+/**
+ * 비동기식으로 사용자의 패스워드를 데이터베이스로부터 존재하는지 확인하고 논리값 리턴받기
+ */
 exports.confirmPassword = async (req, res) => {
     if (!req.body) {
         res.status(400).send({
@@ -104,6 +113,10 @@ exports.confirmPassword = async (req, res) => {
 
 };
 
+
+/**
+ * 비동기식으로 회원을 데이터베이스로부터 삭제하기
+ */
 exports.deleteUser = async (req, res) => {
     if (!req.body) {
         res.status(400).send({
@@ -129,6 +142,10 @@ exports.deleteUser = async (req, res) => {
     }
 }
 
+
+/**
+ * 비동기식으로 사용자의 패스워드를 데이터베이스에 업데이트하기
+ */
 exports.updatePassword = async (req, res) => {
     if (!req.body) {
         res.status(400).send({
@@ -160,7 +177,9 @@ exports.updatePassword = async (req, res) => {
     }
 }
 
-
+/**
+ * 비동기식으로 사용자의 사진경로를 데이터베이스에 업데이트하기
+ */
 exports.updatePicture = async (req, res) => {
     if (!req.body) {
         res.status(400).send({
@@ -193,6 +212,10 @@ exports.updatePicture = async (req, res) => {
     }
 }
 
+
+/**
+ * 비동기식으로 사용자 정보를 데이터베이스로에 업데이트하기
+ */
 exports.updateUser = async (req, res) => {
     if (!req.body) {
         res.status(400).send({
@@ -219,6 +242,9 @@ exports.updateUser = async (req, res) => {
 }
 
 
+/**
+ * 비동기식으로 사용자의 정보를 데이터베이스로부터 불러오기
+ */
 exports.getUser = async (req, res) => {
     if (!req.body) {
         res.status(400).send({
@@ -245,6 +271,9 @@ exports.getUser = async (req, res) => {
 }
 
 
+/**
+ * 비동기식으로 사용자의 사진경로 데이터베이스로부터 불러오고 이미지를 클라언트에게 전송하기
+ */
 exports.getPicture = async (req, res) => {
     if (!req.body) {
         res.status(400).send({
@@ -272,6 +301,10 @@ exports.getPicture = async (req, res) => {
     }
 }
 
+
+/**
+ * 비동기식으로 사용자의 사진경로를 데이터베이스로부터 불러오기 (미사용)
+ */
 exports.getUserPictureUrl = async (req, res) => {
     if (!req.body) {
         res.status(400).send({
@@ -298,6 +331,9 @@ exports.getUserPictureUrl = async (req, res) => {
 }
 
 
+/**
+ * 비동기식으로 사용자의 이름을 데이터베이스로부터 불러오기 (미사용)
+ */
 exports.getUserName = async (req, res) => {
     if (!req.body) {
         res.status(400).send({
@@ -324,7 +360,9 @@ exports.getUserName = async (req, res) => {
 }
 
 
-
+/**
+ * 비동기식으로 사용자 목록을 데이터베이스로부터 불러오기
+ */
 exports.getUserList = async (req, res) => {
     if (!req.body) {
         res.status(400).send({

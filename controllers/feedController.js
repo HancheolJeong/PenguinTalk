@@ -1,33 +1,36 @@
 const feed = require('../models/feedModel.js');
 const path = require('path');
-const fs = require('fs');
-const fs2 = require('fs').promises;
+const fs = require('fs').promises;
 
-//글 추가
+/**
+ * 비동기식으로 새로운 피드를 데이터베이스에 추가
+ */
 exports.insertPost = async (req, res) => {
-  if (!req.body) {
+  if (!req.body) { //처리할 데이터가 없을 시..
     return res.status(400).send({ message: "There is no content." });
   }
 
   let { id, title, content_url, scope } = req.body;
 
-  // Define the directory where you want to save the HTML files
   const contentDir = path.join(__dirname, `../resources/contents/${id}`);
 
-  // Ensure the directory exists
-  if (!fs.existsSync(contentDir)) {
-    fs.mkdirSync(contentDir, { recursive: true });
+  //비동기에서 디렉터리 없을때 디렉터리 생성
+  try {
+    await fs.access(contentDir);
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      await fs.mkdir(contentDir, { recursive: true });
+    } else {
+      throw err;
+    }
   }
 
-  // Define the path for the new HTML file
-  const filename = `${id}_${Date.now()}.html`;
-  const filePath = path.join(contentDir, filename);
+  const filename = `${id}_${Date.now()}.html`; 
+  const filePath = path.join(contentDir, filename); // 디렉터리 + 파일명
 
   try {
-    // Save the HTML content to a file
-    fs.writeFileSync(filePath, content_url);
+    fs.writeFile(filePath, content_url);
 
-    // Assuming `feed.insertPost` saves the post data, including the file path, to the database
     let is_success = await feed.insertPost(id, title, filePath, scope);
 
     if (is_success) {
@@ -44,7 +47,9 @@ exports.insertPost = async (req, res) => {
   }
 };
 
-//글 수정
+/**
+ * 비동기식으로 새로운 피드를 데이터베이스에 업데이트
+ */
 exports.updatePost = async (req, res) => {
   if (!req.body) {
     res.status(400).send({
@@ -71,7 +76,9 @@ exports.updatePost = async (req, res) => {
 }
 
 
-//글 삭제
+/**
+ * 비동기식으로 피드를 데이터베이스에서 삭제
+ */
 exports.deletePost = async (req, res) => {
   if (!req.body) {
     res.status(400).send({
@@ -99,7 +106,9 @@ exports.deletePost = async (req, res) => {
 
 
 
-//로그인 상태에서 글 불러오기
+/**
+ * 비동기식으로 로그인 상태에서 불러오는 피드를 데이터베이스로 부터 불러오기
+ */
 exports.getPostWhileLogin = async (req, res) => {
   if (!req.body) {
     return res.status(400).send({
@@ -108,27 +117,25 @@ exports.getPostWhileLogin = async (req, res) => {
   }
 
   let { id, page } = req.body;
-  page = (page - 1) * 10;
+  page = (page - 1) * 10; // LIMIT에 적용하기 위해 페이지를 연산을 미리해둔다.
 
   try {
     let rows = await feed.getPostWhileLogin(id, page);
     if (rows !== null) {
-      // Process each row to read the file content
       const items = await Promise.all(rows.map(async (row) => {
         try {
-          // Read the content of the file specified by content_url
-          const filePath = path.resolve(__dirname, '../resources/contents', row.content_url); // Adjust based on actual path
+          const filePath = path.resolve(__dirname, '../resources/contents', row.content_url); 
           console.log('Reading file:', filePath)
-          const content = await fs2.readFile(row.content_url, 'utf8');
+          const content = await fs.readFile(row.content_url, 'utf8');
           return {
             ...row,
-            content_url: content, // Replace the file path with the file content
+            content_url: content, 
           };
         } catch (err) {
           console.error('Error reading file:', row.content_url, err);
           return {
             ...row,
-            content_url: 'Error reading content', // Handle file read error
+            content_url: 'Error reading content',
           };
         }
       }));
@@ -147,7 +154,9 @@ exports.getPostWhileLogin = async (req, res) => {
 };
 
 
-//로그인 상태에서 검색하고 글 불러오기
+/**
+ * 비동기식으로 로그인 상태에서 키워드 검색을 통해 불러오는 피드를 데이터베이스로부터 불러오기
+ */
 exports.getSearchedPostWhileLogin = async (req, res) => {
   if (!req.body) {
     res.status(400).send({
@@ -165,7 +174,7 @@ exports.getSearchedPostWhileLogin = async (req, res) => {
           // Read the content of the file specified by content_url
           const filePath = path.resolve(__dirname, '../resources/contents', row.content_url); // Adjust based on actual path
           console.log('Reading file:', filePath)
-          const content = await fs2.readFile(row.content_url, 'utf8');
+          const content = await fs.readFile(row.content_url, 'utf8');
           return {
             ...row,
             content_url: content, // Replace the file path with the file content
@@ -195,7 +204,9 @@ exports.getSearchedPostWhileLogin = async (req, res) => {
 
 
 
-//로그아웃 상태에서 글 불러오기
+/**
+ * 비동기식으로 로그아웃 상태에서 피드를 데이터베이스로부터 불러오기
+ */
 exports.getPostWhileLogout = async (req, res) => {
   if (!req.body) {
     return res.status(400).send({
@@ -215,7 +226,7 @@ exports.getPostWhileLogout = async (req, res) => {
           // Read the content of the file specified by content_url
           const filePath = path.resolve(__dirname, '../resources/contents', row.content_url); // Adjust based on actual path
           console.log('Reading file:', filePath)
-          const content = await fs2.readFile(row.content_url, 'utf8');
+          const content = await fs.readFile(row.content_url, 'utf8');
           return {
             ...row,
             content_url: content, // Replace the file path with the file content
@@ -242,7 +253,9 @@ exports.getPostWhileLogout = async (req, res) => {
   }
 };
 
-//로그아웃 상태에서 검색하고 글 불러오기
+/**
+ * 비동기식으로 로그아웃 상태에서 키워드 검색을 통해 피드를 데이터베이스로부터 불러오기
+ */
 exports.getSearchedPostWhileLogout = async (req, res) => {
   if (!req.body) {
     res.status(400).send({
@@ -261,7 +274,7 @@ exports.getSearchedPostWhileLogout = async (req, res) => {
           // Read the content of the file specified by content_url
           const filePath = path.resolve(__dirname, '../resources/contents', row.content_url); // Adjust based on actual path
           console.log('Reading file:', filePath)
-          const content = await fs2.readFile(row.content_url, 'utf8');
+          const content = await fs.readFile(row.content_url, 'utf8');
           return {
             ...row,
             content_url: content, // Replace the file path with the file content
@@ -289,7 +302,9 @@ exports.getSearchedPostWhileLogout = async (req, res) => {
   }
 }
 
-//내가 쓴 게시글 불러오기
+/**
+ * 비동기식으로 자신이 작성한 피드를 데이터베이스로부터 불러오기
+ */
 exports.getMyPosts = async (req, res) => {
   if (!req.body) {
     res.status(400).send({
@@ -307,7 +322,7 @@ exports.getMyPosts = async (req, res) => {
           // Read the content of the file specified by content_url
           const filePath = path.resolve(__dirname, '../resources/contents', row.content_url); // Adjust based on actual path
           console.log('Reading file:', filePath)
-          const content = await fs2.readFile(row.content_url, 'utf8');
+          const content = await fs.readFile(row.content_url, 'utf8');
           return {
             ...row,
             content_url: content, // Replace the file path with the file content
@@ -336,7 +351,9 @@ exports.getMyPosts = async (req, res) => {
 }
 
 
-//친구가 쓴 게시글 불러오기
+/**
+ * 비동기식으로 친구가 작성한 피드를 데이터베이스로부터 불러오기
+ */
 exports.getFriendPosts = async (req, res) => {
   if (!req.body) {
     res.status(400).send({
@@ -354,7 +371,7 @@ exports.getFriendPosts = async (req, res) => {
           // Read the content of the file specified by content_url
           const filePath = path.resolve(__dirname, '../resources/contents', row.content_url); // Adjust based on actual path
           console.log('Reading file:', filePath)
-          const content = await fs2.readFile(row.content_url, 'utf8');
+          const content = await fs.readFile(row.content_url, 'utf8');
           return {
             ...row,
             content_url: content, // Replace the file path with the file content
@@ -382,7 +399,10 @@ exports.getFriendPosts = async (req, res) => {
   }
 }
 
-//친구가 아닌 유저의 게시글 불러오기
+
+/**
+ * 비동기식으로 친구가 아닌 유저가 작성한 피드를 데이터베이스로부터 불러오기
+ */
 exports.getNonFriendPosts = async (req, res) => {
   if (!req.body) {
     res.status(400).send({
@@ -400,7 +420,7 @@ exports.getNonFriendPosts = async (req, res) => {
           // Read the content of the file specified by content_url
           const filePath = path.resolve(__dirname, '../resources/contents', row.content_url); // Adjust based on actual path
           console.log('Reading file:', filePath)
-          const content = await fs2.readFile(row.content_url, 'utf8');
+          const content = await fs.readFile(row.content_url, 'utf8');
           return {
             ...row,
             content_url: content, // Replace the file path with the file content
@@ -428,7 +448,9 @@ exports.getNonFriendPosts = async (req, res) => {
   }
 }
 
-//태그된 게시물 가져오기
+/**
+ * 비동기식으로 자신이 태그된 피드를 데이터베이스로부터 불러오기
+ */
 exports.getPostwithTags = async (req, res) => {
   if (!req.body) {
     res.status(400).send({
@@ -445,7 +467,7 @@ exports.getPostwithTags = async (req, res) => {
           // Read the content of the file specified by content_url
           const filePath = path.resolve(__dirname, '../resources/contents', row.content_url); // Adjust based on actual path
           console.log('Reading file:', filePath)
-          const content = await fs2.readFile(row.content_url, 'utf8');
+          const content = await fs.readFile(row.content_url, 'utf8');
           return {
             ...row,
             content_url: content, // Replace the file path with the file content
@@ -474,7 +496,9 @@ exports.getPostwithTags = async (req, res) => {
 }
 
 
-//댓글, 태그 추가 
+/**
+ * 비동기식으로 댓글과 태그를 데이터베이스에 추가하기
+ */
 exports.insertCommentAndTags = async (req, res) => {
   if (!req.body) {
     res.status(400).send({
@@ -501,7 +525,10 @@ exports.insertCommentAndTags = async (req, res) => {
   }
 }
 
-//댓글 수정
+
+/**
+ * 비동기식으로 댓글을 데이터베이스로부터 수정하기
+ */
 exports.updateComment = async (req, res) => {
   if (!req.body) {
     res.status(400).send({
@@ -528,7 +555,9 @@ exports.updateComment = async (req, res) => {
 }
 
 
-//댓글 삭제
+/**
+ * 비동기식으로 댓글을 데이터베이스로부터 삭제하기
+ */
 exports.deleteComment = async (req, res) => {
   if (!req.body) {
     res.status(400).send({
@@ -555,7 +584,9 @@ exports.deleteComment = async (req, res) => {
 }
 
 
-//댓글 불러오기
+/**
+ * 비동기식으로 댓글을 데이터베이스로부터 불러오기
+ */
 exports.getComment = async (req, res) => {
   if (!req.body) {
     res.status(400).send({
@@ -584,6 +615,9 @@ exports.getComment = async (req, res) => {
 
 
 //받은 태그 모두 불러오기
+/**
+ * 비동기식으로 자신이 받은 태그를 데이터베이스로부터 불러오기
+ */
 exports.getTag = async (req, res) => {
   if (!req.body) {
     res.status(400).send({

@@ -4,7 +4,7 @@ const { pool, executeQuery } = require("./db.js");
  * 친구 추가하는 함수 
  * @param {string} user_id : 사용자 ID
  * @param {string} friend_id : 사용자의 친구 ID
- * @returns {boolean} 처리 결과
+ * @returns true or false
  * 트랜잭션 처리, 친구 목록은 사용자 ID와 친구 ID 쌍으로 저장하며
  * 친구 요청 테이블 레코드를 동시에 삭제 함
  */
@@ -44,7 +44,7 @@ exports.insertFriendList = async (user_id, friend_id) => {
  * 친구 삭제하는 함수
  * @param {string} user_id : 사용자 ID
  * @param {string} friend_id : 사용자의 친구 ID
- * @returns {boolean} 사용자의 처리 결과
+ * @returns true or false
  */
 exports.deleteFriendList = async (user_id, friend_id) => {
   try {
@@ -67,8 +67,8 @@ exports.deleteFriendList = async (user_id, friend_id) => {
 /**
  * 친구 목록을 사용자 ID 기준으로 불러오는 함수
  * @param {string} user_id : 사용자 ID
- * @param {string} page : 페이지 번호
- * @returns {string} json
+ * @param {int} page : 페이지 번호
+ * @returns json
  */
 exports.getFriendList = async (user_id, page) => {
   try {
@@ -122,7 +122,7 @@ exports.getFriendListAll = async (user_id) => {
  * 친구 요청 추가
  * @param {string} sender_id : 친구 요청한 사용자 ID
  * @param {string} receiver_id : 친구 요청받은 사용자 ID
- * @returns {boolean} 처리 결과
+ * @returns true or false
  */
 exports.insertFriendRequest = async (sender_id, receiver_id) => {
   try {
@@ -146,7 +146,7 @@ exports.insertFriendRequest = async (sender_id, receiver_id) => {
  * 친구 요청 삭제
  * @param {string} sender_id : 친구 요청한 사용자 ID
  * @param {string} receiver_id : 친구 요청받은 사용자 ID
- * @returns {boolean} 처리 결과 논리값
+ * @returns true or false
  */
 exports.deleteFriendRequest = async (sender_id, receiver_id) => {
   try {
@@ -167,8 +167,8 @@ exports.deleteFriendRequest = async (sender_id, receiver_id) => {
 /**
  * 사용자가 보낸 친구요청 목록 불러오는 함수
  * @param {string} sender_id : 친구요청한 사용자 ID 
- * @param {string} page : 페이지 번호
- * @returns {string} json
+ * @param {int} page : 페이지 번호
+ * @returns json
  */
 exports.getFriendRequestFromMe = async (sender_id, page) => {
   try {
@@ -194,8 +194,8 @@ exports.getFriendRequestFromMe = async (sender_id, page) => {
 /**
  * 사용자가 받은 친구요청 목록 불러오는 함수
  * @param {string} sender_id : 친구요청받은 사용자 ID 
- * @param {string} page : 페이지 번호
- * @returns {string} json
+ * @param {int} page : 페이지 번호
+ * @returns json
  */
 exports.getFriendRequestToMe = async (receiver_id, page) => {
   try {
@@ -223,7 +223,7 @@ exports.getFriendRequestToMe = async (receiver_id, page) => {
  * 차단할 사용자 추가
  * @param {string} user_id : 차단한 사용자 ID
  * @param {string} blocked_user_id : 차단된 사용자 ID
- * @returns {boolean} 처리 결과
+ * @returns ture or false
  * 트랜잭션 처리 , 유저를 차단 할 때, 친구목록에서 삭제하고, 친구 요청도 삭제한다.
  */
 exports.insertBlockedFriend = async (user_id, friend_id) => {
@@ -266,15 +266,12 @@ exports.insertBlockedFriend = async (user_id, friend_id) => {
   return true;
 };
 
-/*
- 친구 차단 삭제
-*/
 
 /**
- * 친구 차단
+ * 친구 차단 해제하는 함수
  * @param {string} user_id : 사용자 ID 
  * @param {string} blocked_user_id : 차단된 사용자 ID
- * @returns {boolean} 처리 결과
+ * @returns true or false
  */
 exports.deleteBlockedFriend = async (user_id, blocked_user_id) => {
   try {
@@ -296,8 +293,8 @@ exports.deleteBlockedFriend = async (user_id, blocked_user_id) => {
 /**
  * 차단된 사용자정보를 가져오는 함수
  * @param {string} user_id : 사용자 ID
- * @param {string} page : 페이지 번호
- * @returns {string} json
+ * @param {int} page : 페이지 번호
+ * @returns json
  */
 exports.getBlockedFriend = async (user_id, page) => {
   try {
@@ -324,8 +321,8 @@ exports.getBlockedFriend = async (user_id, page) => {
 /**
  * 친구 요청이 가능한 사용자 목록을 리턴하는 함수
  * @param {string} id : 사용자 ID
- * @param {string} page : 페이지 번호
- * @returns {string} json
+ * @param {int} page : 페이지 번호
+ * @returns json
  * 친구, 차단, 친구요청 상태가 없는 사용자 목록
  */
 exports.getFriendToRequestPossible = async (id, page) => {
@@ -354,7 +351,7 @@ exports.getFriendToRequestPossible = async (id, page) => {
 /**
  * 차단이 가능한 사용자 목록을 리턴하는 함수
  * @param {string} id : 사용자 ID 
- * @returns {string} json
+ * @returns json
  */
 exports.getFriendToBlockPossible = async (id) => {
   try {

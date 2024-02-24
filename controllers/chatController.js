@@ -1,6 +1,9 @@
 const chat = require('../models/chatModel.js');
 
 // 채팅 추가
+/**
+ * 비동기식으로 웹소켓으로 받은 채팅을 데이터베이스에 저장하기
+ */
   exports.insertChat = async(sender_id, receiver_id, message) => {
 
       try
@@ -23,7 +26,10 @@ const chat = require('../models/chatModel.js');
   }
 
 
-  //채팅 불러오기
+
+/**
+ * 비동기식으로 사용자가 받은 채팅 기록을 데이터베이스로부터 불러오기
+ */
 exports.getChat = async(req, res) => {
   if (!req.body) {
       res.status(400).send({

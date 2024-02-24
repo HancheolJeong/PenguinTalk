@@ -1,7 +1,12 @@
 const { executeQuery } = require("./db.js");
-/*
-채팅 추가
-*/
+
+/**
+ * 채팅기록을 저장하는 함수
+ * @param {string} sender_id : 메시지를 보낸 사용자 ID
+ * @param {string} receiver_id : 메시지를 받은 사용자 ID
+ * @param {string} message_content : 메시지 내용
+ * @returns true or false
+ */
   exports.insertChat = async(sender_id, receiver_id, message_content) =>{
     try
     {
@@ -10,7 +15,7 @@ const { executeQuery } = require("./db.js");
       const result = await executeQuery(query, [sender_id, receiver_id, message_content]);
       if(result.affectedRows === 0)
       {
-        throw{message: 'db error', status:404};
+        return false;
       }
       return true;
     }
@@ -21,9 +26,13 @@ const { executeQuery } = require("./db.js");
     }
   };
 
-/*
-글 불러오기 scope 0 : 전체, 1 : 친구만, 2 : 나만보기
-*/
+
+/**
+ * 채팅기록을 불러오는 함수
+ * @param {string} sender_id : 메시지를 보낸 사용자 ID
+ * @param {string} receiver_id : 메시지를 받은 사용자 ID
+ * @returns json
+ */
   exports.getChat = async(sender_id, receiver_id) =>{
     try
     {

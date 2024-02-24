@@ -1,7 +1,9 @@
 const friend = require('../models/friendModel.js');
 
 
-//친구 추가
+/**
+ * 비동기식으로 친구들을 데이터베이스로부터 불러오기
+ */
 exports.insertFriendList = async(req, res) => {
   if (!req.body) {
       res.status(400).send({
@@ -31,7 +33,9 @@ exports.insertFriendList = async(req, res) => {
     }
 }
 
-//친구 삭제
+/**
+ * 비동기식으로 친구를 데이터베이스로부터 삭제하기
+ */
 exports.deleteFriendList = async(req, res) => {
   if (!req.body) {
       res.status(400).send({
@@ -62,7 +66,9 @@ exports.deleteFriendList = async(req, res) => {
 }
 
 
-//친구 불러오기
+/**
+ * 비동기식으로 사용자의 친구리스트를 데이터베이스로부터 불러오기 + 페이지네이션 적용
+ */
 exports.getFriendList = async(req, res) => {
   if (!req.body) {
       res.status(400).send({
@@ -93,7 +99,9 @@ exports.getFriendList = async(req, res) => {
     }
 }
 
-//친구 전체 불러오기
+/**
+ * 비동기식으로 사용자의 친구리스트를 데이터베이스로부터 불러오기
+ */
 exports.getFriendListAll = async(req, res) => {
     if (!req.body) {
         res.status(400).send({
@@ -124,7 +132,9 @@ exports.getFriendListAll = async(req, res) => {
   }
 
 
-//친구 요청 추가
+/**
+ * 비동기식으로 사용자의 친구요청을 데이터베이스에 추가하기
+ */
 exports.insertFriendRequest = async(req, res) => {
   if (!req.body) {
       res.status(400).send({
@@ -154,7 +164,9 @@ exports.insertFriendRequest = async(req, res) => {
     }
 }
 
-//친구 요청 삭제
+/**
+ * 비동기식으로 사용자의 친구요청을 데이터베이스에서 삭제하기
+ */
 exports.deleteFriendRequest = async(req, res) => {
   if (!req.body) {
       res.status(400).send({
@@ -185,7 +197,9 @@ exports.deleteFriendRequest = async(req, res) => {
 }
 
 
-//내가 보낸 친구 요청 불러오기
+/**
+ * 비동기식으로 사용자가 보낸 친구요청을 데이터베이스로부터 불러오기
+ */
 exports.getFriendRequestFromMe = async(req, res) => {
   if (!req.body) {
       res.status(400).send({
@@ -216,7 +230,9 @@ exports.getFriendRequestFromMe = async(req, res) => {
     }
 }
 
-//내가 받은 친구 요청 불러오기
+/**
+ * 비동기식으로 사용자가 받은 친구요청을 데이터베이스로부터 불러오기
+ */
 exports.getFriendRequestToMe = async(req, res) => {
   if (!req.body) {
       res.status(400).send({
@@ -248,7 +264,9 @@ exports.getFriendRequestToMe = async(req, res) => {
 }
 
 
-//친구 차단 추가
+/**
+ * 비동기식으로 사용자가 차단한 유저목록을 데이터베이스에 추가하기
+ */
 exports.insertBlockedFriend = async(req, res) => {
   if (!req.body) {
       res.status(400).send({
@@ -278,7 +296,9 @@ exports.insertBlockedFriend = async(req, res) => {
     }
 }
 
-//친구 차단 해제
+/**
+ * 비동기식으로 사용자가 차단한 사용자를 데이터베이스로부터 삭제하기
+ */
 exports.deleteBlockedFriend = async(req, res) => {
   if (!req.body) {
       res.status(400).send({
@@ -309,7 +329,9 @@ exports.deleteBlockedFriend = async(req, res) => {
 }
 
 
-//차단 목록
+/**
+ * 비동기식으로 사용자가 차단한 사용자들을 데이터베이스로부터 불러오기
+ */
 exports.getBlockedFriend = async(req, res) => {
   if (!req.body) {
       res.status(400).send({
@@ -341,7 +363,9 @@ exports.getBlockedFriend = async(req, res) => {
 }
 
 
-//친구 요청이 가능한 사람 리스트
+/**
+ * 비동기식으로 사용자가 친구 요청이 가능한 사용자들을 데이터베이스로부터 불러오기
+ */
 exports.getFriendToRequestPossible = async(req, res) => {
   if (!req.body) {
       res.status(400).send({
@@ -373,7 +397,9 @@ exports.getFriendToRequestPossible = async(req, res) => {
 }
 
 
-//친구 차단이 가능한 사람 리스트
+/**
+ * 비동기식으로 사용자가 차단 가능한 사용자들을 데이터베이스로부터 불러오기
+ */
 exports.getFriendToBlockPossible = async(req, res) => {
   if (!req.body) {
       res.status(400).send({
