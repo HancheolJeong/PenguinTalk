@@ -62,6 +62,13 @@ node.js 20.11.0, Express 4.18.2, MySQL 8.0.3
 <img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/ce0eedfa-ef2c-4dee-bf8b-6ce8ee5d15ec.png" width="800px"/>
 <p style="text-align: center;">로그인</p>
 </div>
+
+<br>
+
+<div markdown="1" style="padding-left: 15px;">
+<img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/4586d19c-d318-44b1-8590-fa053a2ef6c5.png" width="800px"/>
+<p style="text-align: center;">프로필</p>
+</div>
 </details>
 
 <br>
@@ -83,7 +90,7 @@ node.js 20.11.0, Express 4.18.2, MySQL 8.0.3
 
 <div markdown="1" style="padding-left: 15px;">
 <img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/8cbdaae3-c700-4e12-bdcc-5f68b94d45d0.png" width="800px"/>
-<p style="text-align: center;">새로운 비밀번호 입력</p>
+<p style="text-align: center;">새로운 패스워드 입력</p>
 </div>
 </details>
 
@@ -126,6 +133,8 @@ node.js 20.11.0, Express 4.18.2, MySQL 8.0.3
 </div>
 </details>
 
+<br>
+
 <details><summary>친구관리</summary>
 <div markdown="1" style="padding-left: 15px;">
 <img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/81b00f6b-8818-4eb5-9210-90e08b985630.png" width="800px"/>
@@ -147,14 +156,20 @@ node.js 20.11.0, Express 4.18.2, MySQL 8.0.3
 </div>
 </details>
 
+<br>
+
+<details><summary>채팅</summary>
+<div markdown="1" style="padding-left: 15px;">
+<img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/b947299d-6399-41fc-b9b3-5a040969bf21.png" width="800px"/>
+<p style="text-align: center;">채팅</p>
+</div>
+</details>
+
 
 
 # 📎 기타
 
-
-## FRONT-END
-
-# File Structure
+<details><summary>front-directory</summary>
 front-end/<br>
 |-- node_modules/<br>
 |-- build/<br>
@@ -183,17 +198,11 @@ front-end/<br>
 |-- package-lock.json<br>
 |-- package.json<br>
 |-- README.md<br>
+</details>
 
-# execute
-![alt text](home.png)
+<br>
 
-
-
-
-## BACK-END
-
-# File Structure
-
+<details><summary>back-directory</summary>
 back-end/<br>
 |-- node_modules/<br>
 |-- resources/<br>
@@ -224,10 +233,11 @@ back-end/<br>
 |-- package-lock.json<br>
 |-- package.json<br>
 |-- README.md<br>
+</details>
 
+<br>
 
-# create table
-
+<details><summary>테이블 생성 쿼리</summary>
 - user table
 
 CREATE TABLE user (
@@ -322,10 +332,11 @@ CREATE TABLE chat_history (
     FOREIGN KEY (sender_id) REFERENCES user(id) ON DELETE CASCADE,
     FOREIGN KEY (receiver_id) REFERENCES user(id) ON DELETE CASCADE
 );
+</details>
 
+<br>
 
-# routes
-
+<details><summary>REST API</summary>
 |uri|method|requset|response|
 |------|---|---|---|
 |/user/add|post|id, pw, name, birthday, gender|result|
@@ -334,19 +345,19 @@ CREATE TABLE chat_history (
 |/user/mod/pw|patch|id, pw|result|
 |/user/mod/url|patch|id, url|result|
 |/user/mod/info|put|id, name, birthday, gender|result|
-|/user/get/img|post|id|image|
-|/user/get/info|post|id|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
-|/user/get/name|post|id|result, items[name]|
-|/user/get/url|post|id|result, items[picture_url]|
-|/user/get/list|post|id|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
+|/user/get/img|get|id|image|
+|/user/get/info|get|id|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
+|/user/get/name|get|id|result, items[name]|
+|/user/get/url|get|id|result, items[picture_url]|
+|/user/get/list|get|id|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
 |------|---|---|---|
-|/friend|post|user_id, page|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
-|/friend/get/img|post|id|image|
+|/friend|get|user_id, page|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
+|/friend/get/img|get|id|image|
 |/friend/add|post|user_id, friend_id|result|
 |/friend/del|delete|user_id, friend_id|result|
-|/friend/request/fm|post|sender_id, page|result, items[receiver_id, create_dt]|
-|/friend/request/tm|post|receiver_id, page|resultm items[sender_id, create_dt]|
-|/friend/request/pos|post|user_id, page|result, items[id, name, birthday, gender, picture_url]|
+|/friend/request/fm|get|sender_id, page|result, items[receiver_id, create_dt]|
+|/friend/request/tm|get|receiver_id, page|resultm items[sender_id, create_dt]|
+|/friend/request/pos|get|user_id, page|result, items[id, name, birthday, gender, picture_url]|
 |/friend/request/add|post|sender_id, receiver_id|result|
 |/friend/request/del|delete|sender_id, receiver_id|result|
 |/friend/block|post|user_id, page|result, items[blocked_user_id]|
@@ -356,25 +367,22 @@ CREATE TABLE chat_history (
 |------|---|---|---|
 |/feed:page|get|page|result, items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
 |/feed|get|page, keyword|result, items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
-|/feed|post|id, page|result, items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
-|/feed/search|post|id, page, keyword|result items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
-|/feed/my|post|id, page|result items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
-|/feed/friend|post|id, page|result items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
-|/feed/nonfriend|post|id, page|result items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
-|/feed/postId|post|id|result items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
-|/feed/get/img|post|id|image|
+|/feed/home|get|id, page|result, items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
+|/feed/search|get|id, page, keyword|result items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
+|/feed/my|get|id, page|result items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
+|/feed/friend|get|id, page|result items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
+|/feed/nonfriend|get|id, page|result items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
+|/feed/postId|get|id|result items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
+|/feed/get/img|get|id|image|
 |/feed/add|post|id, title, content_url, scope|result|
 |/feed/mod|put|id, title, content_url, scope|result|
 |/feed/del|delete|id|result|
-|/feed/comment|post|post_id, page|result, items[id, post_id, user_id, create_dt, tagged_count]|
+|/feed/comment|get|post_id, page|result, items[id, post_id, user_id, create_dt, tagged_count]|
 |/feed/comment/add|post|post_id, user_id, content, users|result|
 |/feed/comment/mod|put|id, content|result|
 |/feed/comment/del|delete|id|result|
-|/feed/tag|post|user_id, page|result, items[comment_id, post_id, sender_id, receiver_id, content, create_dt, checking]|
+|/feed/tag|get|user_id, page|result, items[comment_id, post_id, sender_id, receiver_id, content, create_dt, checking]|
 |------|---|---|---|
-|/chat|post|sender_id, receiver_id, message_content|result, items[id, sender_id, receiver_id, message_content, create_dt]|
+|/chat|get|sender_id, receiver_id, message_content|result, items[id, sender_id, receiver_id, message_content, create_dt]|
 |/chat/add|post|sender_id, receiver_id, page|result|
-
-
-# execute
-![alt text](image.png)
+</details>
