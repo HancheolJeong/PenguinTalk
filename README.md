@@ -13,6 +13,8 @@
 2024.02.05 ~ 2024.02.24
 
 <br />
+<br />
+<br />
 
 # 👩‍🔧기술
 
@@ -25,6 +27,8 @@ HTML, CSS, JavaScript, React, Redux
 node.js 20.11.0, Express 4.18.2, MySQL 8.0.3
 
 <br />
+<br />
+<br />
 
 # 📝설계
 
@@ -36,6 +40,8 @@ node.js 20.11.0, Express 4.18.2, MySQL 8.0.3
 </details>
 
 <br/>
+<br />
+<br />
 
 # 🔑주요기능
 
@@ -47,6 +53,8 @@ node.js 20.11.0, Express 4.18.2, MySQL 8.0.3
 - 웹소켓을 이용한 실시간 통신
 
 <br/>
+<br />
+<br />
 
 # 💻실행화면
 
@@ -165,7 +173,9 @@ node.js 20.11.0, Express 4.18.2, MySQL 8.0.3
 </div>
 </details>
 
-
+<br />
+<br />
+<br />
 
 # 📎 기타
 
@@ -280,7 +290,7 @@ CREATE TABLE comments (
 CREATE TABLE tags (
     comment_id INT NOT NULL,
     user_id VARCHAR(255) NOT NULL,
-    checking TINYINT NOT NULL DEFAULT 0, # 0:미확인, 1:확인
+    checking TINYINT NOT NULL DEFAULT 0,
     create_dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (comment_id, user_id),
     FOREIGN KEY (comment_id) REFERENCES comment(id) ON DELETE CASCADE,
@@ -337,52 +347,52 @@ CREATE TABLE chat_history (
 <br>
 
 <details><summary>REST API</summary>
-|uri|method|requset|response|
-|------|---|---|---|
-|/user/add|post|id, pw, name, birthday, gender|result|
-|/user/login|post|id, pw|result|
-|/user/del|delete|id|result|
-|/user/mod/pw|patch|id, pw|result|
-|/user/mod/url|patch|id, url|result|
-|/user/mod/info|put|id, name, birthday, gender|result|
-|/user/get/img|get|id|image|
-|/user/get/info|get|id|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
-|/user/get/name|get|id|result, items[name]|
-|/user/get/url|get|id|result, items[picture_url]|
-|/user/get/list|get|id|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
-|------|---|---|---|
-|/friend|get|user_id, page|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|
-|/friend/get/img|get|id|image|
-|/friend/add|post|user_id, friend_id|result|
-|/friend/del|delete|user_id, friend_id|result|
-|/friend/request/fm|get|sender_id, page|result, items[receiver_id, create_dt]|
-|/friend/request/tm|get|receiver_id, page|resultm items[sender_id, create_dt]|
-|/friend/request/pos|get|user_id, page|result, items[id, name, birthday, gender, picture_url]|
-|/friend/request/add|post|sender_id, receiver_id|result|
-|/friend/request/del|delete|sender_id, receiver_id|result|
-|/friend/block|post|user_id, page|result, items[blocked_user_id]|
-|/friend/block/pos|post|user_id|result, items[id, name, birthday, gender, picture_url]|
-|/friend/block/add|post|user_id, blocked_id|result|
-|/friend/block/del|delete|user_id, blocked_id|result|
-|------|---|---|---|
-|/feed:page|get|page|result, items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
-|/feed|get|page, keyword|result, items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
-|/feed/home|get|id, page|result, items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
-|/feed/search|get|id, page, keyword|result items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
-|/feed/my|get|id, page|result items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
-|/feed/friend|get|id, page|result items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
-|/feed/nonfriend|get|id, page|result items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
-|/feed/postId|get|id|result items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|
-|/feed/get/img|get|id|image|
-|/feed/add|post|id, title, content_url, scope|result|
-|/feed/mod|put|id, title, content_url, scope|result|
-|/feed/del|delete|id|result|
-|/feed/comment|get|post_id, page|result, items[id, post_id, user_id, create_dt, tagged_count]|
-|/feed/comment/add|post|post_id, user_id, content, users|result|
-|/feed/comment/mod|put|id, content|result|
-|/feed/comment/del|delete|id|result|
-|/feed/tag|get|user_id, page|result, items[comment_id, post_id, sender_id, receiver_id, content, create_dt, checking]|
-|------|---|---|---|
-|/chat|get|sender_id, receiver_id, message_content|result, items[id, sender_id, receiver_id, message_content, create_dt]|
-|/chat/add|post|sender_id, receiver_id, page|result|
+|uri|method|requset|response|<br>
+|------|---|---|---|<br>
+|/user/add|post|id, pw, name, birthday, gender|result|<br>
+|/user/login|post|id, pw|result|<br>
+|/user/del|delete|id|result|<br>
+|/user/mod/pw|patch|id, pw|result|<br>
+|/user/mod/url|patch|id, url|result|<br>
+|/user/mod/info|put|id, name, birthday, gender|result|<br>
+|/user/get/img|get|id|image|<br>
+|/user/get/info|get|id|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|<br>
+|/user/get/name|get|id|result, items[name]|<br>
+|/user/get/url|get|id|result, items[picture_url]|<br>
+|/user/get/list|get|id|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|<br>
+|------|---|---|---|<br>
+|/friend|get|user_id, page|result, items[id, name, birthday, gender, create_dt, login_dt, picture_url]|<br>
+|/friend/get/img|get|id|image|<br>
+|/friend/add|post|user_id, friend_id|result|<br>
+|/friend/del|delete|user_id, friend_id|result|<br>
+|/friend/request/fm|get|sender_id, page|result, items[receiver_id, create_dt]|<br>
+|/friend/request/tm|get|receiver_id, page|resultm items[sender_id, create_dt]|<br>
+|/friend/request/pos|get|user_id, page|result, items[id, name, birthday, gender, picture_url]|<br>
+|/friend/request/add|post|sender_id, receiver_id|result|<br>
+|/friend/request/del|delete|sender_id, receiver_id|result|<br>
+|/friend/block|post|user_id, page|result, items[blocked_user_id]|<br>
+|/friend/block/pos|post|user_id|result, items[id, name, birthday, gender, picture_url]|<br>
+|/friend/block/add|post|user_id, blocked_id|result|<br>
+|/friend/block/del|delete|user_id, blocked_id|result|<br>
+|------|---|---|---|<br>
+|/feed:page|get|page|result, items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|<br>
+|/feed|get|page, keyword|result, items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|<br>
+|/feed/home|get|id, page|result, items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|<br>
+|/feed/search|get|id, page, keyword|result items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|<br>
+|/feed/my|get|id, page|result items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|<br>
+|/feed/friend|get|id, page|result items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|<br>
+|/feed/nonfriend|get|id, page|result items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|<br>
+|/feed/postId|get|id|result items[id, user_id, title, content_url, scope, create_dt, name, count_comment]|<br>
+|/feed/get/img|get|id|image|<br>
+|/feed/add|post|id, title, content_url, scope|result|<br>
+|/feed/mod|put|id, title, content_url, scope|result|<br>
+|/feed/del|delete|id|result|<br>
+|/feed/comment|get|post_id, page|result, items[id, post_id, user_id, create_dt, tagged_count]|<br>
+|/feed/comment/add|post|post_id, user_id, content, users|result|<br>
+|/feed/comment/mod|put|id, content|result|<br>
+|/feed/comment/del|delete|id|result|<br>
+|/feed/tag|get|user_id, page|result, items[comment_id, post_id, sender_id, receiver_id, content, create_dt, checking]|<br>
+|------|---|---|---|<br>
+|/chat|get|sender_id, receiver_id, message_content|result, items[id, sender_id, receiver_id, message_content, create_dt]|<br>
+|/chat/add|post|sender_id, receiver_id, page|result|<br>
 </details>
