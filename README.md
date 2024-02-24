@@ -1,3 +1,58 @@
+# 🐧PenguinTalk
+
+<br />
+
+# 📄 프로젝트 정보
+
+### 요약
+
+커뮤니케이션 웹 서비스
+
+### 개발 기간
+
+2024.02.05 ~ 2024.02.24
+
+### 개발 인원
+
+> |                    Name                    |  Position   |
+> | :----------------------------------------: | :---------: |
+> | [정한철](https://github.com/HancheolJeong) | Back, Front |
+
+<br />
+
+# 👩‍🔧기술
+
+### Language
+
+JS
+
+### Framework
+Express 4.18.2
+React/Redux
+
+### DB
+MySQL 8.0.3
+
+### Server
+node.js
+
+### API
+JWT
+Socket.io
+multer
+cors
+
+<br />
+
+# 설계
+
+<details>
+<summary>ERD</summary>
+<div markdown="1" style="padding-left: 15px;">
+<img src="https://private-user-images.githubusercontent.com/70940120/307528196-35002d57-a6ea-42c3-a3ba-86495963c7ed.PNG" width="800px"/>
+</div>
+</details>
+
 ## FRONT-END
 
 # File Structure
@@ -52,6 +107,7 @@ back-end/<br>
 |   |-- friendController.js<br>
 |   |-- userController.js<br>
 |-- models/<br>
+|   |-- db.js<br>
 |   |-- chatModel.js<br>
 |   |-- feedModel.js<br>
 |   |-- friendModel.js<br>
@@ -60,6 +116,9 @@ back-end/<br>
 |   |-- routes.js<br>
 |-- middleware/<br>
 |   |-- auth.js<br>
+|   |-- upload.js<br>
+|-- libs/<br>
+|   |-- socketHandler.js<br>
 |-- server.js<br>
 |-- .env<br>
 |-- .gitignore<br>
