@@ -49,7 +49,7 @@ cors
 <details>
 <summary>ERD</summary>
 <div markdown="1" style="padding-left: 15px;">
-<img src="https://private-user-images.githubusercontent.com/70940120/307528196-35002d57-a6ea-42c3-a3ba-86495963c7ed.PNG" width="800px"/>
+<img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/35002d57-a6ea-42c3-a3ba-86495963c7ed.png" width="800px"/>
 </div>
 </details>
 
