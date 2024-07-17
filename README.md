@@ -32,12 +32,10 @@ node.js 20.11.0, Express 4.18.2, MySQL 8.0.3
 
 # 📝설계
 
-<details>
 <summary>ERD</summary>
 <div markdown="1" style="padding-left: 15px;">
 <img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/35002d57-a6ea-42c3-a3ba-86495963c7ed.png" width="800px"/>
 </div>
-</details>
 
 <br/>
 <br />
@@ -58,7 +56,7 @@ node.js 20.11.0, Express 4.18.2, MySQL 8.0.3
 
 # 💻실행화면
 
-<details><summary>회원가입 및 로그인</summary>
+<summary>회원가입 및 로그인</summary>
 <div markdown="1" style="padding-left: 15px;">
 <img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/dd1a9f03-7fa8-4a89-ba1f-c5e6451fe4a7.png" width="800px"/>
 <p style="text-align: center;">회원가입</p>
@@ -77,11 +75,10 @@ node.js 20.11.0, Express 4.18.2, MySQL 8.0.3
 <img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/4586d19c-d318-44b1-8590-fa053a2ef6c5.png" width="800px"/>
 <p style="text-align: center;">프로필</p>
 </div>
-</details>
 
 <br>
 
-<details><summary>회원정보수정</summary>
+<summary>회원정보수정</summary>
 <div markdown="1" style="padding-left: 15px;">
 <img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/de230f32-e4bc-4a65-ac04-29145d82bc22.png" width="800px"/>
 <p style="text-align: center;">회원정보 수정</p>
@@ -100,11 +97,11 @@ node.js 20.11.0, Express 4.18.2, MySQL 8.0.3
 <img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/8cbdaae3-c700-4e12-bdcc-5f68b94d45d0.png" width="800px"/>
 <p style="text-align: center;">새로운 패스워드 입력</p>
 </div>
-</details>
+
 
 <br>
 
-<details><summary>피드</summary>
+<summary>피드</summary>
 <div markdown="1" style="padding-left: 15px;">
 <img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/f032f4ac-9b47-4175-8277-6bd3d5f65410.png" width="800px"/>
 <p style="text-align: center;">피드작성</p>
@@ -116,11 +113,11 @@ node.js 20.11.0, Express 4.18.2, MySQL 8.0.3
 <img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/b28cc802-00ac-4d27-ae67-e4b21e3195ce.png" width="800px"/>
 <p style="text-align: center;">피드</p>
 </div>
-</details>
+
 
 <br>
 
-<details><summary>댓글,태그</summary>
+<summary>댓글,태그</summary>
 <div markdown="1" style="padding-left: 15px;">
 <img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/c74fec5a-fee2-46b3-b70d-d37788945228.png" width="800px"/>
 <p style="text-align: center;">댓글작성</p>
@@ -139,11 +136,11 @@ node.js 20.11.0, Express 4.18.2, MySQL 8.0.3
 <img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/b6a53641-070c-4d62-b5ff-25cf484ab397.png" width="800px"/>
 <p style="text-align: center;">태그알림</p>
 </div>
-</details>
+
 
 <br>
 
-<details><summary>친구관리</summary>
+<summary>친구관리</summary>
 <div markdown="1" style="padding-left: 15px;">
 <img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/81b00f6b-8818-4eb5-9210-90e08b985630.png" width="800px"/>
 <p style="text-align: center;">드롭다운메뉴</p>
@@ -162,16 +159,15 @@ node.js 20.11.0, Express 4.18.2, MySQL 8.0.3
 <img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/5c2f4498-374f-4633-a911-b6a3e6eeea31.png" width="800px"/>
 <p style="text-align: center;">친구목록</p>
 </div>
-</details>
+
 
 <br>
 
-<details><summary>채팅</summary>
+<summary>채팅</summary>
 <div markdown="1" style="padding-left: 15px;">
 <img src="https://github.com/HancheolJeong/PenguinTalk/assets/70940120/b947299d-6399-41fc-b9b3-5a040969bf21.png" width="800px"/>
 <p style="text-align: center;">채팅</p>
 </div>
-</details>
 
 <br />
 <br />
